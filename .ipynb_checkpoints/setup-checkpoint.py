@@ -12,7 +12,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="predicode-sflippl",
+    name="predicode",
     version="0.0.0.9000",
     author="Samuel Lippl",
     author_email="sfc.lippl@gmail.com",

@@ -1,0 +1,11 @@
+README.md
+setup.py
+predicode/__init__.py
+predicode.egg-info/PKG-INFO
+predicode.egg-info/SOURCES.txt
+predicode.egg-info/dependency_links.txt
+predicode.egg-info/top_level.txt
+predicode/datasets/__init__.py
+predicode/datasets/cifar10.py
+predicode/datasets/imagedata.py
+predicode/simulations/__init__.py
