@@ -50,7 +50,7 @@ class ImageData:
         return dataframe
     
     def rgb_dataframe(self, subset = None, n_random = None):
-        dataframe = self.dataframe(subset = None, n_random = None)
+        dataframe = self.dataframe(subset = subset, n_random = n_random)
         dataframe['rgb'] = np.array([
             '#' + 
             ImageData.hex_2(r) + 

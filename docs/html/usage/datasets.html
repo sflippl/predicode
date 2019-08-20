@@ -12,6 +12,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="Installation" href="installation.html" />
@@ -233,6 +235,78 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="Datasets">
 <h1>Datasets<a class="headerlink" href="#Datasets" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Artificial-Datasets">
+<h2>Artificial Datasets<a class="headerlink" href="#Artificial-Datasets" title="Permalink to this headline">¶</a></h2>
+<p>Artificial datasets provide a simple example for how the algorithm works and an opportunity to study its analytical solutions.</p>
+<div class="section" id="Decaying-Multinormal-Distribution">
+<h3>Decaying Multinormal Distribution<a class="headerlink" href="#Decaying-Multinormal-Distribution" title="Permalink to this headline">¶</a></h3>
+<p>The closed-form solution of a linear predictive coding model is given by a principal components analysis. A multinormal distribution allows for an easy model for such a solution. The class ‘DecayingMultiNormal’ models a high-dimensional input with decaying importance. Namely, the variance of the different principal components is specified using the decay constant ‘alpha’. Dimensionality of the input data is specified using ‘dimensions’ and sample size is specified by ‘samples’.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
+<span class="n">art_data</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">DecayingMultiNormal</span><span class="p">(</span><span class="n">dimensions</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                                  <span class="n">samples</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+                                  <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">lazytools</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">art_data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_datasets_6_0.png" src="../_images/usage_datasets_6_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8735735730103)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">art_data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_datasets_7_0.png" src="../_images/usage_datasets_7_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8735682449065)&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
 <div class="section" id="Image-Datasets">
 <h2>Image Datasets<a class="headerlink" href="#Image-Datasets" title="Permalink to this headline">¶</a></h2>
 <p>Image datasets are predominantly included as examples for the predictive coding algorithms under the ‘datasets’ module. Whereas their main purpose is being incorporated by the respective algorithms, ‘predicode’ allows for some functionality in exploring the datasets on their own. In particular, a number of images may be visualized using the pictures method (see Cifar-10 below).</p>
@@ -242,7 +316,7 @@ div.rendered_html tbody tr:hover {
 <p>Cifar-10 serves as a simple example dataset for basic predictive coding algorithms demonstrating static extraclassical effects.</p>
 <p>For now, only the training dataset can be read in using the class <code class="docutils literal notranslate"><span class="pre">Cifar10</span></code></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -253,7 +327,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>This dataset may be explored by looking at the pictures along with their labels. This is possible in black-white and color.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -265,20 +339,20 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/usage_datasets_8_0.png" src="../_images/usage_datasets_8_0.png" />
+<img alt="../_images/usage_datasets_15_0.png" src="../_images/usage_datasets_15_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (-9223363265846236202)&gt;
+<span></span>&lt;ggplot: (-9223363293114942036)&gt;
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -290,30 +364,30 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/usage_datasets_9_0.png" src="../_images/usage_datasets_9_0.png" />
+<img alt="../_images/usage_datasets_16_0.png" src="../_images/usage_datasets_16_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (-9223363265900130823)&gt;
+<span></span>&lt;ggplot: (8743719730980)&gt;
 </pre></div>
 </div>
 </div>
 <p>This builds upon the underlying data frame that contains the RGB values for the color and the black-white pictures:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">cifar</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">subset</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">25</span><span class="p">))</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span></span><span class="n">cifar</span><span class="o">.</span><span class="n">rgb_dataframe</span><span class="p">(</span><span class="n">subset</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -435,6 +509,7 @@ div.rendered_html tbody tr:hover {
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Artificial-Datasets">Artificial Datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Image-Datasets">Image Datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Cifar-10">Cifar-10</a></li>
 </ul>
