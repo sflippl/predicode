@@ -47,6 +47,10 @@ class ImageData:
             'b': data[:,:,:,2].flatten(),
             'bw': data.mean(axis=3).flatten()
         })
+        return dataframe
+    
+    def rgb_dataframe(self, subset = None, n_random = None):
+        dataframe = self.dataframe(subset = None, n_random = None)
         dataframe['rgb'] = np.array([
             '#' + 
             ImageData.hex_2(r) + 
@@ -61,7 +65,7 @@ class ImageData:
         return dataframe
     
     def pictures(self, mode = 'bw', subset = None, n_random = 10):
-        dataframe = self.dataframe(subset = subset, n_random = n_random)
+        dataframe = self.rgb_dataframe(subset = subset, n_random = n_random)
         if mode == 'bw':
             fill_key = 'rgb_bw'
         elif mode == 'color':
