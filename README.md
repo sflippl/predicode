@@ -14,4 +14,4 @@ Moreover, you can install the newest development version (in line with the gener
 pip install git+https://github.com/sflippl/predicode
 ```
 
-You can check out the documentation [here](sflippl.github.io/predicode).
+You can check out the documentation [here](https://sflippl.github.io/predicode).
