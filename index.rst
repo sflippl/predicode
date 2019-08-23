@@ -12,6 +12,7 @@ Welcome to predicode's documentation!
    
    usage/installation
    usage/datasets
+   usage/minimal_model
 
 
 

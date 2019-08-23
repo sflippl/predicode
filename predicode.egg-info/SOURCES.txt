@@ -9,4 +9,8 @@ predicode/datasets/__init__.py
 predicode/datasets/artificial_data.py
 predicode/datasets/cifar10.py
 predicode/datasets/imagedata.py
-predicode/simulations/__init__.py
+predicode/hierarchical/__init__.py
+predicode/hierarchical/hierarchical.py
+predicode/hierarchical/weight_init.py
+predicode/hierarchical/interfaces/__init__.py
+predicode/hierarchical/interfaces/minimal_model.py

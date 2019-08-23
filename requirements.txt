@@ -3,3 +3,6 @@ pip install pandas
 pip install numpy
 pip install tensorflow
 pip install plotnine
+pip install keras
+pip install scipy
+pip install sklearn

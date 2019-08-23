@@ -1,0 +1,1585 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>First linear predictive coding model &#8212; predicode 0.0.0.9000 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 5ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="First-linear-predictive-coding-model">
+<h1>First linear predictive coding model<a class="headerlink" href="#First-linear-predictive-coding-model" title="Permalink to this headline">¶</a></h1>
+<p>This notebook is going to throw together some different terminology coming from ‘keras’, ‘tensorflow’, and more generic predictive coding jargon. The idea is the creation of a linear predictive coding model that is easy to specify and easy to extend. The sequential specification method of ‘keras’ is ideally suited for this specification. For this purpose, a mixture of questions and goals is important:</p>
+<ul class="simple">
+<li><p>The first implementation will be given by ‘Hierarchical()’ (inspired by ‘Sequential()’).</p></li>
+<li><p>Should ‘Hierarchical()’ be merely inspired by or actually implemented on top of ‘Sequential()’?</p></li>
+<li><p>It seems natural to start off by formulating the input, i. e. the lowest layer, and proceed from there. After specifying the lowest layer, one might thus specify the transformation upon this lowest layer (though this specification will be a feature that will be added later), and then add the next higher layer.</p></li>
+<li><p>‘predicode’ should thus definitely use the layers from ‘keras’.</p></li>
+<li><p>The output is likely going to have to include a copy of the estimation and true state of every layer.</p></li>
+</ul>
+<p>This process is necessarily going to include some exploration before settling on a sensible procedure.</p>
+<div class="section" id="Create-Hierarchical-akin-to-Sequential">
+<h2>Create Hierarchical akin to Sequential<a class="headerlink" href="#Create-Hierarchical-akin-to-Sequential" title="Permalink to this headline">¶</a></h2>
+<p>As a first pass, the following code must work:</p>
+<div class="highlight-{python} notranslate"><div class="highlight"><pre><span></span>import predicode as pc
+hpc = pc.Hierarchical()
+hpc.add(keras.Activation(&#39;relu&#39;))
+hpc.add(keras.Dense(4))
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
+<span class="kn">import</span> <span class="nn">keras</span>
+<span class="n">hpc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">Hierarchical</span><span class="p">()</span>
+<span class="n">hpc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,)))</span>
+<span class="n">hpc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Using TensorFlow backend.
+WARNING: Logging before flag parsing goes to stderr.
+W0823 01:10:10.263563 140503168038720 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py:74: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+W0823 01:10:10.289473 140503168038720 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py:517: The name tf.placeholder is deprecated. Please use tf.compat.v1.placeholder instead.
+
+W0823 01:10:10.295683 140503168038720 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py:4138: The name tf.random_uniform is deprecated. Please use tf.random.uniform instead.
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">art</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">DecayingMultiNormal</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="First-fit-using-tensorflow-directly">
+<h2>First fit using tensorflow directly<a class="headerlink" href="#First-fit-using-tensorflow-directly" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Understanding-Tensorflow">
+<h3>Understanding Tensorflow<a class="headerlink" href="#Understanding-Tensorflow" title="Permalink to this headline">¶</a></h3>
+<p>We now fit a tensorflow predictive coding model with 10 input dimensions and 4 latent dimensions. We first use an example to understand a bit better how Tensorflow works – we simply predict the output given a certain input and compute the mean squared error.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">latent_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])]</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">latent</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">latent_array</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sklearn.decomposition</span> <span class="k">as</span> <span class="nn">decomp</span>
+<span class="n">art_pca</span> <span class="o">=</span> <span class="n">decomp</span><span class="o">.</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">art_pca</span><span class="o">.</span><span class="n">components_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">latent</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">error</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">prediction</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0821 01:52:23.502819 140692113475392 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/losses/losses_impl.py:121: add_dispatch_support.&lt;locals&gt;.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">writer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">FileWriter</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">writer</span><span class="o">.</span><span class="n">add_graph</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">get_default_graph</span><span class="p">())</span>
+<span class="n">writer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.54916465
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Understanding-estimators">
+<h3>Understanding estimators<a class="headerlink" href="#Understanding-estimators" title="Permalink to this headline">¶</a></h3>
+<p>We now fit an estimator that generates the best latent variables, following the ‘Creating Custom Estimators’ tutorial on tensorflow.org.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">train_x</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">observed_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">feature_column</span><span class="o">.</span><span class="n">numeric_column</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">train_x</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+</pre></div>
+</div>
+</div>
+<p>The goal is to have the following code work:</p>
+classifier = tf.estimator.Estimator(
+    model_fn=state_estimator,
+    params={
+        'feature_columns': my_feature_columns,
+        # Two hidden layers of 10 nodes each.
+        'hidden_units': 4,
+        # The model must choose between 3 classes.
+        'weights': art_pca.components_,
+    })<p>For this purpose, we must define a custom ‘state_estimator’. Since we are currently inferring the latent states, the weights are fixed. The weights thus represent tensors, whereas the weights represent operations. Accordingly, we essentially flip the computational graph.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dct_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;theta1_</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">art_pca</span><span class="o">.</span><span class="n">components_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dct_weights</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;theta1_0-0&#39;: array([-0.37593458]),
+ &#39;theta1_0-1&#39;: array([0.44660314]),
+ &#39;theta1_0-2&#39;: array([-0.06655914]),
+ &#39;theta1_0-3&#39;: array([-0.0658276]),
+ &#39;theta1_0-4&#39;: array([0.66387109]),
+ &#39;theta1_0-5&#39;: array([-0.1667903]),
+ &#39;theta1_0-6&#39;: array([0.08629256]),
+ &#39;theta1_0-7&#39;: array([-0.03118381]),
+ &#39;theta1_0-8&#39;: array([0.24703254]),
+ &#39;theta1_0-9&#39;: array([0.33536204]),
+ &#39;theta1_1-0&#39;: array([-0.12240433]),
+ &#39;theta1_1-1&#39;: array([-0.02433083]),
+ &#39;theta1_1-2&#39;: array([0.29516051]),
+ &#39;theta1_1-3&#39;: array([-0.59586923]),
+ &#39;theta1_1-4&#39;: array([0.01317754]),
+ &#39;theta1_1-5&#39;: array([0.36974514]),
+ &#39;theta1_1-6&#39;: array([-0.10461511]),
+ &#39;theta1_1-7&#39;: array([0.37006281]),
+ &#39;theta1_1-8&#39;: array([-0.38021622]),
+ &#39;theta1_1-9&#39;: array([0.33601344]),
+ &#39;theta1_2-0&#39;: array([0.23962836]),
+ &#39;theta1_2-1&#39;: array([0.0004807]),
+ &#39;theta1_2-2&#39;: array([0.2678398]),
+ &#39;theta1_2-3&#39;: array([0.57348647]),
+ &#39;theta1_2-4&#39;: array([0.21299678]),
+ &#39;theta1_2-5&#39;: array([0.38186292]),
+ &#39;theta1_2-6&#39;: array([0.35854457]),
+ &#39;theta1_2-7&#39;: array([0.45463516]),
+ &#39;theta1_2-8&#39;: array([0.05383881]),
+ &#39;theta1_2-9&#39;: array([0.11233992]),
+ &#39;theta1_3-0&#39;: array([0.68071079]),
+ &#39;theta1_3-1&#39;: array([-0.15230832]),
+ &#39;theta1_3-2&#39;: array([-0.27041466]),
+ &#39;theta1_3-3&#39;: array([-0.25065839]),
+ &#39;theta1_3-4&#39;: array([0.24546643]),
+ &#39;theta1_3-5&#39;: array([-0.41716802]),
+ &#39;theta1_3-6&#39;: array([0.2215861]),
+ &#39;theta1_3-7&#39;: array([0.13727436]),
+ &#39;theta1_3-8&#39;: array([-0.145502]),
+ &#39;theta1_3-9&#39;: array([0.23255726])}
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">latent_weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">feature_column</span><span class="o">.</span><span class="n">numeric_column</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dct_weights</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">latent_weights</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[NumericColumn(key=&#39;theta1_0-0&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_0-1&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_0-2&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_0-3&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_0-4&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_0-5&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_0-6&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_0-7&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_0-8&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_0-9&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-0&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-1&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-2&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-3&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-4&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-5&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-6&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-7&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-8&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_1-9&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-0&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-1&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-2&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-3&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-4&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-5&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-6&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-7&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-8&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_2-9&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-0&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-1&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-2&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-3&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-4&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-5&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-6&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-7&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-8&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None),
+ NumericColumn(key=&#39;theta1_3-9&#39;, shape=(1,), default_value=None, dtype=tf.float64, normalizer_fn=None)]
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">state_estimator</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="n">flipped_graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">feature_column</span><span class="o">.</span><span class="n">input_layer</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;latent_weights&#39;</span><span class="p">])</span>
+    <span class="n">flipped_graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">flipped_graph</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">PREDICT</span><span class="p">:</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;prediction&#39;</span><span class="p">:</span> <span class="n">flipped_graph</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">flipped_graph</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span>
+
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">train_op</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">global_step</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">get_global_step</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">Estimator</span><span class="p">(</span>
+    <span class="n">model_fn</span><span class="o">=</span><span class="n">state_estimator</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;latent_weights&#39;</span><span class="p">:</span> <span class="n">latent_weights</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="mi">4</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 01:10:32.298853 140503168038720 estimator.py:1811] Using temporary folder as model directory: /tmp/tmpo6wwm3c7
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(100, 10)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">input_fn</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">dct_weights</span><span class="p">,</span> <span class="n">art_data</span><span class="o">.</span><span class="n">flatten</span><span class="p">()),</span> <span class="n">steps</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 01:10:32.666815 140503168038720 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/training_util.py:236: Variable.initialized_value (from tensorflow.python.ops.variables) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use Variable.read_value. Variables in 2.X are initialized automatically both in eager and graph (inside tf.defun) contexts.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-22-bd19458e8ed5&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>hpc<span class="ansi-blue-fg">.</span>train<span class="ansi-blue-fg">(</span>input_fn <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">lambda</span><span class="ansi-blue-fg">:</span> <span class="ansi-blue-fg">(</span>dct_weights<span class="ansi-blue-fg">,</span> art_data<span class="ansi-blue-fg">.</span>flatten<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> steps <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">10000</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/.local/lib/python3.7/site-packages/tensorflow_estimator/python/estimator/estimator.py</span> in <span class="ansi-cyan-fg">train</span><span class="ansi-blue-fg">(self, input_fn, hooks, steps, max_steps, saving_listeners)</span>
+<span class="ansi-green-intense-fg ansi-bold">    365</span>
+<span class="ansi-green-intense-fg ansi-bold">    366</span>       saving_listeners <span class="ansi-blue-fg">=</span> _check_listeners_type<span class="ansi-blue-fg">(</span>saving_listeners<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 367</span><span class="ansi-red-fg">       </span>loss <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_train_model<span class="ansi-blue-fg">(</span>input_fn<span class="ansi-blue-fg">,</span> hooks<span class="ansi-blue-fg">,</span> saving_listeners<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    368</span>       logging<span class="ansi-blue-fg">.</span>info<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;Loss for final step: %s.&#39;</span><span class="ansi-blue-fg">,</span> loss<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    369</span>       <span class="ansi-green-fg">return</span> self
+
+<span class="ansi-green-fg">~/.local/lib/python3.7/site-packages/tensorflow_estimator/python/estimator/estimator.py</span> in <span class="ansi-cyan-fg">_train_model</span><span class="ansi-blue-fg">(self, input_fn, hooks, saving_listeners)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1156</span>       <span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>_train_model_distributed<span class="ansi-blue-fg">(</span>input_fn<span class="ansi-blue-fg">,</span> hooks<span class="ansi-blue-fg">,</span> saving_listeners<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1157</span>     <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">-&gt; 1158</span><span class="ansi-red-fg">       </span><span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>_train_model_default<span class="ansi-blue-fg">(</span>input_fn<span class="ansi-blue-fg">,</span> hooks<span class="ansi-blue-fg">,</span> saving_listeners<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1159</span>
+<span class="ansi-green-intense-fg ansi-bold">   1160</span>   <span class="ansi-green-fg">def</span> _train_model_default<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input_fn<span class="ansi-blue-fg">,</span> hooks<span class="ansi-blue-fg">,</span> saving_listeners<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/.local/lib/python3.7/site-packages/tensorflow_estimator/python/estimator/estimator.py</span> in <span class="ansi-cyan-fg">_train_model_default</span><span class="ansi-blue-fg">(self, input_fn, hooks, saving_listeners)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1183</span>       features, labels, input_hooks = (
+<span class="ansi-green-intense-fg ansi-bold">   1184</span>           self._get_features_and_labels_from_input_fn(
+<span class="ansi-green-fg">-&gt; 1185</span><span class="ansi-red-fg">               input_fn, ModeKeys.TRAIN))
+</span><span class="ansi-green-intense-fg ansi-bold">   1186</span>       worker_hooks<span class="ansi-blue-fg">.</span>extend<span class="ansi-blue-fg">(</span>input_hooks<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1187</span>       estimator_spec = self._call_model_fn(
+
+<span class="ansi-green-fg">~/.local/lib/python3.7/site-packages/tensorflow_estimator/python/estimator/estimator.py</span> in <span class="ansi-cyan-fg">_get_features_and_labels_from_input_fn</span><span class="ansi-blue-fg">(self, input_fn, mode)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1020</span>     <span class="ansi-blue-fg">&#34;&#34;&#34;Extracts the `features` and labels from return values of `input_fn`.&#34;&#34;&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">   1021</span>     return estimator_util.parse_input_fn_result(
+<span class="ansi-green-fg">-&gt; 1022</span><span class="ansi-red-fg">         self._call_input_fn(input_fn, mode))
+</span><span class="ansi-green-intense-fg ansi-bold">   1023</span>
+<span class="ansi-green-intense-fg ansi-bold">   1024</span>   <span class="ansi-green-fg">def</span> _extract_batch_length<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> preds_evaluated<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/.local/lib/python3.7/site-packages/tensorflow_estimator/python/estimator/estimator.py</span> in <span class="ansi-cyan-fg">_call_input_fn</span><span class="ansi-blue-fg">(self, input_fn, mode, input_context)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1111</span>       kwargs<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;input_context&#39;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> input_context
+<span class="ansi-green-intense-fg ansi-bold">   1112</span>     <span class="ansi-green-fg">with</span> ops<span class="ansi-blue-fg">.</span>device<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;/cpu:0&#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">-&gt; 1113</span><span class="ansi-red-fg">       </span><span class="ansi-green-fg">return</span> input_fn<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1114</span>
+<span class="ansi-green-intense-fg ansi-bold">   1115</span>   <span class="ansi-green-fg">def</span> _call_model_fn<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> features<span class="ansi-blue-fg">,</span> labels<span class="ansi-blue-fg">,</span> mode<span class="ansi-blue-fg">,</span> config<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-22-bd19458e8ed5&gt;</span> in <span class="ansi-cyan-fg">&lt;lambda&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>hpc<span class="ansi-blue-fg">.</span>train<span class="ansi-blue-fg">(</span>input_fn <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">lambda</span><span class="ansi-blue-fg">:</span> <span class="ansi-blue-fg">(</span>dct_weights<span class="ansi-blue-fg">,</span> art_data<span class="ansi-blue-fg">.</span>flatten<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> steps <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">10000</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">NameError</span>: name &#39;art_data&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">evaluation</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">input_fn</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:(</span><span class="n">dct_weights</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])),</span> <span class="n">steps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">evaluation</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-23-3a5639047e84&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>evaluation
+
+<span class="ansi-red-fg">NameError</span>: name &#39;evaluation&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">prediction</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">input_fn</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:(</span><span class="n">dct_weights</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">predicted</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 01:10:33.321393 140503168038720 estimator.py:1000] Input graph does not use tf.data.Dataset or contain a QueueRunner. That means predict yields forever. This is probably a mistake.
+W0823 01:10:33.325584 140503168038720 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:205: NumericColumn._get_dense_tensor (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0823 01:10:33.326913 140503168038720 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:2115: NumericColumn._transform_feature (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0823 01:10:33.333678 140503168038720 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:206: NumericColumn._variable_shape (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0823 01:10:33.721682 140503168038720 deprecation.py:323] From &lt;ipython-input-19-5a7ddeea620d&gt;:3: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+W0823 01:10:33.725034 140503168038720 deprecation.py:506] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/init_ops.py:1251: calling VarianceScaling.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+W0823 01:10:34.127164 140503168038720 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/array_ops.py:1354: add_dispatch_support.&lt;locals&gt;.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">art_pca</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>PCA(copy=True, iterated_power=&#39;auto&#39;, n_components=4, random_state=None,
+  svd_solver=&#39;auto&#39;, tol=0.0, whiten=False)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">actual_prediction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">art_pca</span><span class="o">.</span><span class="n">components_</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">art_pca</span><span class="o">.</span><span class="n">components_</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predicted</span><span class="p">[</span><span class="s1">&#39;prediction&#39;</span><span class="p">])</span>
+<span class="n">pred</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">lazytools</span>
+<span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/explore_03-lpc-1_43_0.png" src="../_images/explore_03-lpc-1_43_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8781365092202)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">actual_prediction</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/explore_03-lpc-1_44_0.png" src="../_images/explore_03-lpc-1_44_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8781362938558)&gt;
+</pre></div>
+</div>
+</div>
+<p>Both are thus similar to each other, but differently scaled for some reason. This might have something to do with involuntary scaling. This is likely an issue of the PCA implementation and not really of concern. More as a more global concern, I will not that Tensorflow currently uses CPUs instead of GPUs, a problem I will solve once we have extracted the actual latent variables.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">get_variable_names</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-31-08c0a2f8fb4b&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>hpc<span class="ansi-blue-fg">.</span>get_variable_names<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/.local/lib/python3.7/site-packages/tensorflow_estimator/python/estimator/estimator.py</span> in <span class="ansi-cyan-fg">get_variable_names</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    275</span>       ValueError<span class="ansi-blue-fg">:</span> If the<span class="ansi-red-fg"> </span><span class="ansi-red-fg">`</span>Estimator<span class="ansi-red-fg">`</span> has <span class="ansi-green-fg">not</span> produced a checkpoint yet<span class="ansi-blue-fg">.</span>
+<span class="ansi-green-intense-fg ansi-bold">    276</span>     &#34;&#34;&#34;
+<span class="ansi-green-fg">--&gt; 277</span><span class="ansi-red-fg">     </span>_check_checkpoint_available<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>model_dir<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    278</span>     <span class="ansi-green-fg">with</span> context<span class="ansi-blue-fg">.</span>graph_mode<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    279</span>       <span class="ansi-green-fg">return</span> <span class="ansi-blue-fg">[</span>name <span class="ansi-green-fg">for</span> name<span class="ansi-blue-fg">,</span> _ <span class="ansi-green-fg">in</span> training<span class="ansi-blue-fg">.</span>list_variables<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>model_dir<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span>
+
+<span class="ansi-green-fg">~/.local/lib/python3.7/site-packages/tensorflow_estimator/python/estimator/estimator.py</span> in <span class="ansi-cyan-fg">_check_checkpoint_available</span><span class="ansi-blue-fg">(model_dir)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1917</span>   <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> latest_path<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   1918</span>     raise ValueError(
+<span class="ansi-green-fg">-&gt; 1919</span><span class="ansi-red-fg">         &#39;Could not find trained model in model_dir: {}.&#39;.format(model_dir))
+</span><span class="ansi-green-intense-fg ansi-bold">   1920</span>
+<span class="ansi-green-intense-fg ansi-bold">   1921</span>
+
+<span class="ansi-red-fg">ValueError</span>: Could not find trained model in model_dir: /tmp/tmpo6wwm3c7.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">get_variable_value</span><span class="p">(</span><span class="s1">&#39;dense/kernel&#39;</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>The lesson from this (or alternatively drawing a quick diagram): We still have samples. What used to be samples turns into dimensions, but what used to be dimensions turns into samples, which means, the columns of theta are samples and its rows are dimensions.</p>
+</div>
+<div class="section" id="Estimator-of-the-latent-variables">
+<h3>Estimator of the latent variables<a class="headerlink" href="#Estimator-of-the-latent-variables" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(100, 10)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">observed_dct</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])}</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">observed_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">feature_column</span><span class="o">.</span><span class="n">numeric_column</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">observed_dct</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dct_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;theta1_</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="n">art_pca</span><span class="o">.</span><span class="n">components_</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])}</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">latent_weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">feature_column</span><span class="o">.</span><span class="n">numeric_column</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dct_weights</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">state_estimator</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="n">flipped_graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">feature_column</span><span class="o">.</span><span class="n">input_layer</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;latent_weights&#39;</span><span class="p">])</span>
+    <span class="n">flipped_graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">flipped_graph</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">use_bias</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">PREDICT</span><span class="p">:</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;prediction&#39;</span><span class="p">:</span> <span class="n">flipped_graph</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">flipped_graph</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">EVAL</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span>
+            <span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">ModeKeys</span><span class="o">.</span><span class="n">TRAIN</span>
+
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">train_op</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">global_step</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">get_global_step</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">EstimatorSpec</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">train_op</span><span class="o">=</span><span class="n">train_op</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">help</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Help on function dense in module tensorflow.python.layers.core:
+
+dense(inputs, units, activation=None, use_bias=True, kernel_initializer=None, bias_initializer=&lt;tensorflow.python.ops.init_ops.Zeros object at 0x7fc93183f8d0&gt;, kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, bias_constraint=None, trainable=True, name=None, reuse=None)
+    Functional interface for the densely-connected layer. (deprecated)
+
+    Warning: THIS FUNCTION IS DEPRECATED. It will be removed in a future version.
+    Instructions for updating:
+    Use keras.layers.dense instead.
+
+    This layer implements the operation:
+    `outputs = activation(inputs * kernel + bias)`
+    where `activation` is the activation function passed as the `activation`
+    argument (if not `None`), `kernel` is a weights matrix created by the layer,
+    and `bias` is a bias vector created by the layer
+    (only if `use_bias` is `True`).
+
+    Arguments:
+      inputs: Tensor input.
+      units: Integer or Long, dimensionality of the output space.
+      activation: Activation function (callable). Set it to None to maintain a
+        linear activation.
+      use_bias: Boolean, whether the layer uses a bias.
+      kernel_initializer: Initializer function for the weight matrix.
+        If `None` (default), weights are initialized using the default
+        initializer used by `tf.compat.v1.get_variable`.
+      bias_initializer: Initializer function for the bias.
+      kernel_regularizer: Regularizer function for the weight matrix.
+      bias_regularizer: Regularizer function for the bias.
+      activity_regularizer: Regularizer function for the output.
+      kernel_constraint: An optional projection function to be applied to the
+          kernel after being updated by an `Optimizer` (e.g. used to implement
+          norm constraints or value constraints for layer weights). The function
+          must take as input the unprojected variable and must return the
+          projected variable (which must have the same shape). Constraints are
+          not safe to use when doing asynchronous distributed training.
+      bias_constraint: An optional projection function to be applied to the
+          bias after being updated by an `Optimizer`.
+      trainable: Boolean, if `True` also add variables to the graph collection
+        `GraphKeys.TRAINABLE_VARIABLES` (see `tf.Variable`).
+      name: String, the name of the layer.
+      reuse: Boolean, whether to reuse the weights of a previous layer
+        by the same name.
+
+    Returns:
+      Output tensor the same shape as `inputs` except the last dimension is of
+      size `units`.
+
+    Raises:
+      ValueError: if eager execution is enabled.
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">Estimator</span><span class="p">(</span>
+    <span class="n">model_fn</span><span class="o">=</span><span class="n">state_estimator</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;latent_weights&#39;</span><span class="p">:</span> <span class="n">latent_weights</span><span class="p">,</span>
+        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="mi">4</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 01:10:36.630481 140503168038720 estimator.py:1811] Using temporary folder as model directory: /tmp/tmpo2zj2e2_
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">input_fn</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">dct_weights</span><span class="p">,</span> <span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">steps</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 01:10:37.362521 140503168038720 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 107 vs previous value: 107. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0823 01:10:37.364422 140503168038720 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 109 vs previous value: 109. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0823 01:10:37.366378 140503168038720 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 111 vs previous value: 111. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0823 01:10:37.368605 140503168038720 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 113 vs previous value: 113. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0823 01:10:37.506400 140503168038720 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 401 vs previous value: 401. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;tensorflow_estimator.python.estimator.estimator.Estimator at 0x7fc92025cfd0&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">evaluation</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">input_fn</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:(</span><span class="n">dct_weights</span><span class="p">,</span> <span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">steps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 01:10:40.979073 140503168038720 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/saver.py:1276: checkpoint_exists (from tensorflow.python.training.checkpoint_management) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use standard file APIs to check for files with this prefix.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">evaluation</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;loss&#39;: 4.2674452e-05, &#39;global_step&#39;: 10000}
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">prediction</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">input_fn</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:(</span><span class="n">dct_weights</span><span class="p">,</span> <span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">predicted_lst</span> <span class="o">=</span> <span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="n">prediction</span><span class="p">)[</span><span class="s1">&#39;prediction&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 01:10:41.113993 140503168038720 estimator.py:1000] Input graph does not use tf.data.Dataset or contain a QueueRunner. That means predict yields forever. This is probably a mistake.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predicted_lst</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">predicted</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/explore_03-lpc-1_64_0.png" src="../_images/explore_03-lpc-1_64_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (-9223363255511115709)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">actual_prediction</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/explore_03-lpc-1_65_0.png" src="../_images/explore_03-lpc-1_65_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (-9223363255511131406)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">latent_values</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">get_variable_value</span><span class="p">(</span><span class="s1">&#39;dense/kernel&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">latent_values</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/explore_03-lpc-1_67_0.png" src="../_images/explore_03-lpc-1_67_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8781343626707)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">actual_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">art_pca</span><span class="o">.</span><span class="n">components_</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">actual_latent</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/explore_03-lpc-1_69_0.png" src="../_images/explore_03-lpc-1_69_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8781342127855)&gt;
+</pre></div>
+</div>
+</div>
+<p>We have thus succeeded in fitting a simple LPC model to some artificial data. Unfortunately, my graphics card does not support GPU computing. Then, we will generate a specialized interface for 2-dimensional LPC, since that will often be our concern. Later, this fucntion will be re-integrated in the generalized interface. This means that we will first generate a estimate_state function, then discuss estimate_weights and generate that function, and finally combine the two.</p>
+</div>
+</div>
+<div class="section" id="Creating-first-layer-of-abstraction">
+<h2>Creating first layer of abstraction<a class="headerlink" href="#Creating-first-layer-of-abstraction" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Using TensorFlow backend.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">art</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">DecayingMultiNormal</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">hpc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">MinimalHierarchicalModel</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">latent_dimensions</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+WARNING: Logging before flag parsing goes to stderr.
+W0823 04:01:34.746461 140419061159744 estimator.py:1811] Using temporary folder as model directory: /tmp/tmpm4zftp6v
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 04:01:34.784617 140419061159744 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/training_util.py:236: Variable.initialized_value (from tensorflow.python.ops.variables) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use Variable.read_value. Variables in 2.X are initialized automatically both in eager and graph (inside tf.defun) contexts.
+W0823 04:01:34.813914 140419061159744 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:24: The name tf.feature_column.input_layer is deprecated. Please use tf.compat.v1.feature_column.input_layer instead.
+
+W0823 04:01:34.815494 140419061159744 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:205: NumericColumn._get_dense_tensor (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0823 04:01:34.816277 140419061159744 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:2115: NumericColumn._transform_feature (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0823 04:01:34.823043 140419061159744 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:206: NumericColumn._variable_shape (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0823 04:01:34.904294 140419061159744 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:27: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+W0823 04:01:34.907384 140419061159744 deprecation.py:506] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/init_ops.py:1251: calling VarianceScaling.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+W0823 04:01:35.265891 140419061159744 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:10: The name tf.losses.mean_squared_error is deprecated. Please use tf.compat.v1.losses.mean_squared_error instead.
+
+W0823 04:01:35.283592 140419061159744 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/losses/losses_impl.py:121: add_dispatch_support.&lt;locals&gt;.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+W0823 04:01:35.301189 140419061159744 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:19: The name tf.train.GradientDescentOptimizer is deprecated. Please use tf.compat.v1.train.GradientDescentOptimizer instead.
+
+W0823 04:01:35.306434 140419061159744 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:20: The name tf.train.get_global_step is deprecated. Please use tf.compat.v1.train.get_global_step instead.
+
+W0823 04:01:35.976105 140419061159744 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 97 vs previous value: 97. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0823 04:01:35.991936 140419061159744 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 108 vs previous value: 108. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0823 04:01:36.000339 140419061159744 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 119 vs previous value: 119. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0823 04:01:36.005650 140419061159744 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 125 vs previous value: 125. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0823 04:01:36.014129 140419061159744 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 133 vs previous value: 133. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;tensorflow_estimator.python.estimator.estimator.Estimator at 0x7fb58f6bd3c8&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 04:01:41.933584 140419061159744 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/saver.py:1276: checkpoint_exists (from tensorflow.python.training.checkpoint_management) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use standard file APIs to check for files with this prefix.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;loss&#39;: 3.9767117e-05, &#39;global_step&#39;: 10000}
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">lazytools</span>
+<span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">predict</span><span class="p">(),</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0823 04:01:52.425830 140419061159744 estimator.py:1000] Input graph does not use tf.data.Dataset or contain a QueueRunner. That means predict yields forever. This is probably a mistake.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/explore_03-lpc-1_76_1.png" src="../_images/explore_03-lpc-1_76_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8776140727146)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">latent_values</span><span class="p">(),</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/explore_03-lpc-1_77_0.png" src="../_images/explore_03-lpc-1_77_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (-9223363260755593121)&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">predicode</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/minimal_model.html">Minimal Model</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Samuel Lippl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/explore/03-lpc-1.ipynb.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
