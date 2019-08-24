@@ -47,9 +47,11 @@ class TestImageData(unittest.TestCase):
         self.assertEqual(pc.ImageData.hex_2(0), '00')
         with self.assertRaises(AssertionError):
             pc.ImageData.hex_2(16**3)
+        with self.assertRaises(AssertionError):
             pc.ImageData.hex_2(-1)
         with self.assertRaises(TypeError):
             pc.ImageData.hex_2('01')
+        with self.assertRaises(TypeError):
             pc.ImageData.hex_2(1.5)
     
     def test_dataframe(self):
