@@ -9,8 +9,10 @@ Welcome to predicode's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-
+   
+   usage/installation
+   usage/datasets
+   usage/minimal_model
 
 Indices and tables
 ==================

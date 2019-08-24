@@ -14,6 +14,19 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import commonmark
+
+def docstring(app, what, name, obj, options, lines):
+    md  = '\n'.join(lines)
+    ast = commonmark.Parser().parse(md)
+    rst = commonmark.ReStructuredTextRenderer().render(ast)
+    lines.clear()
+    for line in rst.splitlines():
+        lines.append(line)
+
+def setup(app):
+    app.connect('autodoc-process-docstring', docstring)
+
 
 # -- Project information -----------------------------------------------------
 
@@ -32,7 +45,11 @@ release = '0.0.0.9000'
 # ones.
 extensions = [
     'nbsphinx',
+    'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
+    'sphinx.ext.autodoc',
+    'recommonmark',
+    'sphinx.ext.autosummary'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

@@ -14,8 +14,6 @@ Welcome to predicode's documentation!
    usage/datasets
    usage/minimal_model
 
-
-
 Indices and tables
 ==================
 

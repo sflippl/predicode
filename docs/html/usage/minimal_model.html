@@ -16,6 +16,7 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Documentation" href="../module.html" />
     <link rel="prev" title="Datasets" href="datasets.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -237,7 +238,7 @@ div.rendered_html tbody tr:hover {
 <h1>Minimal Model<a class="headerlink" href="#Minimal-Model" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/sflippl/predicode/blob/master/usage/minimal_model.ipynb"><img alt="Google Colab" src="https://badgen.net/badge/Launch/on%20Google%20Colab/blue?icon=github" /></a></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -246,6 +247,11 @@ div.rendered_html tbody tr:hover {
 <span class="k">except</span><span class="p">:</span>
     <span class="o">!</span>pip install git+https://github.com/sflippl/predicode
     <span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">lazytools_sflippl</span> <span class="k">as</span> <span class="nn">lazytools</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="o">!</span>pip install git+https://github.com/sflippl/lazytools
+    <span class="kn">import</span> <span class="nn">lazytools_sflippl</span> <span class="k">as</span> <span class="nn">lazytools</span>
 </pre></div>
 </div>
 </div>
@@ -397,7 +403,6 @@ Use standard file APIs to check for files with this prefix.
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">latent_values</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">latent_values</span><span class="p">()</span>
-<span class="kn">import</span> <span class="nn">lazytools</span>
 <span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">latent_values</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -481,6 +486,7 @@ W0824 15:59:23.500001 139821115447104 estimator.py:1000] Input graph does not us
 <li class="toctree-l2"><a class="reference internal" href="#State-Estimation">State Estimation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../module.html">API Documentation</a></li>
 </ul>
 
 <div class="relations">
@@ -488,6 +494,7 @@ W0824 15:59:23.500001 139821115447104 estimator.py:1000] Input graph does not us
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="datasets.html" title="previous chapter">Datasets</a></li>
+      <li>Next: <a href="../module.html" title="next chapter">API Documentation</a></li>
   </ul></li>
 </ul>
 </div>

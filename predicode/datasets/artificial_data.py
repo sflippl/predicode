@@ -2,6 +2,11 @@ import numpy as np
 import scipy.stats as stats
 
 class ArtificialData:
+    """Arbitrary artificial data
+    
+    Arguments:
+        data (numpy.ndarray): Dataset with one sample per row and one dimension per column
+    """
     def __init__(self, data):
         self.data = data
         
