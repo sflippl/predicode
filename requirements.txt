@@ -1,4 +1,3 @@
-pip install setuptools
 pip install pandas
 pip install numpy
 pip install tensorflow
