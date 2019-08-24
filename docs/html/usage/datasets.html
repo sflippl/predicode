@@ -236,6 +236,28 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="Datasets">
 <h1>Datasets<a class="headerlink" href="#Datasets" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/sflippl/predicode/blob/master/usage/datasets.ipynb"><img alt="Google Colab" src="https://badgen.net/badge/Launch/on%20Google%20Colab/blue?icon=terminal" /></a></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="o">!</span>pip install git+https://github.com/sflippl/predicode
+    <span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Using TensorFlow backend.
+</pre></div></div>
+</div>
 <div class="section" id="Artificial-Datasets">
 <h2>Artificial Datasets<a class="headerlink" href="#Artificial-Datasets" title="Permalink to this headline">¶</a></h2>
 <p>Artificial datasets provide a simple example for how the algorithm works and an opportunity to study its analytical solutions.</p>
@@ -247,8 +269,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
-<span class="n">art_data</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">DecayingMultiNormal</span><span class="p">(</span><span class="n">dimensions</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span></span><span class="n">art_data</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">DecayingMultiNormal</span><span class="p">(</span><span class="n">dimensions</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
                                   <span class="n">samples</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
                                   <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">lazytools</span>
@@ -269,7 +290,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/usage_datasets_6_0.png" src="../_images/usage_datasets_6_0.png" />
+<img alt="../_images/usage_datasets_8_0.png" src="../_images/usage_datasets_8_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -294,7 +315,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/usage_datasets_7_0.png" src="../_images/usage_datasets_7_0.png" />
+<img alt="../_images/usage_datasets_9_0.png" src="../_images/usage_datasets_9_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -340,7 +361,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/usage_datasets_15_0.png" src="../_images/usage_datasets_15_0.png" />
+<img alt="../_images/usage_datasets_17_0.png" src="../_images/usage_datasets_17_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -365,7 +386,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/usage_datasets_16_0.png" src="../_images/usage_datasets_16_0.png" />
+<img alt="../_images/usage_datasets_18_0.png" src="../_images/usage_datasets_18_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">

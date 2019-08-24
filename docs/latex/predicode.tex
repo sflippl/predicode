@@ -232,6 +232,39 @@ pip install git+https://github.com/sflippl/predicode
 
 \chapter{Datasets}
 \label{\detokenize{usage/datasets:Datasets}}\label{\detokenize{usage/datasets::doc}}
+\sphinxhref{https://colab.research.google.com/github/sflippl/predicode/blob/master/usage/datasets.ipynb}{\sphinxincludegraphics{{/home/sflippl/Documents/predicode/predicode/docs/doctrees/images/b54294fd4278d22369403065806b2c772298d1fc/blue}.svg}}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k}{try}\PYG{p}{:}
+    \PYG{k+kn}{import} \PYG{n+nn}{predicode} \PYG{k}{as} \PYG{n+nn}{pc}
+\PYG{k}{except}\PYG{p}{:}
+    \PYG{o}{!}pip install git+https://github.com/sflippl/predicode
+    \PYG{k+kn}{import} \PYG{n+nn}{predicode} \PYG{k}{as} \PYG{n+nn}{pc}
+\end{sphinxVerbatim}
+}
+
+
+
+%
+{
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+Using TensorFlow backend.
+\end{sphinxVerbatim}
+}
+% The following \relax is needed to avoid problems with adjacent ANSI
+% cells and some other stuff (e.g. bullet lists) following ANSI cells.
+% See https://github.com/sphinx-doc/sphinx/issues/3594
+\relax
+
 
 \section{Artificial Datasets}
 \label{\detokenize{usage/datasets:Artificial-Datasets}}
@@ -246,8 +279,7 @@ The closed-form solution of a linear predictive coding model is given by a princ
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{import} \PYG{n+nn}{predicode} \PYG{k}{as} \PYG{n+nn}{pc}
-\PYG{n}{art\PYGZus{}data} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{DecayingMultiNormal}\PYG{p}{(}\PYG{n}{dimensions} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,}
+\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{art\PYGZus{}data} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{DecayingMultiNormal}\PYG{p}{(}\PYG{n}{dimensions} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,}
                                   \PYG{n}{samples} \PYG{o}{=} \PYG{l+m+mi}{10000}\PYG{p}{,}
                                   \PYG{n}{alpha} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{)}
 \PYG{k+kn}{import} \PYG{n+nn}{lazytools}
@@ -270,7 +302,7 @@ The closed-form solution of a linear predictive coding model is given by a princ
 
 \begin{nbsphinxfancyoutput}
 
-\noindent\sphinxincludegraphics[width=611\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_datasets_6_0}.png}
+\noindent\sphinxincludegraphics[width=611\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_datasets_8_0}.png}
 
 \end{nbsphinxfancyoutput}
 
@@ -302,7 +334,7 @@ The closed-form solution of a linear predictive coding model is given by a princ
 
 \begin{nbsphinxfancyoutput}
 
-\noindent\sphinxincludegraphics[width=622\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_datasets_7_0}.png}
+\noindent\sphinxincludegraphics[width=622\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_datasets_9_0}.png}
 
 \end{nbsphinxfancyoutput}
 
@@ -357,7 +389,7 @@ This dataset may be explored by looking at the pictures along with their labels.
 
 \begin{nbsphinxfancyoutput}
 
-\noindent\sphinxincludegraphics[width=523\sphinxpxdimen,height=669\sphinxpxdimen]{{usage_datasets_15_0}.png}
+\noindent\sphinxincludegraphics[width=523\sphinxpxdimen,height=669\sphinxpxdimen]{{usage_datasets_17_0}.png}
 
 \end{nbsphinxfancyoutput}
 
@@ -389,7 +421,7 @@ This dataset may be explored by looking at the pictures along with their labels.
 
 \begin{nbsphinxfancyoutput}
 
-\noindent\sphinxincludegraphics[width=523\sphinxpxdimen,height=669\sphinxpxdimen]{{usage_datasets_16_0}.png}
+\noindent\sphinxincludegraphics[width=523\sphinxpxdimen,height=669\sphinxpxdimen]{{usage_datasets_18_0}.png}
 
 \end{nbsphinxfancyoutput}
 
@@ -437,6 +469,8 @@ This builds upon the underlying data frame that contains the RGB values for the 
 
 \chapter{Minimal Model}
 \label{\detokenize{usage/minimal_model:Minimal-Model}}\label{\detokenize{usage/minimal_model::doc}}
+\sphinxhref{https://colab.research.google.com/github/sflippl/predicode/blob/master/usage/minimal\_model.ipynb}{\sphinxincludegraphics{{/home/sflippl/Documents/predicode/predicode/docs/doctrees/images/1cbef8f858ac0e12d0cf2cb67076bcaff7e5a3c8/blue}.svg}}
+
 {
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
@@ -652,7 +686,7 @@ The method ‘latent\_values’ allows for the extraction of the latent values, 
 
 \begin{nbsphinxfancyoutput}
 
-\noindent\sphinxincludegraphics[width=611\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_minimal_model_15_0}.png}
+\noindent\sphinxincludegraphics[width=611\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_minimal_model_16_0}.png}
 
 \end{nbsphinxfancyoutput}
 
@@ -706,7 +740,7 @@ W0824 15:59:23.500001 139821115447104 estimator.py:1000] Input graph does not us
 
 \begin{nbsphinxfancyoutput}
 
-\noindent\sphinxincludegraphics[width=623\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_minimal_model_17_1}.png}
+\noindent\sphinxincludegraphics[width=623\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_minimal_model_18_1}.png}
 
 \end{nbsphinxfancyoutput}
 
