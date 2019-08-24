@@ -1,0 +1,1 @@
+from predicode.hierarchical.interfaces.test.minimal_model import *

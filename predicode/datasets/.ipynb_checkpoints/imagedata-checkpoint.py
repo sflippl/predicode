@@ -18,6 +18,7 @@ class ImageData:
         Initializes ImageData from a 4-dimensional numpy array (image examples, x axis, y axis, channels).
         A possible second argument ('labels') provides a data frame with labels.
         """
+        assert data.ndim == 4
         self.data = data
         self.labels = labels
         if labels is None:
@@ -33,7 +34,7 @@ class ImageData:
             if n_random is None:
                 subset = range(data.shape[0])
             else:
-                subset = np.random.choice(range(data.shape[0]), size = n_random, replace = False)
+                subset = np.random.choice(range(data.shape[0]), size = min(n_random, data.shape[0]), replace = False)
         data = data[subset,:,:,:]
         image_id = list(np.repeat(list(subset), repeats = self.xdim * self.ydim))
         flattened_y = list(np.repeat(list(range(self.ydim)), repeats = self.xdim))*len(subset)
@@ -72,7 +73,7 @@ class ImageData:
         elif mode == 'color':
             fill_key = 'rgb'
         else:
-            raise NotImplemented("Pictures are either in black-white ('bw') or in color ('color').")
+            raise NotImplementedError("Pictures are either in black-white ('bw') or in color ('color').")
         picture = (gg.ggplot(dataframe, gg.aes(x = 'x', y = 'y', fill = fill_key)) + 
                     gg.geom_tile() + 
                     gg.theme_void() + 

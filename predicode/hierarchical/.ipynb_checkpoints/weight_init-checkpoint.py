@@ -26,13 +26,18 @@ class WeightInitRandom(WeightInit):
     def initialize(self, input_dimensions = None, latent_dimensions = None, **kwargs):
         if latent_dimensions is None:
             latent_dimensions = input_dimensions
-        if method == 'orthogonal':
-            weights = stats.ortho_group(input_dimensions)[:,range(latent_dimensions)]
+        try:
+            assert latent_dimensions <= input_dimensions
+        except AssertionError:
+            raise ValueError('Latent dimensions (%d) must be less than input dimensions (%d)' % (latent_dimensions, input_dimensions))
+        if self.method == 'orthogonal':
+            weights = stats.ortho_group.rvs(input_dimensions)[:,range(latent_dimensions)]
             return weights
 
 def weight_init(char, **kwargs):
     if type(char) is np.ndarray:
         return char
+    assert char in ['pca', 'random']
     if char == 'pca':
         return WeightInitPCA().initialize(**kwargs)
     if char == 'random':
