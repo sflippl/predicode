@@ -12,3 +12,5 @@ install:
 # command to run tests
 script:
   - coverage run -m nose -v --with-coverage --cover-package=predicode predicode
+after_success:
+  - coveralls
