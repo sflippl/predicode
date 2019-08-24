@@ -1,9 +1,9 @@
-from abc import ABC
+import abc
 import numpy as np
 import sklearn.decomposition as decomp
 import scipy.stats as stats
 
-class WeightInit(ABC):
+class WeightInit(abc.ABC):
     pass
 
 class WeightInitPCA(WeightInit):

@@ -7,6 +7,7 @@ class ImageData:
     
     def hex_2(integer):
         hex_2 = hex(integer)[2:]
+        assert integer >= 0
         assert len(hex_2) <= 2
         if len(hex_2) == 1:
             hex_2 = '0' + str(hex_2)
