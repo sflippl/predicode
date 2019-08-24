@@ -1,5 +1,9 @@
 # Predicode: Simulations and analytical solutions of predictive coding algorithms
 
+[![Build Status](https://travis-ci.org/sflippl/predicode.svg?branch=master)](https://travis-ci.org/sflippl/predicode)
+[![Coverage Status](https://coveralls.io/repos/github/sflippl/predicode/badge.svg?branch=master)](https://coveralls.io/github/sflippl/predicode?branch=master)
+![Python Version](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7%20%7C%203.7--dev-blue)
+
 The package 'predicode' intends to provide a consistent Tensorflow interface to fitting hierarchical predictive coding models, syntactically guided by keras models.
 
 I release versions with fully added features on [PyPi](https://pypi.org/project/predicode/). Currently, this only consists of the CIFAR dataset interface. You can install this version with the command
