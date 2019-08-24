@@ -11,4 +11,4 @@ install:
   - pip install coveralls
 # command to run tests
 script:
-  - python -m nose predicode
+  - coverage run -m nose -v --with-coverage --cover-package=predicode predicode
