@@ -6,4 +6,3 @@ plotnine
 keras
 scipy
 sklearn
-nose
