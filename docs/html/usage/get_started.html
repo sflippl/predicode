@@ -272,8 +272,8 @@ Using TensorFlow backend.
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">art</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">DecayingMultiNormal</span><span class="p">(</span><span class="n">dimensions</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">art</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">decaying_multi_normal</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">art</span><span class="p">,</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -299,7 +299,7 @@ Using TensorFlow backend.
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">hpc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">MinimalHierarchicalModel</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">latent_dimensions</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
+<span></span><span class="n">hpc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">MinimalHierarchicalModel</span><span class="p">(</span><span class="n">art</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">latent_dimensions</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -355,7 +355,7 @@ W0825 16:17:11.203196 140077287700288 estimator.py:1811] Using temporary folder 
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">latent_values</span><span class="p">(),</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">latent_values</span><span class="p">(),</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -380,7 +380,7 @@ W0825 16:17:11.203196 140077287700288 estimator.py:1811] Using temporary folder 
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">predict</span><span class="p">(),</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">predict</span><span class="p">(),</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

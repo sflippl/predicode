@@ -39,35 +39,41 @@
 </div>
 <div class="section" id="module-predicode.hierarchical.interfaces.test.minimal_model">
 <span id="predicode-hierarchical-interfaces-test-minimal-model-module"></span><h2>predicode.hierarchical.interfaces.test.minimal_model module<a class="headerlink" href="#module-predicode.hierarchical.interfaces.test.minimal_model" title="Permalink to this headline">¶</a></h2>
+<p>Tests predicode.hierarchical.interfaces.test.</p>
 <dl class="class">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState">
 <em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.interfaces.test.minimal_model.</code><code class="sig-name descname">TestMinimalModelState</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Test state estimation of the minimal model.</p>
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.setUp">
 <code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>Estimates an example model for ten steps and silenced messages.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_activate">
 <code class="sig-name descname">test_activate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_activate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests whether activation works.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_eval">
 <code class="sig-name descname">test_eval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_eval" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests whether state evaluation works.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_latent_values">
 <code class="sig-name descname">test_latent_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_latent_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests whether latent values can be retained.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_predict">
 <code class="sig-name descname">test_predict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_predict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests whether prediction works.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -75,32 +81,37 @@
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight">
 <em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.interfaces.test.minimal_model.</code><code class="sig-name descname">TestMinimalModelWeight</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Test weight estimation of the minimal model.</p>
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.setUp">
 <code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>Sets up weight estimation stuff.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.test_eval">
 <code class="sig-name descname">test_eval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.test_eval" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test weight evaluation.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.test_predict">
 <code class="sig-name descname">test_predict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.test_predict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test prediction after weight estimation.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.test_train">
 <code class="sig-name descname">test_train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.test_train" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Test weight training.</p>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-predicode.hierarchical.interfaces.test">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-predicode.hierarchical.interfaces.test" title="Permalink to this headline">¶</a></h2>
+<p>Tests predicode.hierarchical.interfaces.</p>
 </div>
 </div>
 
@@ -123,10 +134,10 @@
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/get_started.html">Get Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/datasets.html">Datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/minimal_model.html">Minimal Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module.html">API Documentation</a></li>
 </ul>
 
 <div class="relations">

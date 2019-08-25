@@ -1,5 +1,5 @@
-from predicode.datasets.imagedata import ImageData
-from predicode.datasets.cifar10 import Cifar10
-from predicode.datasets.artificial_data import *
+"""Datasets for predictive coding models."""
 
-import predicode.datasets.test
+from predicode.datasets.artificial_data import *
+from predicode.datasets.imagedata import *
+from predicode.datasets.cifar10 import *

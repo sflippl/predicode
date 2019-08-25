@@ -55,7 +55,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="predicode.hierarchical.test.html">predicode.hierarchical.test package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="predicode.hierarchical.test.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="predicode.hierarchical.test.html#module-predicode.hierarchical.test.hierarchical">predicode.hierarchical.test.hierarchical module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="predicode.hierarchical.test.html#predicode-hierarchical-test-hierarchical-module">predicode.hierarchical.test.hierarchical module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="predicode.hierarchical.test.html#module-predicode.hierarchical.test.weight_init">predicode.hierarchical.test.weight_init module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="predicode.hierarchical.test.html#module-predicode.hierarchical.test">Module contents</a></li>
 </ul>
@@ -66,61 +66,93 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-predicode.hierarchical.hierarchical">
-<span id="predicode-hierarchical-hierarchical-module"></span><h2>predicode.hierarchical.hierarchical module<a class="headerlink" href="#module-predicode.hierarchical.hierarchical" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="predicode.hierarchical.hierarchical.Hierarchical">
-<em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.hierarchical.</code><code class="sig-name descname">Hierarchical</code><span class="sig-paren">(</span><em class="sig-param">layers=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.hierarchical.Hierarchical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">keras.engine.sequential.Sequential</span></code></p>
-<p>Define a hierarchical predictive coding model in a sequential fashion.</p>
-</dd></dl>
-
+<div class="section" id="predicode-hierarchical-hierarchical-module">
+<h2>predicode.hierarchical.hierarchical module<a class="headerlink" href="#predicode-hierarchical-hierarchical-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-predicode.hierarchical.weight_init">
 <span id="predicode-hierarchical-weight-init-module"></span><h2>predicode.hierarchical.weight_init module<a class="headerlink" href="#module-predicode.hierarchical.weight_init" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="predicode.hierarchical.weight_init.WeightInit">
-<em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.weight_init.</code><code class="sig-name descname">WeightInit</code><a class="headerlink" href="#predicode.hierarchical.weight_init.WeightInit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
-</dd></dl>
-
-<dl class="class">
-<dt id="predicode.hierarchical.weight_init.WeightInitPCA">
-<em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.weight_init.</code><code class="sig-name descname">WeightInitPCA</code><a class="headerlink" href="#predicode.hierarchical.weight_init.WeightInitPCA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#predicode.hierarchical.weight_init.WeightInit" title="predicode.hierarchical.weight_init.WeightInit"><code class="xref py py-class docutils literal notranslate"><span class="pre">predicode.hierarchical.weight_init.WeightInit</span></code></a></p>
-<dl class="method">
-<dt id="predicode.hierarchical.weight_init.WeightInitPCA.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">latent_dimensions=None</em>, <em class="sig-param">input_data=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.weight_init.WeightInitPCA.initialize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="predicode.hierarchical.weight_init.WeightInitRandom">
-<em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.weight_init.</code><code class="sig-name descname">WeightInitRandom</code><span class="sig-paren">(</span><em class="sig-param">method='orthogonal'</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.weight_init.WeightInitRandom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#predicode.hierarchical.weight_init.WeightInit" title="predicode.hierarchical.weight_init.WeightInit"><code class="xref py py-class docutils literal notranslate"><span class="pre">predicode.hierarchical.weight_init.WeightInit</span></code></a></p>
-<dl class="method">
-<dt id="predicode.hierarchical.weight_init.WeightInitRandom.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">input_dimensions=None</em>, <em class="sig-param">latent_dimensions=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.weight_init.WeightInitRandom.initialize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="predicode.hierarchical.weight_init.WeightInitRandom.validate_method">
-<code class="sig-name descname">validate_method</code><span class="sig-paren">(</span><em class="sig-param">method</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.weight_init.WeightInitRandom.validate_method" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<p>Specifies weight initialization.</p>
 <dl class="function">
 <dt id="predicode.hierarchical.weight_init.weight_init">
 <code class="sig-prename descclassname">predicode.hierarchical.weight_init.</code><code class="sig-name descname">weight_init</code><span class="sig-paren">(</span><em class="sig-param">char</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.weight_init.weight_init" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize weights according to method.</p>
+<p>Initialize weights according to the specified method and the additional
+input arguments as a shortcut for <code class="docutils literal notranslate"><span class="pre">pc.weight_init_*(...)(...)</span></code>.</p>
+<p>If passed a numpy array or a function, it returns the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dimensions</strong> – Number of input dimensions.</p></li>
+<li><p><strong>latent_dimensions</strong> – Number of latent dimensions. Must be less than the</p></li>
+</ul>
+</dd>
+</dl>
+<p>input dimensions.
+:param input_data: Input data as a two dimensional numpy array. One sample per
+row and one dimension per column.
+:param char: Which method?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Two dimensional numpy array with one rotation per row.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="predicode.hierarchical.weight_init.weight_init_pca">
+<code class="sig-prename descclassname">predicode.hierarchical.weight_init.</code><code class="sig-name descname">weight_init_pca</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.weight_init.weight_init_pca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize weights as the first principal rotations of a PCA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Function that initializes weights.</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">param</span> <span class="n">latent_dimensions</span><span class="p">:</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">latent</span> <span class="n">dimensions</span><span class="o">.</span>
+<span class="p">:</span><span class="n">param</span> <span class="n">input_data</span><span class="p">:</span> <span class="n">Input</span> <span class="n">data</span> <span class="k">as</span> <span class="n">a</span> <span class="n">two</span> <span class="n">dimensional</span> <span class="n">numpy</span> <span class="n">array</span><span class="o">.</span> <span class="n">One</span> <span class="n">sample</span>
+                   <span class="n">per</span> <span class="n">row</span> <span class="ow">and</span> <span class="n">one</span> <span class="n">dimension</span> <span class="n">per</span> <span class="n">column</span><span class="o">.</span>
+
+<span class="p">:</span><span class="n">returns</span><span class="p">:</span> <span class="n">Two</span> <span class="n">dimensional</span> <span class="n">numpy</span> <span class="n">array</span> <span class="k">with</span> <span class="n">one</span> <span class="n">principal</span> <span class="n">rotation</span> <span class="n">per</span>
+          <span class="n">column</span><span class="o">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="predicode.hierarchical.weight_init.weight_init_random">
+<code class="sig-prename descclassname">predicode.hierarchical.weight_init.</code><code class="sig-name descname">weight_init_random</code><span class="sig-paren">(</span><em class="sig-param">method='orthogonal'</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.weight_init.weight_init_random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize weights randomly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>method</strong> – Which method should be used for the random initialization?</p>
+</dd>
+</dl>
+<p>Default is orthogonal.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">orthogonal</span><span class="p">:</span> <span class="n">Creates</span> <span class="n">a</span> <span class="n">random</span> <span class="n">orthogonal</span> <span class="n">matrix</span><span class="o">.</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Function that initializes weights.</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">param</span> <span class="n">input_dimensions</span><span class="p">:</span> <span class="n">Number</span> <span class="n">of</span> <span class="nb">input</span> <span class="n">dimensions</span><span class="o">.</span>
+<span class="p">:</span><span class="n">param</span> <span class="n">latent_dimensions</span><span class="p">:</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">latent</span> <span class="n">dimensions</span><span class="o">.</span>
+
+<span class="p">:</span><span class="n">returns</span><span class="p">:</span> <span class="n">Two</span> <span class="n">dimensional</span> <span class="n">numpy</span> <span class="n">array</span> <span class="k">with</span> <span class="n">one</span> <span class="n">principal</span> <span class="n">rotation</span> <span class="n">per</span>
+          <span class="n">column</span><span class="o">.</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – Method must be implemented.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-predicode.hierarchical">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-predicode.hierarchical" title="Permalink to this headline">¶</a></h2>
-<p>Created on Sat Aug 17 10:52:30 2019</p>
-<p>&#64;author: sflippl</p>
+<p>Implements hierarchical predictive coding models.</p>
 </div>
 </div>
 
@@ -143,10 +175,10 @@
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/get_started.html">Get Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/datasets.html">Datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/minimal_model.html">Minimal Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module.html">API Documentation</a></li>
 </ul>
 
 <div class="relations">

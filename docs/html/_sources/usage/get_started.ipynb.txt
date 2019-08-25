@@ -90,8 +90,8 @@
     }
    ],
    "source": [
-    "art = pc.DecayingMultiNormal(dimensions = 10, samples = 100)\n",
-    "lazytools.matrix_heatmap(art.data, pole = 0)"
+    "art = pc.decaying_multi_normal(dimensions=10, size=100)\n",
+    "lazytools.matrix_heatmap(art, pole=0)"
    ]
   },
   {
@@ -116,7 +116,7 @@
     }
    ],
    "source": [
-    "hpc = pc.MinimalHierarchicalModel(art.data, weights = 'pca', latent_dimensions = 4)"
+    "hpc = pc.MinimalHierarchicalModel(art, weights='pca', latent_dimensions=4)"
    ]
   },
   {
@@ -195,7 +195,7 @@
     }
    ],
    "source": [
-    "lazytools.matrix_heatmap(hpc.latent_values(), pole = 0)"
+    "lazytools.matrix_heatmap(hpc.latent_values(), pole=0)"
    ]
   },
   {
@@ -234,7 +234,7 @@
     }
    ],
    "source": [
-    "lazytools.matrix_heatmap(hpc.predict(), pole = 0)"
+    "lazytools.matrix_heatmap(hpc.predict(), pole=0)"
    ]
   }
  ],
@@ -254,9 +254,9 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.7.1"
+   "version": "3.7.4"
   }
  },
  "nbformat": 4,
- "nbformat_minor": 2
+ "nbformat_minor": 4
 }

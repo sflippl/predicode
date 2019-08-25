@@ -1,11 +1,20 @@
+"""Tests predicode.datasets.artificial_data."""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import unittest
 import predicode as pc
 
 class TestDecayingMultiNormal(unittest.TestCase):
+    """Tests decaying_multi_normal function."""
     def setUp(self):
-        self.art = pc.DecayingMultiNormal(2,1)
-    
+        """Sets up an example dataset."""
+        self.art = pc.decaying_multi_normal(2, 1)
+
     def test_init(self):
-        with self.assertRaises(AssertionError):
-            pc.DecayingMultiNormal(2,2,-1)
-        self.assertEqual(self.art.data.shape, (1,2))
+        """Tests that initialization of decaying_multi_normal function works."""
+        with self.assertRaises(ValueError):
+            pc.decaying_multi_normal(2, 2, -1)
+        self.assertEqual(self.art.shape, (1, 2))

@@ -52,45 +52,134 @@
 </div>
 <div class="section" id="module-predicode.hierarchical.interfaces.minimal_model">
 <span id="predicode-hierarchical-interfaces-minimal-model-module"></span><h2>predicode.hierarchical.interfaces.minimal_model module<a class="headerlink" href="#module-predicode.hierarchical.interfaces.minimal_model" title="Permalink to this headline">¶</a></h2>
+<p>Interface to the minimal model, linear predictive coding with a single hidden
+layer.</p>
 <dl class="class">
 <dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel">
 <em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.interfaces.minimal_model.</code><code class="sig-name descname">MinimalHierarchicalModel</code><span class="sig-paren">(</span><em class="sig-param">input_data</em>, <em class="sig-param">weights='pca'</em>, <em class="sig-param">latent_dimensions=None</em>, <em class="sig-param">use_bias=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface to the minimal hierarchical model.</p>
+<p>The minimal hierarchical model is given by a linear predictive coding model
+with one densely connected, linear layer.</p>
+<dl class="attribute">
+<dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.input_data">
+<code class="sig-name descname">input_data</code><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.input_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A numpy array, where the columns correspond to the
+dimensions and the rows correspond to the number of observations.</p>
+<dl class="attribute">
+<dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.input_dimensions">
+<code class="sig-name descname">input_dimensions</code><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.input_dimensions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Input dimensions.</p>
+<dl class="attribute">
+<dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.n_observations">
+<code class="sig-name descname">n_observations</code><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.n_observations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Number of observations.</p>
+<dl class="attribute">
+<dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.latent_dimensions">
+<code class="sig-name descname">latent_dimensions</code><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.latent_dimensions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Dimensions of the latent layer.</p>
+<dl class="attribute">
+<dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.weights">
+<code class="sig-name descname">weights</code><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.weights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>An object that can be fed through
+:fun:<code class="docutils literal notranslate"><span class="pre">~predicode.weight_init</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>use_bias</strong> – Should the model use an additional bias layer?</p>
+</dd>
+</dl>
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.activate">
 <code class="sig-name descname">activate</code><span class="sig-paren">(</span><em class="sig-param">what</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.activate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Activate state or weight estimation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>what</strong> – ‘state’ or ‘weight’.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.evaluate">
 <code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.evaluate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Evaluate network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Additional parameters for tf.Estimator.evaluate().</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Statistics of the trained model.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.latent_values">
 <code class="sig-name descname">latent_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.latent_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the latent values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The latent variables for the input data as a two-dimensional numpy</p>
+</dd>
+</dl>
+<p>array. Each observation is one row and each latent dimension one
+column.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.predict">
 <code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.predict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Predict the input data according to the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – Additional parameters for tf.Estimator.predict().</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Prediction as a two-dimensional numpy array with the same form as</p>
+</dd>
+</dl>
+<p>the input data.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.train">
 <code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">steps=10000.0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.train" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Train the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>steps</strong> – Number of steps.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
-<dt id="predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.validate_what">
-<code class="sig-name descname">validate_what</code><span class="sig-paren">(</span><em class="sig-param">what</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.validate_what" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt>
+<em class="property">property </em><code class="sig-name descname">weights</code></dt>
+<dd><p>Get the weights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The weights of the minimal model with the rotation that returns one</p>
+</dd>
+</dl>
+<p>input dimension per row.</p>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-predicode.hierarchical.interfaces">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-predicode.hierarchical.interfaces" title="Permalink to this headline">¶</a></h2>
+<p>Interfaces to the general hierarchical model.</p>
 </div>
 </div>
 
@@ -113,10 +202,10 @@
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/get_started.html">Get Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/datasets.html">Datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/minimal_model.html">Minimal Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module.html">API Documentation</a></li>
 </ul>
 
 <div class="relations">

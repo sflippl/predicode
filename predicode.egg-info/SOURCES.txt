@@ -14,12 +14,10 @@ predicode/datasets/test/artificial_data.py
 predicode/datasets/test/cifar.py
 predicode/datasets/test/imagedata.py
 predicode/hierarchical/__init__.py
-predicode/hierarchical/hierarchical.py
 predicode/hierarchical/weight_init.py
 predicode/hierarchical/interfaces/__init__.py
 predicode/hierarchical/interfaces/minimal_model.py
 predicode/hierarchical/interfaces/test/__init__.py
 predicode/hierarchical/interfaces/test/minimal_model.py
 predicode/hierarchical/test/__init__.py
-predicode/hierarchical/test/hierarchical.py
 predicode/hierarchical/test/weight_init.py

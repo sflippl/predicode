@@ -37,46 +37,35 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-predicode.hierarchical.test.hierarchical">
-<span id="predicode-hierarchical-test-hierarchical-module"></span><h2>predicode.hierarchical.test.hierarchical module<a class="headerlink" href="#module-predicode.hierarchical.test.hierarchical" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="predicode.hierarchical.test.hierarchical.TestHierarchical">
-<em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.test.hierarchical.</code><code class="sig-name descname">TestHierarchical</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.hierarchical.TestHierarchical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
-<dl class="method">
-<dt id="predicode.hierarchical.test.hierarchical.TestHierarchical.setUp">
-<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.hierarchical.TestHierarchical.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="predicode.hierarchical.test.hierarchical.TestHierarchical.test">
-<code class="sig-name descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.hierarchical.TestHierarchical.test" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<div class="section" id="predicode-hierarchical-test-hierarchical-module">
+<h2>predicode.hierarchical.test.hierarchical module<a class="headerlink" href="#predicode-hierarchical-test-hierarchical-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-predicode.hierarchical.test.weight_init">
 <span id="predicode-hierarchical-test-weight-init-module"></span><h2>predicode.hierarchical.test.weight_init module<a class="headerlink" href="#module-predicode.hierarchical.test.weight_init" title="Permalink to this headline">¶</a></h2>
+<p>Tests predicode.hierarchical.weight_init.</p>
 <dl class="class">
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInit">
 <em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.test.weight_init.</code><code class="sig-name descname">TestWeightInit</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Tests weight_init function.</p>
 <dl class="method">
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInit.test_init">
 <code class="sig-name descname">test_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInit.test_init" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests whether non-character arguments are appropriately handled.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInit.test_pca">
 <code class="sig-name descname">test_pca</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInit.test_pca" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests whether PCA initialization is appropriately implemented.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInit.test_random">
 <code class="sig-name descname">test_random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInit.test_random" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests whether random weight initialization is appropriately
+implemented.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -84,16 +73,18 @@
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInitPCA">
 <em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.test.weight_init.</code><code class="sig-name descname">TestWeightInitPCA</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInitPCA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Tests weight initialization with PCA.</p>
 <dl class="method">
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInitPCA.setUp">
 <code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInitPCA.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>Sets up the weight initialization.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInitPCA.test_initialize">
 <code class="sig-name descname">test_initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInitPCA.test_initialize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests weight initialization.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -101,27 +92,31 @@
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInitRandom">
 <em class="property">class </em><code class="sig-prename descclassname">predicode.hierarchical.test.weight_init.</code><code class="sig-name descname">TestWeightInitRandom</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInitRandom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Tests random weight initialization.</p>
 <dl class="method">
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInitRandom.setUp">
 <code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInitRandom.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>Sets up the weight initializations.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInitRandom.test_initialize">
 <code class="sig-name descname">test_initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInitRandom.test_initialize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests whether the function works correctly.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="predicode.hierarchical.test.weight_init.TestWeightInitRandom.test_validate">
 <code class="sig-name descname">test_validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#predicode.hierarchical.test.weight_init.TestWeightInitRandom.test_validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests whether non-implemented methods are appropriately handled.</p>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-predicode.hierarchical.test">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-predicode.hierarchical.test" title="Permalink to this headline">¶</a></h2>
+<p>Tests predicode.hierarchical.</p>
 </div>
 </div>
 
@@ -144,10 +139,10 @@
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/get_started.html">Get Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/datasets.html">Datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/minimal_model.html">Minimal Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module.html">API Documentation</a></li>
 </ul>
 
 <div class="relations">
