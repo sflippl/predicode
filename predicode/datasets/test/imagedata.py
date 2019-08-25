@@ -64,6 +64,8 @@ class TestImageData(unittest.TestCase):
         """Tests appropriate handling of faulty handling."""
         with self.assertRaises(ValueError):
             pc.ImageData(np.array([], ndmin=5))
+        with self.assertRaises(ValueError):
+            pc.ImageData(np.array([[[[1]]]]))
         with self.assertRaises(AttributeError):
             pc.ImageData('a')
 
