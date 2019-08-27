@@ -7,6 +7,8 @@ from __future__ import print_function
 
 import tensorflow as tf
 import numpy as np
+import math
+import tqdm
 
 from predicode.hierarchical.weight_init import weight_init
 
@@ -35,24 +37,23 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
         loss = tf.losses.mean_squared_error(flipped_graph, labels)
         return loss
 
-    @staticmethod
-    def _state_estimator_eval(mode, flipped_graph, labels):
-        loss = MinimalHierarchicalModel._state_estimator_loss(flipped_graph,
-                                                              labels)
+    @classmethod
+    def _state_estimator_eval(cls, mode, flipped_graph, labels):
+        loss = cls._state_estimator_loss(flipped_graph, labels)
         return tf.estimator.EstimatorSpec(mode, loss=loss)
 
-    @staticmethod
-    def _state_estimator_train(mode, flipped_graph, labels):
-        loss = MinimalHierarchicalModel._state_estimator_loss(flipped_graph,
-                                                              labels)
-        optimizer = tf.train.GradientDescentOptimizer(learning_rate=1)
+    def _state_estimator_train(self, mode, flipped_graph, labels,
+                               learning_rate=1):
+        loss = self._state_estimator_loss(flipped_graph, labels)
+        optimizer = tf.train.GradientDescentOptimizer(
+            learning_rate=learning_rate
+        )
         train_op = optimizer.minimize(
             loss, global_step=tf.train.get_global_step()
         )
         return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
 
-    @staticmethod
-    def _state_estimator(features, labels, mode, params):
+    def _state_estimator(self, features, labels, mode, params):
         flipped_graph = tf.feature_column.input_layer(features,
                                                       params['latent_weights'])
         flipped_graph = tf.layers.dense(flipped_graph,
@@ -60,23 +61,25 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
                                         use_bias=params['use_bias'])
 
         if mode == tf.estimator.ModeKeys.PREDICT:
-            return MinimalHierarchicalModel._state_estimator_predict(
+            return self._state_estimator_predict(
                 mode, flipped_graph
             )
 
         if mode == tf.estimator.ModeKeys.EVAL:
-            return MinimalHierarchicalModel._state_estimator_eval(
+            return self._state_estimator_eval(
                 mode, flipped_graph, labels
             )
 
         assert mode == tf.estimator.ModeKeys.TRAIN
 
-        return MinimalHierarchicalModel._state_estimator_train(
-            mode, flipped_graph, labels
+        return self._state_estimator_train(
+            mode, flipped_graph, labels,
+            learning_rate=params['state_learning_rate']
         )
 
     def __init__(self, input_data, weights='pca', latent_dimensions=None,
-                 use_bias=False, **kwargs):
+                 use_bias=False, state_learning_rate=1,
+                 **kwargs):
         self.input_data = input_data
         self.input_dimensions = input_data.shape[1]
         self.n_observations = input_data.shape[0]
@@ -102,11 +105,15 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
                 key=key, dtype=tf.float64
             ) for key in self._dct_weights.keys()
         ]
+        kwargs['state_learning_rate'] = state_learning_rate
+        
+        self._kwargs = kwargs
 
         self._state = tf.estimator.Estimator(
-            model_fn=MinimalHierarchicalModel._state_estimator,
+            model_fn=self._state_estimator,
             params=kwargs
         )
+        self._state.config.replace(save_summary_steps=10)
 
         self.activate('state')
 
@@ -126,15 +133,23 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
         what = self._validate_what(what)
         self.what = what
 
-    def train(self, steps=1e4, **kwargs):
+    def train(self, steps=None, max_steps=None, learning_rate=None, **kwargs):
         """Train the network.
 
         Args:
-            steps: Number of steps."""
+            max_steps: Number of steps."""
+        if learning_rate is not None:
+            if learning_rate != self._kwargs['state_learning_rate']:
+                self._kwargs['state_learning_rate'] = learning_rate
+                self._state = tf.estimator.Estimator(
+                    model_fn=self._state_estimator,
+                    params=self._kwargs
+                )
         if self.what == 'state':
             return self._state.train(
                 input_fn=lambda: (self._dct_weights, self.input_data.T),
                 steps=steps,
+                max_steps=max_steps,
                 **kwargs
             )
         raise NotImplementedError()
@@ -174,7 +189,35 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
             prediction = np.array(prediction_lst).T
             return prediction
         raise NotImplementedError()
+    
+    def learning_curve(self, steps=1e4, resolution=1, learning_rate=None, **kwargs):
+        """Get the learning curve.
 
+        Args:
+            steps: For how many steps would you like the learning curve?
+            resolution: In what resolution (in steps) would you like to
+                determine the learning curve?
+            learning_rate: You can optionally specify a learning rate.
+            kwargs: Other arguments.
+
+        Returns:
+            Three dimensional numpy array: observations x latent dimensions x
+            steps."""
+        tsteps = math.ceil(steps/resolution)
+        steps_per_tstep = steps/tsteps
+        _learning_curve = np.empty(dtype=np.float64,
+                                   shape=(self.n_observations,
+                                          self.latent_dimensions,
+                                          tsteps))
+        prev_verbosity = tf.logging.get_verbosity()
+        tf.logging.set_verbosity(tf.logging.ERROR)
+        for i in tqdm.trange(tsteps):
+            self.train(steps=steps_per_tstep)
+            _learning_curve[:,:,i] = self.latent_values
+        tf.logging.set_verbosity(prev_verbosity)
+        return _learning_curve
+
+    @property
     def latent_values(self):
         """Get the latent values.
 

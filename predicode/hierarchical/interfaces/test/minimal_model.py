@@ -4,6 +4,7 @@ import warnings
 
 import unittest
 import numpy as np
+import tensorflow as tf
 
 import predicode as pc
 
@@ -15,9 +16,8 @@ class TestMinimalModelState(unittest.TestCase):
         self.model = pc.MinimalHierarchicalModel(
             np.array([[1, 1], [0, 1]]), latent_dimensions=1
         )
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            self.model.train(steps=10)
+        tf.logging.set_verbosity(tf.logging.ERROR)
+        self.model.train(steps=10)
 
     def test_activate(self):
         """Tests whether activation works."""
@@ -36,8 +36,16 @@ class TestMinimalModelState(unittest.TestCase):
 
     def test_latent_values(self):
         """Tests whether latent values can be retained."""
-        latent_values = self.model.latent_values()
+        latent_values = self.model.latent_values
         self.assertEqual(latent_values.shape, (2, 1))
+
+    def test_learning_curve(self):
+        learning_curve = self.model.learning_curve(steps=10, resolution=5)
+        self.assertEqual(learning_curve.shape, (2, 1, 2))
+    
+    def test_train(self):
+        """Test alternative learning rate."""
+        self.model.train(steps=10, learning_rate=10)
 
 class TestMinimalModelWeight(unittest.TestCase):
     """Test weight estimation of the minimal model."""

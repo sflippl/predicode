@@ -11,7 +11,7 @@ predicode/datasets/cifar10.py
 predicode/datasets/imagedata.py
 predicode/datasets/test/__init__.py
 predicode/datasets/test/artificial_data.py
-predicode/datasets/test/cifar.py
+predicode/datasets/test/cifar10.py
 predicode/datasets/test/imagedata.py
 predicode/hierarchical/__init__.py
 predicode/hierarchical/weight_init.py
