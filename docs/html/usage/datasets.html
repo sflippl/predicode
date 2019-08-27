@@ -238,7 +238,7 @@ div.rendered_html tbody tr:hover {
 <h1>Datasets<a class="headerlink" href="#Datasets" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/sflippl/predicode/blob/master/usage/datasets.ipynb"><img alt="Google Colab" src="https://badgen.net/badge/Launch/on%20Google%20Colab/blue?icon=terminal" /></a></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -262,23 +262,23 @@ div.rendered_html tbody tr:hover {
 <h3>Decaying Multinormal Distribution<a class="headerlink" href="#Decaying-Multinormal-Distribution" title="Permalink to this headline">¶</a></h3>
 <p>The closed-form solution of a linear predictive coding model is given by a principal components analysis. A multinormal distribution allows for an easy model for such a solution. The class ‘DecayingMultiNormal’ models a high-dimensional input with decaying importance. Namely, the variance of the different principal components is specified using the decay constant ‘alpha’. Dimensionality of the input data is specified using ‘dimensions’ and sample size is specified by ‘samples’.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">art_data</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">DecayingMultiNormal</span><span class="p">(</span><span class="n">dimensions</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-                                  <span class="n">samples</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
-                                  <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span></span><span class="n">art_data</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">decaying_multi_normal</span><span class="p">(</span><span class="n">dimensions</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                                    <span class="n">size</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+                                    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">art_data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">art_data</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -290,20 +290,20 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (8735735730103)&gt;
+<span></span>&lt;ggplot: (8726908181521)&gt;
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">art_data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">art_data</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -315,11 +315,11 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (8735682449065)&gt;
+<span></span>&lt;ggplot: (8726884562885)&gt;
 </pre></div>
 </div>
 </div>
@@ -525,6 +525,7 @@ div.rendered_html tbody tr:hover {
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Get Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Datasets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Artificial-Datasets">Artificial Datasets</a></li>
@@ -533,7 +534,6 @@ div.rendered_html tbody tr:hover {
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="minimal_model.html">Minimal Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module.html">API Documentation</a></li>
 </ul>
 
 <div class="relations">

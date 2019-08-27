@@ -237,7 +237,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Get-Started">
 <h1>Get Started<a class="headerlink" href="#Get-Started" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/sflippl/predicode/blob/master/usage/get_started.ipynb"><img alt="Google Colab" src="https://badgen.net/badge/Launch/on%20Google%20Colab/blue?icon=github" /></a></p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -254,14 +254,6 @@ div.rendered_html tbody tr:hover {
     <span class="kn">import</span> <span class="nn">lazytools_sflippl</span> <span class="k">as</span> <span class="nn">lazytools</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-Using TensorFlow backend.
-</pre></div></div>
 </div>
 <div class="section" id="A-minimal-model-in-60-seconds">
 <h2>A minimal model in 60 seconds<a class="headerlink" href="#A-minimal-model-in-60-seconds" title="Permalink to this headline">¶</a></h2>
@@ -289,7 +281,7 @@ Using TensorFlow backend.
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (-9223363282105274210)&gt;
+<span></span>&lt;ggplot: (8760784900369)&gt;
 </pre></div>
 </div>
 </div>
@@ -309,31 +301,73 @@ Using TensorFlow backend.
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
 WARNING: Logging before flag parsing goes to stderr.
-W0825 16:17:11.203196 140077287700288 estimator.py:1811] Using temporary folder as model directory: /tmp/tmp5j2_6j4z
+W0826 13:23:25.600336 140173786113856 estimator.py:1811] Using temporary folder as model directory: /tmp/tmpf6ungpzq
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">steps</span> <span class="o">=</span> <span class="mf">1e4</span><span class="p">)</span>
+<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0826 13:23:39.305405 140173786113856 estimator.py:1811] Using temporary folder as model directory: /tmp/tmpeo15sm9j
+W0826 13:23:39.341255 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/training_util.py:236: Variable.initialized_value (from tensorflow.python.ops.variables) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use Variable.read_value. Variables in 2.X are initialized automatically both in eager and graph (inside tf.defun) contexts.
+W0826 13:23:39.364500 140173786113856 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:59: The name tf.feature_column.input_layer is deprecated. Please use tf.compat.v1.feature_column.input_layer instead.
+
+W0826 13:23:39.366652 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:205: NumericColumn._get_dense_tensor (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0826 13:23:39.368350 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:2115: NumericColumn._transform_feature (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0826 13:23:39.380359 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:206: NumericColumn._variable_shape (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0826 13:23:39.450145 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:63: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+W0826 13:23:39.457595 140173786113856 deprecation.py:506] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/init_ops.py:1251: calling VarianceScaling.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+W0826 13:23:39.740041 140173786113856 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:35: The name tf.losses.mean_squared_error is deprecated. Please use tf.compat.v1.losses.mean_squared_error instead.
+
+W0826 13:23:39.762232 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/losses/losses_impl.py:121: add_dispatch_support.&lt;locals&gt;.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+W0826 13:23:39.789297 140173786113856 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:49: The name tf.train.GradientDescentOptimizer is deprecated. Please use tf.compat.v1.train.GradientDescentOptimizer instead.
+
+W0826 13:23:39.790798 140173786113856 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:53: The name tf.train.get_global_step is deprecated. Please use tf.compat.v1.train.get_global_step instead.
+
+W0826 13:23:40.310899 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 104 vs previous value: 104. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0826 13:23:40.375190 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 201 vs previous value: 201. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0826 13:23:40.425785 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 301 vs previous value: 301. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0826 13:23:40.477852 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 401 vs previous value: 401. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+W0826 13:23:40.614050 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 646 vs previous value: 646. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;tensorflow_estimator.python.estimator.estimator.Estimator at 0x7f65fef97278&gt;
+<span></span>&lt;tensorflow_estimator.python.estimator.estimator.Estimator at 0x7f7c700d2910&gt;
 </pre></div>
 </div>
 </div>
 <div class="section" id="Outcome">
 <h3>Outcome<a class="headerlink" href="#Outcome" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -341,21 +375,31 @@ W0825 16:17:11.203196 140077287700288 estimator.py:1811] Using temporary folder 
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+W0826 13:23:46.181127 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/saver.py:1276: checkpoint_exists (from tensorflow.python.training.checkpoint_management) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use standard file APIs to check for files with this prefix.
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>{&#39;loss&#39;: 3.440584e-05, &#39;global_step&#39;: 30000}
+<span></span>{&#39;loss&#39;: 2.7815644e-05, &#39;global_step&#39;: 10000}
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">latent_values</span><span class="p">(),</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">latent_values</span><span class="p">,</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -367,16 +411,16 @@ W0825 16:17:11.203196 140077287700288 estimator.py:1811] Using temporary folder 
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (-9223363282137110896)&gt;
+<span></span>&lt;ggplot: (8760775465813)&gt;
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -389,7 +433,7 @@ W0825 16:17:11.203196 140077287700288 estimator.py:1811] Using temporary folder 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-W0825 16:17:35.552504 140077287700288 estimator.py:1000] Input graph does not use tf.data.Dataset or contain a QueueRunner. That means predict yields forever. This is probably a mistake.
+W0826 13:23:53.079085 140173786113856 estimator.py:1000] Input graph does not use tf.data.Dataset or contain a QueueRunner. That means predict yields forever. This is probably a mistake.
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -400,11 +444,11 @@ W0825 16:17:35.552504 140077287700288 estimator.py:1000] Input graph does not us
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (-9223363282137258517)&gt;
+<span></span>&lt;ggplot: (8760775572757)&gt;
 </pre></div>
 </div>
 </div>

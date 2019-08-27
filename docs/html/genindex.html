@@ -107,12 +107,6 @@
       <li><a href="docs/predicode.datasets.html#predicode.datasets.imagedata.ImageData">ImageData (class in predicode.datasets.imagedata)</a>
 </li>
   </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="docs/predicode.hierarchical.interfaces.html#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.input_data">input_data (predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel attribute)</a>
-</li>
-      <li><a href="docs/predicode.hierarchical.interfaces.html#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.input_dimensions">input_dimensions (predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel attribute)</a>
-</li>
-  </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
@@ -128,9 +122,9 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="docs/predicode.hierarchical.interfaces.html#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.latent_dimensions">latent_dimensions (predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel attribute)</a>
+      <li><a href="docs/predicode.hierarchical.interfaces.html#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.latent_values">latent_values() (predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel property)</a>
 </li>
-      <li><a href="docs/predicode.hierarchical.interfaces.html#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.latent_values">latent_values() (predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel method)</a>
+      <li><a href="docs/predicode.hierarchical.interfaces.html#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.learning_curve">learning_curve() (predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -145,10 +139,6 @@
 
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="docs/predicode.hierarchical.interfaces.html#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.n_observations">n_observations (predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel attribute)</a>
-</li>
-  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="docs/predicode.datasets.html#predicode.datasets.imagedata.ImageData.n_pictures">n_pictures (predicode.datasets.imagedata.ImageData attribute)</a>
 </li>
@@ -174,12 +164,10 @@
 </li>
       <li><a href="docs/predicode.datasets.test.html#module-predicode.datasets.test.artificial_data">predicode.datasets.test.artificial_data (module)</a>
 </li>
-      <li><a href="docs/predicode.datasets.test.html#module-predicode.datasets.test.cifar">predicode.datasets.test.cifar (module)</a>
+      <li><a href="docs/predicode.datasets.test.html#module-predicode.datasets.test.imagedata">predicode.datasets.test.imagedata (module)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="docs/predicode.datasets.test.html#module-predicode.datasets.test.imagedata">predicode.datasets.test.imagedata (module)</a>
-</li>
       <li><a href="docs/predicode.hierarchical.html#module-predicode.hierarchical">predicode.hierarchical (module)</a>
 </li>
       <li><a href="docs/predicode.hierarchical.interfaces.html#module-predicode.hierarchical.interfaces">predicode.hierarchical.interfaces (module)</a>
@@ -215,8 +203,6 @@
       <li><a href="docs/predicode.datasets.test.html#predicode.datasets.test.artificial_data.TestDecayingMultiNormal.setUp">setUp() (predicode.datasets.test.artificial_data.TestDecayingMultiNormal method)</a>
 
       <ul>
-        <li><a href="docs/predicode.datasets.test.html#predicode.datasets.test.cifar.TestCifar10.setUp">(predicode.datasets.test.cifar.TestCifar10 method)</a>
-</li>
         <li><a href="docs/predicode.datasets.test.html#predicode.datasets.test.imagedata.TestImageData.setUp">(predicode.datasets.test.imagedata.TestImageData method)</a>
 </li>
         <li><a href="docs/predicode.hierarchical.interfaces.test.html#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.setUp">(predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState method)</a>
@@ -260,9 +246,9 @@
         <li><a href="docs/predicode.hierarchical.test.html#predicode.hierarchical.test.weight_init.TestWeightInitRandom.test_initialize">(predicode.hierarchical.test.weight_init.TestWeightInitRandom method)</a>
 </li>
       </ul></li>
-      <li><a href="docs/predicode.datasets.test.html#predicode.datasets.test.cifar.TestCifar10.test_labels">test_labels() (predicode.datasets.test.cifar.TestCifar10 method)</a>
-</li>
       <li><a href="docs/predicode.hierarchical.interfaces.test.html#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_latent_values">test_latent_values() (predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState method)</a>
+</li>
+      <li><a href="docs/predicode.hierarchical.interfaces.test.html#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_learning_curve">test_learning_curve() (predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState method)</a>
 </li>
       <li><a href="docs/predicode.hierarchical.test.html#predicode.hierarchical.test.weight_init.TestWeightInit.test_pca">test_pca() (predicode.hierarchical.test.weight_init.TestWeightInit method)</a>
 </li>
@@ -280,11 +266,13 @@
 </li>
       <li><a href="docs/predicode.hierarchical.test.html#predicode.hierarchical.test.weight_init.TestWeightInit.test_random">test_random() (predicode.hierarchical.test.weight_init.TestWeightInit method)</a>
 </li>
-      <li><a href="docs/predicode.hierarchical.interfaces.test.html#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.test_train">test_train() (predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight method)</a>
+      <li><a href="docs/predicode.hierarchical.interfaces.test.html#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState.test_train">test_train() (predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelState method)</a>
+
+      <ul>
+        <li><a href="docs/predicode.hierarchical.interfaces.test.html#predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight.test_train">(predicode.hierarchical.interfaces.test.minimal_model.TestMinimalModelWeight method)</a>
 </li>
+      </ul></li>
       <li><a href="docs/predicode.hierarchical.test.html#predicode.hierarchical.test.weight_init.TestWeightInitRandom.test_validate">test_validate() (predicode.hierarchical.test.weight_init.TestWeightInitRandom method)</a>
-</li>
-      <li><a href="docs/predicode.datasets.test.html#predicode.datasets.test.cifar.TestCifar10">TestCifar10 (class in predicode.datasets.test.cifar)</a>
 </li>
       <li><a href="docs/predicode.datasets.test.html#predicode.datasets.test.artificial_data.TestDecayingMultiNormal">TestDecayingMultiNormal (class in predicode.datasets.test.artificial_data)</a>
 </li>
@@ -314,11 +302,9 @@
 </li>
       <li><a href="docs/predicode.hierarchical.html#predicode.hierarchical.weight_init.weight_init_pca">weight_init_pca() (in module predicode.hierarchical.weight_init)</a>
 </li>
-      <li><a href="docs/predicode.hierarchical.html#predicode.hierarchical.weight_init.weight_init_random">weight_init_random() (in module predicode.hierarchical.weight_init)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="docs/predicode.hierarchical.interfaces.html#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.weights">weights (predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel attribute)</a>
+      <li><a href="docs/predicode.hierarchical.html#predicode.hierarchical.weight_init.weight_init_random">weight_init_random() (in module predicode.hierarchical.weight_init)</a>
 </li>
       <li><a href="docs/predicode.hierarchical.interfaces.html#predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel.weights">weights() (predicode.hierarchical.interfaces.minimal_model.MinimalHierarchicalModel property)</a>
 </li>

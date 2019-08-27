@@ -198,7 +198,7 @@
 
 
 \title{predicode}
-\date{Aug 24, 2019}
+\date{Aug 27, 2019}
 \release{0.0.0.9000}
 \author{Samuel Lippl}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -213,6 +213,310 @@
 \pagestyle{normal}
 \phantomsection\label{\detokenize{index::doc}}
 
+
+\sphinxhref{https://travis-ci.org/sflippl/predicode}{\sphinxincludegraphics{{/home/sflippl/Documents/predicode/predicode/docs/doctrees/images/7256f7aae32b509954da3c73c160d223b834acbc/predicode}.svg}}
+
+\sphinxhref{https://coveralls.io/github/sflippl/predicode?branch=master}{\sphinxincludegraphics{{/home/sflippl/Documents/predicode/predicode/docs/doctrees/images/951e4f9d39f518fb62b652a6589275328715ff0c/badge}.svg}}
+
+\noindent\sphinxincludegraphics{{/home/sflippl/Documents/predicode/predicode/docs/doctrees/images/084f3f18e49bbd498e999d6e8a4f8c85433a232c/031167cf2618c18d14cd822be082033472892626}.7--dev-blue}
+
+The package ‘predicode’ intends to provide a consistent Tensorflow interface to fitting hierarchical predictive coding models, syntactically guided by keras models.
+
+Get started by 60 second introductions to predicode’s base functionality!
+
+
+\chapter{Get Started}
+\label{\detokenize{usage/get_started:Get-Started}}\label{\detokenize{usage/get_started::doc}}
+\sphinxhref{https://colab.research.google.com/github/sflippl/predicode/blob/master/usage/get\_started.ipynb}{\sphinxincludegraphics{{/home/sflippl/Documents/predicode/predicode/docs/doctrees/images/1cbef8f858ac0e12d0cf2cb67076bcaff7e5a3c8/blue}.svg}}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k}{try}\PYG{p}{:}
+    \PYG{k+kn}{import} \PYG{n+nn}{predicode} \PYG{k}{as} \PYG{n+nn}{pc}
+\PYG{k}{except}\PYG{p}{:}
+    \PYG{o}{!}pip install git+https://github.com/sflippl/predicode
+    \PYG{k+kn}{import} \PYG{n+nn}{predicode} \PYG{k}{as} \PYG{n+nn}{pc}
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{k+kn}{import} \PYG{n+nn}{lazytools\PYGZus{}sflippl} \PYG{k}{as} \PYG{n+nn}{lazytools}
+\PYG{k}{except}\PYG{p}{:}
+    \PYG{o}{!}pip install git+https://github.com/sflippl/lazytools
+    \PYG{k+kn}{import} \PYG{n+nn}{lazytools\PYGZus{}sflippl} \PYG{k}{as} \PYG{n+nn}{lazytools}
+\end{sphinxVerbatim}
+}
+
+
+\section{A minimal model in 60 seconds}
+\label{\detokenize{usage/get_started:A-minimal-model-in-60-seconds}}
+A minimal hierarchical predictive coding model consists of a single, densely and linearly connected hidden layer. In itself, it amounts to a simple PCA, but already has interesting consequences, both in its outcome, which is able to explain neural effects such as endstopping, and in its learning trajectory.
+
+To get some data that can well be approximated by a PCA, call pc.DecayingMultiNormal:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[2]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{art} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{decaying\PYGZus{}multi\PYGZus{}normal}\PYG{p}{(}\PYG{n}{dimensions}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{)}
+\PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{art}\PYG{p}{,} \PYG{n}{pole}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+\hrule height -\fboxrule\relax
+\vspace{\nbsphinxcodecellspacing}
+
+\makeatletter\setbox\nbsphinxpromptbox\box\voidb@x\makeatother
+
+\begin{nbsphinxfancyoutput}
+
+\noindent\sphinxincludegraphics[width=611\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_get_started_6_0}.png}
+
+\end{nbsphinxfancyoutput}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimColor={named}{white}}
+
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxout}[2]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8760784900369)\PYGZgt{}
+\end{sphinxVerbatim}
+}
+
+To fit a minimal model to this data, call pc.MinimalHierarchicalModel:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{MinimalHierarchicalModel}\PYG{p}{(}\PYG{n}{art}\PYG{p}{,} \PYG{n}{weights}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{pca}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{latent\PYGZus{}dimensions}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+
+
+%
+{
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+WARNING: Logging before flag parsing goes to stderr.
+W0826 13:23:25.600336 140173786113856 estimator.py:1811] Using temporary folder as model directory: /tmp/tmpf6ungpzq
+\end{sphinxVerbatim}
+}
+% The following \relax is needed to avoid problems with adjacent ANSI
+% cells and some other stuff (e.g. bullet lists) following ANSI cells.
+% See https://github.com/sphinx-doc/sphinx/issues/3594
+\relax
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[4]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{train}\PYG{p}{(}\PYG{n}{max\PYGZus{}steps}\PYG{o}{=}\PYG{l+m+mf}{1e4}\PYG{p}{,} \PYG{n}{learning\PYGZus{}rate}\PYG{o}{=}\PYG{l+m+mi}{5}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+
+
+%
+{
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+W0826 13:23:39.305405 140173786113856 estimator.py:1811] Using temporary folder as model directory: /tmp/tmpeo15sm9j
+W0826 13:23:39.341255 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/training\_util.py:236: Variable.initialized\_value (from tensorflow.python.ops.variables) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use Variable.read\_value. Variables in 2.X are initialized automatically both in eager and graph (inside tf.defun) contexts.
+W0826 13:23:39.364500 140173786113856 deprecation\_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:59: The name tf.feature\_column.input\_layer is deprecated. Please use tf.compat.v1.feature\_column.input\_layer instead.
+
+W0826 13:23:39.366652 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature\_column/feature\_column.py:205: NumericColumn.\_get\_dense\_tensor (from tensorflow.python.feature\_column.feature\_column\_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old \_FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0826 13:23:39.368350 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature\_column/feature\_column.py:2115: NumericColumn.\_transform\_feature (from tensorflow.python.feature\_column.feature\_column\_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old \_FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0826 13:23:39.380359 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature\_column/feature\_column.py:206: NumericColumn.\_variable\_shape (from tensorflow.python.feature\_column.feature\_column\_v2) is deprecated and will be removed in a future version.
+Instructions for updating:
+The old \_FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
+W0826 13:23:39.450145 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:63: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+W0826 13:23:39.457595 140173786113856 deprecation.py:506] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/init\_ops.py:1251: calling VarianceScaling.\_\_init\_\_ (from tensorflow.python.ops.init\_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+W0826 13:23:39.740041 140173786113856 deprecation\_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:35: The name tf.losses.mean\_squared\_error is deprecated. Please use tf.compat.v1.losses.mean\_squared\_error instead.
+
+W0826 13:23:39.762232 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/losses/losses\_impl.py:121: add\_dispatch\_support.<locals>.wrapper (from tensorflow.python.ops.array\_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+W0826 13:23:39.789297 140173786113856 deprecation\_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:49: The name tf.train.GradientDescentOptimizer is deprecated. Please use tf.compat.v1.train.GradientDescentOptimizer instead.
+
+W0826 13:23:39.790798 140173786113856 deprecation\_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:53: The name tf.train.get\_global\_step is deprecated. Please use tf.compat.v1.train.get\_global\_step instead.
+
+W0826 13:23:40.310899 140173786113856 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 104 vs previous value: 104. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
+W0826 13:23:40.375190 140173786113856 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 201 vs previous value: 201. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
+W0826 13:23:40.425785 140173786113856 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 301 vs previous value: 301. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
+W0826 13:23:40.477852 140173786113856 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 401 vs previous value: 401. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
+W0826 13:23:40.614050 140173786113856 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 646 vs previous value: 646. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
+\end{sphinxVerbatim}
+}
+% The following \relax is needed to avoid problems with adjacent ANSI
+% cells and some other stuff (e.g. bullet lists) following ANSI cells.
+% See https://github.com/sphinx-doc/sphinx/issues/3594
+\relax
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimColor={named}{white}}
+
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxout}[4]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}tensorflow\PYGZus{}estimator.python.estimator.estimator.Estimator at 0x7f7c700d2910\PYGZgt{}
+\end{sphinxVerbatim}
+}
+
+
+\subsection{Outcome}
+\label{\detokenize{usage/get_started:Outcome}}
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+
+
+%
+{
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+W0826 13:23:46.181127 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/saver.py:1276: checkpoint\_exists (from tensorflow.python.training.checkpoint\_management) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use standard file APIs to check for files with this prefix.
+\end{sphinxVerbatim}
+}
+% The following \relax is needed to avoid problems with adjacent ANSI
+% cells and some other stuff (e.g. bullet lists) following ANSI cells.
+% See https://github.com/sphinx-doc/sphinx/issues/3594
+\relax
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimColor={named}{white}}
+
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxout}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZob{}\PYGZsq{}loss\PYGZsq{}: 2.7815644e\PYGZhy{}05, \PYGZsq{}global\PYGZus{}step\PYGZsq{}: 10000\PYGZcb{}
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{latent\PYGZus{}values}\PYG{p}{,} \PYG{n}{pole}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+\hrule height -\fboxrule\relax
+\vspace{\nbsphinxcodecellspacing}
+
+\makeatletter\setbox\nbsphinxpromptbox\box\voidb@x\makeatother
+
+\begin{nbsphinxfancyoutput}
+
+\noindent\sphinxincludegraphics[width=611\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_get_started_12_0}.png}
+
+\end{nbsphinxfancyoutput}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimColor={named}{white}}
+
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxout}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8760775465813)\PYGZgt{}
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,} \PYG{n}{pole}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+
+
+%
+{
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+W0826 13:23:53.079085 140173786113856 estimator.py:1000] Input graph does not use tf.data.Dataset or contain a QueueRunner. That means predict yields forever. This is probably a mistake.
+\end{sphinxVerbatim}
+}
+% The following \relax is needed to avoid problems with adjacent ANSI
+% cells and some other stuff (e.g. bullet lists) following ANSI cells.
+% See https://github.com/sphinx-doc/sphinx/issues/3594
+\relax
+
+\hrule height -\fboxrule\relax
+\vspace{\nbsphinxcodecellspacing}
+
+\makeatletter\setbox\nbsphinxpromptbox\box\voidb@x\makeatother
+
+\begin{nbsphinxfancyoutput}
+
+\noindent\sphinxincludegraphics[width=611\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_get_started_13_1}.png}
+
+\end{nbsphinxfancyoutput}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimColor={named}{white}}
+
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxout}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8760775572757)\PYGZgt{}
+\end{sphinxVerbatim}
+}
 
 
 \chapter{Installation}
@@ -243,27 +547,13 @@ pip install git+https://github.com/sflippl/predicode
 \PYG{k}{except}\PYG{p}{:}
     \PYG{o}{!}pip install git+https://github.com/sflippl/predicode
     \PYG{k+kn}{import} \PYG{n+nn}{predicode} \PYG{k}{as} \PYG{n+nn}{pc}
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{k+kn}{import} \PYG{n+nn}{lazytools\PYGZus{}sflippl} \PYG{k}{as} \PYG{n+nn}{lazytools}
+\PYG{k}{except}\PYG{p}{:}
+    \PYG{o}{!}pip install git+https://github.com/sflippl/lazytools
+    \PYG{k+kn}{import} \PYG{n+nn}{lazytools\PYGZus{}sflippl} \PYG{k}{as} \PYG{n+nn}{lazytools}
 \end{sphinxVerbatim}
 }
-
-
-
-%
-{
-\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
-\kern+\FrameHeightAdjust\kern-\fboxrule
-\vspace{\nbsphinxcodecellspacing}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
-\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
-\fvset{hllines={, ,}}%
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-Using TensorFlow backend.
-\end{sphinxVerbatim}
-}
-% The following \relax is needed to avoid problems with adjacent ANSI
-% cells and some other stuff (e.g. bullet lists) following ANSI cells.
-% See https://github.com/sphinx-doc/sphinx/issues/3594
-\relax
 
 
 \section{Artificial Datasets}
@@ -279,10 +569,9 @@ The closed-form solution of a linear predictive coding model is given by a princ
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{art\PYGZus{}data} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{DecayingMultiNormal}\PYG{p}{(}\PYG{n}{dimensions} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,}
-                                  \PYG{n}{samples} \PYG{o}{=} \PYG{l+m+mi}{10000}\PYG{p}{,}
-                                  \PYG{n}{alpha} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{)}
-\PYG{k+kn}{import} \PYG{n+nn}{lazytools}
+\llap{\color{nbsphinxin}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{art\PYGZus{}data} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{decaying\PYGZus{}multi\PYGZus{}normal}\PYG{p}{(}\PYG{n}{dimensions} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,}
+                                    \PYG{n}{size} \PYG{o}{=} \PYG{l+m+mi}{10000}\PYG{p}{,}
+                                    \PYG{n}{alpha} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{)}
 \PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
 \end{sphinxVerbatim}
 }
@@ -291,7 +580,7 @@ The closed-form solution of a linear predictive coding model is given by a princ
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[2]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{art\PYGZus{}data}\PYG{o}{.}\PYG{n}{data}\PYG{p}{,} \PYG{n}{pole} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}
+\llap{\color{nbsphinxin}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{art\PYGZus{}data}\PYG{p}{,} \PYG{n}{pole} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
 
@@ -315,7 +604,7 @@ The closed-form solution of a linear predictive coding model is given by a princ
 
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxout}[2]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8735735730103)\PYGZgt{}
+\llap{\color{nbsphinxout}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8726908181521)\PYGZgt{}
 \end{sphinxVerbatim}
 }
 
@@ -323,7 +612,7 @@ The closed-form solution of a linear predictive coding model is given by a princ
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{cov}\PYG{p}{(}\PYG{n}{art\PYGZus{}data}\PYG{o}{.}\PYG{n}{data}\PYG{o}{.}\PYG{n}{T}\PYG{p}{)}\PYG{p}{,} \PYG{n}{pole} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}
+\llap{\color{nbsphinxin}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{cov}\PYG{p}{(}\PYG{n}{art\PYGZus{}data}\PYG{o}{.}\PYG{n}{T}\PYG{p}{)}\PYG{p}{,} \PYG{n}{pole} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
 
@@ -347,7 +636,7 @@ The closed-form solution of a linear predictive coding model is given by a princ
 
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxout}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8735682449065)\PYGZgt{}
+\llap{\color{nbsphinxout}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8726884562885)\PYGZgt{}
 \end{sphinxVerbatim}
 }
 
@@ -475,11 +764,23 @@ This builds upon the underlying data frame that contains the RGB values for the 
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[10]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k}{try}\PYG{p}{:}
+\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k}{try}\PYG{p}{:}
     \PYG{k+kn}{import} \PYG{n+nn}{predicode} \PYG{k}{as} \PYG{n+nn}{pc}
 \PYG{k}{except}\PYG{p}{:}
     \PYG{o}{!}pip install git+https://github.com/sflippl/predicode
     \PYG{k+kn}{import} \PYG{n+nn}{predicode} \PYG{k}{as} \PYG{n+nn}{pc}
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{k+kn}{import} \PYG{n+nn}{lazytools\PYGZus{}sflippl} \PYG{k}{as} \PYG{n+nn}{lazytools}
+\PYG{k}{except}\PYG{p}{:}
+    \PYG{o}{!}pip install git+https://github.com/sflippl/lazytools
+    \PYG{k+kn}{import} \PYG{n+nn}{lazytools\PYGZus{}sflippl} \PYG{k}{as} \PYG{n+nn}{lazytools}
+\PYG{k+kn}{import} \PYG{n+nn}{pandas} \PYG{k}{as} \PYG{n+nn}{pd}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{import} \PYG{n+nn}{plotnine} \PYG{k}{as} \PYG{n+nn}{gg}
+\PYG{k+kn}{import} \PYG{n+nn}{tensorflow} \PYG{k}{as} \PYG{n+nn}{tf}
+\PYG{n}{tf}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{set\PYGZus{}verbosity}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{logging}\PYG{o}{.}\PYG{n}{ERROR}\PYG{p}{)}
+\PYG{n}{tf}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{set\PYGZus{}random\PYGZus{}seed}\PYG{p}{(}\PYG{l+m+mi}{2885}\PYG{p}{)}
+\PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{seed}\PYG{p}{(}\PYG{l+m+mi}{2885}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
 
@@ -497,8 +798,8 @@ not yet a thing
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{art} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{DecayingMultiNormal}\PYG{p}{(}\PYG{n}{dimensions} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,}
-                             \PYG{n}{samples} \PYG{o}{=} \PYG{l+m+mi}{100}\PYG{p}{)}
+\llap{\color{nbsphinxin}[2]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{art} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{decaying\PYGZus{}multi\PYGZus{}normal}\PYG{p}{(}\PYG{n}{dimensions} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,}
+                               \PYG{n}{size} \PYG{o}{=} \PYG{l+m+mi}{100}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
 
@@ -508,30 +809,10 @@ The minimal model can be fitted by providing input data and the number of latent
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[4]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{MinimalHierarchicalModel}\PYG{p}{(}\PYG{n}{input\PYGZus{}data} \PYG{o}{=} \PYG{n}{art}\PYG{o}{.}\PYG{n}{data}\PYG{p}{,}
+\llap{\color{nbsphinxin}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{MinimalHierarchicalModel}\PYG{p}{(}\PYG{n}{input\PYGZus{}data} \PYG{o}{=} \PYG{n}{art}\PYG{p}{,}
                                   \PYG{n}{latent\PYGZus{}dimensions} \PYG{o}{=} \PYG{l+m+mi}{4}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
-
-
-
-%
-{
-\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
-\kern+\FrameHeightAdjust\kern-\fboxrule
-\vspace{\nbsphinxcodecellspacing}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
-\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
-\fvset{hllines={, ,}}%
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-WARNING: Logging before flag parsing goes to stderr.
-W0824 15:59:17.338732 139821115447104 estimator.py:1811] Using temporary folder as model directory: /tmp/tmp8kmjnddb
-\end{sphinxVerbatim}
-}
-% The following \relax is needed to avoid problems with adjacent ANSI
-% cells and some other stuff (e.g. bullet lists) following ANSI cells.
-% See https://github.com/sphinx-doc/sphinx/issues/3594
-\relax
 
 
 \section{State Estimation}
@@ -542,7 +823,7 @@ By default the weights of the minimal model are initialized as the first PCA com
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{activate}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{state}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\llap{\color{nbsphinxin}[4]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{activate}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{state}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
 
@@ -554,61 +835,9 @@ The minimal model can then be trained in order to extract the latent values.
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{train}\PYG{p}{(}\PYG{p}{)}
+\llap{\color{nbsphinxin}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{train}\PYG{p}{(}\PYG{n}{max\PYGZus{}steps}\PYG{o}{=}\PYG{l+m+mf}{1e3}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
-
-
-
-%
-{
-\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
-\kern+\FrameHeightAdjust\kern-\fboxrule
-\vspace{\nbsphinxcodecellspacing}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
-\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
-\fvset{hllines={, ,}}%
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-W0824 15:59:18.510554 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/training\_util.py:236: Variable.initialized\_value (from tensorflow.python.ops.variables) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use Variable.read\_value. Variables in 2.X are initialized automatically both in eager and graph (inside tf.defun) contexts.
-W0824 15:59:18.523109 139821115447104 deprecation\_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:24: The name tf.feature\_column.input\_layer is deprecated. Please use tf.compat.v1.feature\_column.input\_layer instead.
-
-W0824 15:59:18.524461 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature\_column/feature\_column.py:205: NumericColumn.\_get\_dense\_tensor (from tensorflow.python.feature\_column.feature\_column\_v2) is deprecated and will be removed in a future version.
-Instructions for updating:
-The old \_FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
-W0824 15:59:18.525506 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature\_column/feature\_column.py:2115: NumericColumn.\_transform\_feature (from tensorflow.python.feature\_column.feature\_column\_v2) is deprecated and will be removed in a future version.
-Instructions for updating:
-The old \_FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
-W0824 15:59:18.532030 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature\_column/feature\_column.py:206: NumericColumn.\_variable\_shape (from tensorflow.python.feature\_column.feature\_column\_v2) is deprecated and will be removed in a future version.
-Instructions for updating:
-The old \_FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
-W0824 15:59:18.574176 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:27: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use keras.layers.dense instead.
-W0824 15:59:18.576800 139821115447104 deprecation.py:506] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/init\_ops.py:1251: calling VarianceScaling.\_\_init\_\_ (from tensorflow.python.ops.init\_ops) with dtype is deprecated and will be removed in a future version.
-Instructions for updating:
-Call initializer instance with the dtype argument instead of passing it to the constructor
-W0824 15:59:18.836281 139821115447104 deprecation\_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:10: The name tf.losses.mean\_squared\_error is deprecated. Please use tf.compat.v1.losses.mean\_squared\_error instead.
-
-W0824 15:59:18.848142 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/losses/losses\_impl.py:121: add\_dispatch\_support.<locals>.wrapper (from tensorflow.python.ops.array\_ops) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use tf.where in 2.0, which has the same broadcast rule as np.where
-W0824 15:59:18.858359 139821115447104 deprecation\_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:19: The name tf.train.GradientDescentOptimizer is deprecated. Please use tf.compat.v1.train.GradientDescentOptimizer instead.
-
-W0824 15:59:18.859064 139821115447104 deprecation\_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal\_model.py:20: The name tf.train.get\_global\_step is deprecated. Please use tf.compat.v1.train.get\_global\_step instead.
-
-W0824 15:59:19.296718 139821115447104 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 6 vs previous value: 6. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
-W0824 15:59:19.312877 139821115447104 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 27 vs previous value: 27. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
-W0824 15:59:19.332931 139821115447104 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 62 vs previous value: 62. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
-W0824 15:59:19.340380 139821115447104 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 74 vs previous value: 74. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
-W0824 15:59:19.349026 139821115447104 basic\_session\_run\_hooks.py:724] It seems that global step (tf.train.get\_global\_step) has not been increased. Current value (could be stable): 86 vs previous value: 86. You could increase the global step by passing tf.train.get\_global\_step() to Optimizer.apply\_gradients or Optimizer.minimize.
-\end{sphinxVerbatim}
-}
-% The following \relax is needed to avoid problems with adjacent ANSI
-% cells and some other stuff (e.g. bullet lists) following ANSI cells.
-% See https://github.com/sphinx-doc/sphinx/issues/3594
-\relax
 
 {
 
@@ -619,7 +848,7 @@ W0824 15:59:19.349026 139821115447104 basic\_session\_run\_hooks.py:724] It seem
 
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxout}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}tensorflow\PYGZus{}estimator.python.estimator.estimator.Estimator at 0x7f2a56b03b38\PYGZgt{}
+\llap{\color{nbsphinxout}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}tensorflow\PYGZus{}estimator.python.estimator.estimator.Estimator at 0x7f9c101a6fd0\PYGZgt{}
 \end{sphinxVerbatim}
 }
 
@@ -629,30 +858,9 @@ The usual Tensorflow framework can be used in this context:
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{p}{)}
+\llap{\color{nbsphinxin}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
-
-
-
-%
-{
-\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
-\kern+\FrameHeightAdjust\kern-\fboxrule
-\vspace{\nbsphinxcodecellspacing}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
-\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
-\fvset{hllines={, ,}}%
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-W0824 15:59:23.045202 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/saver.py:1276: checkpoint\_exists (from tensorflow.python.training.checkpoint\_management) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use standard file APIs to check for files with this prefix.
-\end{sphinxVerbatim}
-}
-% The following \relax is needed to avoid problems with adjacent ANSI
-% cells and some other stuff (e.g. bullet lists) following ANSI cells.
-% See https://github.com/sphinx-doc/sphinx/issues/3594
-\relax
 
 {
 
@@ -663,7 +871,7 @@ Use standard file APIs to check for files with this prefix.
 
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxout}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZob{}\PYGZsq{}loss\PYGZsq{}: 3.4082903e\PYGZhy{}05, \PYGZsq{}global\PYGZus{}step\PYGZsq{}: 10000\PYGZcb{}
+\llap{\color{nbsphinxout}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZob{}\PYGZsq{}loss\PYGZsq{}: 0.0026129463, \PYGZsq{}global\PYGZus{}step\PYGZsq{}: 1000\PYGZcb{}
 \end{sphinxVerbatim}
 }
 
@@ -673,8 +881,7 @@ The method ‘latent\_values’ allows for the extraction of the latent values, 
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{latent\PYGZus{}values} \PYG{o}{=} \PYG{n}{hpc}\PYG{o}{.}\PYG{n}{latent\PYGZus{}values}\PYG{p}{(}\PYG{p}{)}
-\PYG{k+kn}{import} \PYG{n+nn}{lazytools}
+\llap{\color{nbsphinxin}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{latent\PYGZus{}values} \PYG{o}{=} \PYG{n}{hpc}\PYG{o}{.}\PYG{n}{latent\PYGZus{}values}
 \PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{latent\PYGZus{}values}\PYG{p}{,} \PYG{n}{pole} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
@@ -699,7 +906,7 @@ The method ‘latent\_values’ allows for the extraction of the latent values, 
 
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxout}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8738711660976)\PYGZgt{}
+\llap{\color{nbsphinxout}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8769264820429)\PYGZgt{}
 \end{sphinxVerbatim}
 }
 
@@ -709,8 +916,55 @@ Similarly the predictions generated by the latent values can be studied:
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[9]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{predictions} \PYG{o}{=} \PYG{n}{hpc}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{p}{)}
+\llap{\color{nbsphinxin}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{predictions} \PYG{o}{=} \PYG{n}{hpc}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{p}{)}
 \PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{matrix\PYGZus{}heatmap}\PYG{p}{(}\PYG{n}{predictions}\PYG{p}{,} \PYG{n}{pole} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+\hrule height -\fboxrule\relax
+\vspace{\nbsphinxcodecellspacing}
+
+\makeatletter\setbox\nbsphinxpromptbox\box\voidb@x\makeatother
+
+\begin{nbsphinxfancyoutput}
+
+\noindent\sphinxincludegraphics[width=611\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_minimal_model_18_0}.png}
+
+\end{nbsphinxfancyoutput}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+\sphinxsetup{VerbatimColor={named}{white}}
+
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxout}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8769230529841)\PYGZgt{}
+\end{sphinxVerbatim}
+}
+
+
+\section{State Learning Curve}
+\label{\detokenize{usage/minimal_model:State-Learning-Curve}}
+Learning curves may also be simulated. Here, we take a single sample from the previous model and simulate its convergence.
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[9]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{curve\PYGZus{}hpc} \PYG{o}{=} \PYG{n}{pc}\PYG{o}{.}\PYG{n}{MinimalHierarchicalModel}\PYG{p}{(}\PYG{n}{input\PYGZus{}data}\PYG{o}{=}\PYG{n}{art}\PYG{p}{[}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{,} \PYG{p}{:}\PYG{p}{]}\PYG{p}{,}
+                                        \PYG{n}{weights}\PYG{o}{=}\PYG{n}{hpc}\PYG{o}{.}\PYG{n}{weights}\PYG{p}{,}
+                                        \PYG{n}{latent\PYGZus{}dimensions}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[10]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{learning\PYGZus{}curve} \PYG{o}{=} \PYG{n}{curve\PYGZus{}hpc}\PYG{o}{.}\PYG{n}{learning\PYGZus{}curve}\PYG{p}{(}\PYG{n}{steps}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{,} \PYG{n}{resolution}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
 \end{sphinxVerbatim}
 }
 
@@ -725,13 +979,37 @@ Similarly the predictions generated by the latent values can be studied:
 \sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-W0824 15:59:23.500001 139821115447104 estimator.py:1000] Input graph does not use tf.data.Dataset or contain a QueueRunner. That means predict yields forever. This is probably a mistake.
+100\%|██████████| 100/100 [00:44<00:00,  2.11it/s]
 \end{sphinxVerbatim}
 }
 % The following \relax is needed to avoid problems with adjacent ANSI
 % cells and some other stuff (e.g. bullet lists) following ANSI cells.
 % See https://github.com/sphinx-doc/sphinx/issues/3594
 \relax
+
+(Note that this is at the time extremely slow.)
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[11]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{df\PYGZus{}learning\PYGZus{}curve} \PYG{o}{=} \PYG{n}{lazytools}\PYG{o}{.}\PYG{n}{array\PYGZus{}to\PYGZus{}dataframe}\PYG{p}{(}\PYG{n}{learning\PYGZus{}curve}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[12]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{n}{df\PYGZus{}learning\PYGZus{}curve}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{dim1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{dim1}\PYG{p}{)} \PYG{k}{for} \PYG{n}{dim1} \PYG{o+ow}{in} \PYG{n}{df\PYGZus{}learning\PYGZus{}curve}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{dim1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{]}
+\PYG{p}{(}\PYG{n}{gg}\PYG{o}{.}\PYG{n}{ggplot}\PYG{p}{(}\PYG{n}{df\PYGZus{}learning\PYGZus{}curve}\PYG{p}{,} \PYG{n}{gg}\PYG{o}{.}\PYG{n}{aes}\PYG{p}{(}\PYG{n}{x}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{dim2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{y}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{array}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{dim1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{group}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{dim1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{)} \PYG{o}{+}
+    \PYG{n}{gg}\PYG{o}{.}\PYG{n}{geom\PYGZus{}line}\PYG{p}{(}\PYG{p}{)} \PYG{o}{+}
+    \PYG{n}{gg}\PYG{o}{.}\PYG{n}{xlab}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Step}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)} \PYG{o}{+}
+    \PYG{n}{gg}\PYG{o}{.}\PYG{n}{ylab}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Estimated Value}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)} \PYG{o}{+}
+    \PYG{n}{gg}\PYG{o}{.}\PYG{n}{labs}\PYG{p}{(}\PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Latent Dimension}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)} \PYG{o}{+}
+    \PYG{n}{gg}\PYG{o}{.}\PYG{n}{theme\PYGZus{}bw}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
 
 \hrule height -\fboxrule\relax
 \vspace{\nbsphinxcodecellspacing}
@@ -740,7 +1018,7 @@ W0824 15:59:23.500001 139821115447104 estimator.py:1000] Input graph does not us
 
 \begin{nbsphinxfancyoutput}
 
-\noindent\sphinxincludegraphics[width=623\sphinxpxdimen,height=396\sphinxpxdimen]{{usage_minimal_model_18_1}.png}
+\noindent\sphinxincludegraphics[width=752\sphinxpxdimen,height=433\sphinxpxdimen]{{usage_minimal_model_25_0}.png}
 
 \end{nbsphinxfancyoutput}
 
@@ -753,23 +1031,11 @@ W0824 15:59:23.500001 139821115447104 estimator.py:1000] Input graph does not us
 
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxout}[9]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8738711440090)\PYGZgt{}
+\llap{\color{nbsphinxout}[12]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZlt{}ggplot: (8769230573945)\PYGZgt{}
 \end{sphinxVerbatim}
 }
 
-
-\chapter{Indices and tables}
-\label{\detokenize{index:indices-and-tables}}\begin{itemize}
-\item {} 
-\DUrole{xref,std,std-ref}{genindex}
-
-\item {} 
 \DUrole{xref,std,std-ref}{modindex}
-
-\item {} 
-\DUrole{xref,std,std-ref}{search}
-
-\end{itemize}
 
 
 

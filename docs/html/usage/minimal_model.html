@@ -237,7 +237,7 @@ div.rendered_html tbody tr:hover {
 <h1>Minimal Model<a class="headerlink" href="#Minimal-Model" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/sflippl/predicode/blob/master/usage/minimal_model.ipynb"><img alt="Google Colab" src="https://badgen.net/badge/Launch/on%20Google%20Colab/blue?icon=github" /></a></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -251,6 +251,13 @@ div.rendered_html tbody tr:hover {
 <span class="k">except</span><span class="p">:</span>
     <span class="o">!</span>pip install git+https://github.com/sflippl/lazytools
     <span class="kn">import</span> <span class="nn">lazytools_sflippl</span> <span class="k">as</span> <span class="nn">lazytools</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">plotnine</span> <span class="k">as</span> <span class="nn">gg</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">2885</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">2885</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -264,40 +271,31 @@ div.rendered_html tbody tr:hover {
 </dd>
 </dl>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">art</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">DecayingMultiNormal</span><span class="p">(</span><span class="n">dimensions</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-                             <span class="n">samples</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+<span></span><span class="n">art</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">decaying_multi_normal</span><span class="p">(</span><span class="n">dimensions</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                               <span class="n">size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>The minimal model can be fitted by providing input data and the number of latent dimensions to the class ‘pc.MinimalHierarchicalModel’:</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">hpc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">MinimalHierarchicalModel</span><span class="p">(</span><span class="n">input_data</span> <span class="o">=</span> <span class="n">art</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+<span></span><span class="n">hpc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">MinimalHierarchicalModel</span><span class="p">(</span><span class="n">input_data</span> <span class="o">=</span> <span class="n">art</span><span class="p">,</span>
                                   <span class="n">latent_dimensions</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-WARNING: Logging before flag parsing goes to stderr.
-W0824 15:59:17.338732 139821115447104 estimator.py:1811] Using temporary folder as model directory: /tmp/tmp8kmjnddb
-</pre></div></div>
 </div>
 <div class="section" id="State-Estimation">
 <h2>State Estimation<a class="headerlink" href="#State-Estimation" title="Permalink to this headline">¶</a></h2>
 <p>By default the weights of the minimal model are initialized as the first PCA components. This is the optimal solution for the minimal model and can be used to study state estimation. Since a predictive coding model can improve either by adapting its states or its weights, we first need to specify which of the two can currently be modified:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -308,67 +306,26 @@ W0824 15:59:17.338732 139821115447104 estimator.py:1811] Using temporary folder 
 <p>(Technically, this would not have been necessary.) States are activated by default.</p>
 <p>The minimal model can then be trained in order to extract the latent values.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="mf">1e3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-W0824 15:59:18.510554 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/training_util.py:236: Variable.initialized_value (from tensorflow.python.ops.variables) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use Variable.read_value. Variables in 2.X are initialized automatically both in eager and graph (inside tf.defun) contexts.
-W0824 15:59:18.523109 139821115447104 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:24: The name tf.feature_column.input_layer is deprecated. Please use tf.compat.v1.feature_column.input_layer instead.
-
-W0824 15:59:18.524461 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:205: NumericColumn._get_dense_tensor (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
-Instructions for updating:
-The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
-W0824 15:59:18.525506 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:2115: NumericColumn._transform_feature (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
-Instructions for updating:
-The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
-W0824 15:59:18.532030 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:206: NumericColumn._variable_shape (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
-Instructions for updating:
-The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
-W0824 15:59:18.574176 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:27: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use keras.layers.dense instead.
-W0824 15:59:18.576800 139821115447104 deprecation.py:506] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/init_ops.py:1251: calling VarianceScaling.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
-Instructions for updating:
-Call initializer instance with the dtype argument instead of passing it to the constructor
-W0824 15:59:18.836281 139821115447104 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:10: The name tf.losses.mean_squared_error is deprecated. Please use tf.compat.v1.losses.mean_squared_error instead.
-
-W0824 15:59:18.848142 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/losses/losses_impl.py:121: add_dispatch_support.&lt;locals&gt;.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use tf.where in 2.0, which has the same broadcast rule as np.where
-W0824 15:59:18.858359 139821115447104 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:19: The name tf.train.GradientDescentOptimizer is deprecated. Please use tf.compat.v1.train.GradientDescentOptimizer instead.
-
-W0824 15:59:18.859064 139821115447104 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:20: The name tf.train.get_global_step is deprecated. Please use tf.compat.v1.train.get_global_step instead.
-
-W0824 15:59:19.296718 139821115447104 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 6 vs previous value: 6. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-W0824 15:59:19.312877 139821115447104 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 27 vs previous value: 27. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-W0824 15:59:19.332931 139821115447104 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 62 vs previous value: 62. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-W0824 15:59:19.340380 139821115447104 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 74 vs previous value: 74. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-W0824 15:59:19.349026 139821115447104 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 86 vs previous value: 86. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;tensorflow_estimator.python.estimator.estimator.Estimator at 0x7f2a56b03b38&gt;
+<span></span>&lt;tensorflow_estimator.python.estimator.estimator.Estimator at 0x7f9c101a6fd0&gt;
 </pre></div>
 </div>
 </div>
 <p>The usual Tensorflow framework can be used in this context:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -376,32 +333,22 @@ W0824 15:59:19.349026 139821115447104 basic_session_run_hooks.py:724] It seems t
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-W0824 15:59:23.045202 139821115447104 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/saver.py:1276: checkpoint_exists (from tensorflow.python.training.checkpoint_management) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use standard file APIs to check for files with this prefix.
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>{&#39;loss&#39;: 3.4082903e-05, &#39;global_step&#39;: 10000}
+<span></span>{&#39;loss&#39;: 0.0026129463, &#39;global_step&#39;: 1000}
 </pre></div>
 </div>
 </div>
 <p>The method ‘latent_values’ allows for the extraction of the latent values, which we here visualize using a heatmap:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">latent_values</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">latent_values</span><span class="p">()</span>
+<span></span><span class="n">latent_values</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">latent_values</span>
 <span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">latent_values</span><span class="p">,</span> <span class="n">pole</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -414,17 +361,17 @@ Use standard file APIs to check for files with this prefix.
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (8738711660976)&gt;
+<span></span>&lt;ggplot: (8769264820429)&gt;
 </pre></div>
 </div>
 </div>
 <p>Similarly the predictions generated by the latent values can be studied:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -436,24 +383,89 @@ Use standard file APIs to check for files with this prefix.
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_minimal_model_18_0.png" src="../_images/usage_minimal_model_18_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8769230529841)&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="State-Learning-Curve">
+<h2>State Learning Curve<a class="headerlink" href="#State-Learning-Curve" title="Permalink to this headline">¶</a></h2>
+<p>Learning curves may also be simulated. Here, we take a single sample from the previous model and simulate its convergence.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">curve_hpc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">MinimalHierarchicalModel</span><span class="p">(</span><span class="n">input_data</span><span class="o">=</span><span class="n">art</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">:],</span>
+                                        <span class="n">weights</span><span class="o">=</span><span class="n">hpc</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span>
+                                        <span class="n">latent_dimensions</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">learning_curve</span> <span class="o">=</span> <span class="n">curve_hpc</span><span class="o">.</span><span class="n">learning_curve</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-W0824 15:59:23.500001 139821115447104 estimator.py:1000] Input graph does not use tf.data.Dataset or contain a QueueRunner. That means predict yields forever. This is probably a mistake.
+100%|██████████| 100/100 [00:44&lt;00:00,  2.11it/s]
 </pre></div></div>
+</div>
+<p>(Note that this is at the time extremely slow.)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df_learning_curve</span> <span class="o">=</span> <span class="n">lazytools</span><span class="o">.</span><span class="n">array_to_dataframe</span><span class="p">(</span><span class="n">learning_curve</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df_learning_curve</span><span class="p">[</span><span class="s1">&#39;dim1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dim1</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim1</span> <span class="ow">in</span> <span class="n">df_learning_curve</span><span class="p">[</span><span class="s1">&#39;dim1&#39;</span><span class="p">]]</span>
+<span class="p">(</span><span class="n">gg</span><span class="o">.</span><span class="n">ggplot</span><span class="p">(</span><span class="n">df_learning_curve</span><span class="p">,</span> <span class="n">gg</span><span class="o">.</span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;dim2&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;dim1&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;dim1&#39;</span><span class="p">))</span> <span class="o">+</span>
+    <span class="n">gg</span><span class="o">.</span><span class="n">geom_line</span><span class="p">()</span> <span class="o">+</span>
+    <span class="n">gg</span><span class="o">.</span><span class="n">xlab</span><span class="p">(</span><span class="s1">&#39;Step&#39;</span><span class="p">)</span> <span class="o">+</span>
+    <span class="n">gg</span><span class="o">.</span><span class="n">ylab</span><span class="p">(</span><span class="s1">&#39;Estimated Value&#39;</span><span class="p">)</span> <span class="o">+</span>
+    <span class="n">gg</span><span class="o">.</span><span class="n">labs</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;Latent Dimension&#39;</span><span class="p">)</span> <span class="o">+</span>
+    <span class="n">gg</span><span class="o">.</span><span class="n">theme_bw</span><span class="p">())</span>
+</pre></div>
+</div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/usage_minimal_model_18_1.png" src="../_images/usage_minimal_model_18_1.png" />
+<img alt="../_images/usage_minimal_model_25_0.png" src="../_images/usage_minimal_model_25_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (8738711440090)&gt;
+<span></span>&lt;ggplot: (8769230573945)&gt;
 </pre></div>
 </div>
 </div>
@@ -484,6 +496,7 @@ W0824 15:59:23.500001 139821115447104 estimator.py:1000] Input graph does not us
 <li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Minimal Model</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#State-Estimation">State Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#State-Learning-Curve">State Learning Curve</a></li>
 </ul>
 </li>
 </ul>

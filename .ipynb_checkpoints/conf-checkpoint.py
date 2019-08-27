@@ -49,7 +49,8 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.autodoc',
     'recommonmark',
-    'sphinx.ext.autosummary'
+    'sphinx.ext.autosummary',
+    'sphinx.ext.imgconverter'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
