@@ -55,9 +55,9 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
         return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
 
     def _state_estimator(self, features, labels, mode, params):
-        flipped_graph = tf.feature_column.input_layer(features,
-                                                      params['latent_weights'])
-        flipped_graph = tf.layers.dense(flipped_graph,
+        _input = tf.feature_column.input_layer(features,
+                                               params['latent_weights'])
+        flipped_graph = tf.layers.dense(_input,
                                         units=params['n_observations'],
                                         use_bias=params['use_bias'])
 
@@ -116,30 +116,70 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
         )
         self._state.config.replace(save_summary_steps=10)
 
-        self.activate('state')
+        self.activate('state', 'simulation')
 
     @staticmethod
-    def _validate_what(what):
+    def _validate_estimation(what):
         if what not in ['state', 'weight']:
             raise ValueError(
                 'You must either activate "state" or "weight" estimation.'
             )
         return what
 
-    def activate(self, what):
-        """Activate state or weight estimation.
+    @staticmethod
+    def _validate_method(what):
+        if what not in ['simulation', 'analytical']:
+            raise ValueError(
+                'You must either activate "simulation" or "analytical" method.'
+            )
+        return what
+
+    def activate(self, estimation=None, method=None):
+        """Activate state or weight estimation and method to solve the model.
 
         Args:
-            what: 'state' or 'weight'."""
-        what = self._validate_what(what)
-        self.what = what
+            estimation: 'state' or 'weight'.
+            method: 'simulation' or analytical'."""
+        if estimation:
+            estimation = self._validate_estimation(estimation)
+            self._estimation = estimation
+        if method:
+            method = self._validate_method(method)
+            self._method = method
+
+    @property
+    def estimation(self):
+        return self._estimation
+
+    @property
+    def method(self):
+        return self._method
+
+    def activate_state_estimation(self):
+        """Activate state estimation."""
+        self.activate(estimation='state')
+
+    def activate_weight_estimation(self):
+        """Activate weight estimation."""
+        self.activate(estimation='weight')
+
+    def activate_simulation_method(self):
+        """Activate simulation method."""
+        self.activate(method='simulation')
+
+    def activate_analytical_method(self):
+        """Activate analytical method."""
+        self.activate(method='analytical')
 
     def train(self, steps=None, max_steps=None, learning_rate=None, **kwargs):
         """Train the network.
 
         Args:
-            max_steps: Number of steps."""
-        if self.what == 'state':
+            steps: Number of steps (see Tensorflow documentation).
+            max_steps: Number of steps.
+            learning_rate: Learning rate (see Tensorflow documentation).
+            kwargs: Additional arguments."""
+        if self.estimation == 'state':
             if learning_rate is not None:
                 if learning_rate != self._kwargs['state_learning_rate']:
                     self._kwargs['state_learning_rate'] = learning_rate
@@ -164,7 +204,7 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
 
         Returns:
             Statistics of the trained model."""
-        if self.what == 'state':
+        if self.estimation == 'state':
             return self._state.evaluate(
                 input_fn=lambda: (self._dct_weights, self.input_data.T),
                 steps=1,
@@ -181,7 +221,7 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
         Returns:
             Prediction as a two-dimensional numpy array with the same form as
             the input data."""
-        if self.what == 'state':
+        if self.estimation == 'state':
             generator = self._state.predict(
                 input_fn=lambda: (self._dct_weights, self.input_data.T),
                 **kwargs)
