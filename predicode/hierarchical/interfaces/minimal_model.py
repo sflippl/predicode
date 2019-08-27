@@ -5,9 +5,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import math
+
 import tensorflow as tf
 import numpy as np
-import math
 import tqdm
 
 from predicode.hierarchical.weight_init import weight_init
@@ -77,7 +78,7 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
             learning_rate=params['state_learning_rate']
         )
 
-    def __init__(self, input_data, weights='pca', latent_dimensions=None,
+    def __init__(self, input_data, weights='pca', latent_dimensions=None, #pylint:disable=too-many-arguments
                  use_bias=False, state_learning_rate=1,
                  **kwargs):
         self.input_data = input_data
@@ -106,7 +107,7 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
             ) for key in self._dct_weights.keys()
         ]
         kwargs['state_learning_rate'] = state_learning_rate
-        
+
         self._kwargs = kwargs
 
         self._state = tf.estimator.Estimator(
@@ -138,14 +139,15 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
 
         Args:
             max_steps: Number of steps."""
-        if learning_rate is not None:
-            if learning_rate != self._kwargs['state_learning_rate']:
-                self._kwargs['state_learning_rate'] = learning_rate
-                self._state = tf.estimator.Estimator(
-                    model_fn=self._state_estimator,
-                    params=self._kwargs
-                )
         if self.what == 'state':
+            if learning_rate is not None:
+                if learning_rate != self._kwargs['state_learning_rate']:
+                    self._kwargs['state_learning_rate'] = learning_rate
+                    self._state = tf.estimator.Estimator(
+                        model_fn=self._state_estimator,
+                        params=self._kwargs
+                    )
+
             return self._state.train(
                 input_fn=lambda: (self._dct_weights, self.input_data.T),
                 steps=steps,
@@ -189,8 +191,9 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
             prediction = np.array(prediction_lst).T
             return prediction
         raise NotImplementedError()
-    
-    def learning_curve(self, steps=1e4, resolution=1, learning_rate=None, **kwargs):
+
+    def learning_curve(self, steps=1e4, resolution=1, learning_rate=None,
+                       **kwargs):
         """Get the learning curve.
 
         Args:
@@ -212,8 +215,9 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
         prev_verbosity = tf.logging.get_verbosity()
         tf.logging.set_verbosity(tf.logging.ERROR)
         for i in tqdm.trange(tsteps):
-            self.train(steps=steps_per_tstep)
-            _learning_curve[:,:,i] = self.latent_values
+            self.train(steps=steps_per_tstep, learning_rate=learning_rate,
+                       **kwargs)
+            _learning_curve[:, :, i] = self.latent_values
         tf.logging.set_verbosity(prev_verbosity)
         return _learning_curve
 

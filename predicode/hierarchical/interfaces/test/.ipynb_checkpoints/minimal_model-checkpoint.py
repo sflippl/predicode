@@ -40,9 +40,10 @@ class TestMinimalModelState(unittest.TestCase):
         self.assertEqual(latent_values.shape, (2, 1))
 
     def test_learning_curve(self):
+        """Test if learning curve is created."""
         learning_curve = self.model.learning_curve(steps=10, resolution=5)
         self.assertEqual(learning_curve.shape, (2, 1, 2))
-    
+
     def test_train(self):
         """Test alternative learning rate."""
         self.model.train(steps=10, learning_rate=10)
