@@ -6,3 +6,4 @@ plotnine
 keras
 scipy
 sklearn
+tqdm

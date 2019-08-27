@@ -1,7 +1,9 @@
-pip install setuptools
-pip install pandas
-pip install numpy
-pip install tensorflow
-pip install plotnine
-pip install keras
-pip install scipy
+setuptools>=41.0.0
+pandas
+numpy
+tensorflow
+plotnine
+keras
+scipy
+sklearn
+tqdm
