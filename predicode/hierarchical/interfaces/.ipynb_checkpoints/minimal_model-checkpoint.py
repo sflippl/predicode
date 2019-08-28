@@ -8,10 +8,13 @@ from __future__ import print_function
 import math
 
 import tensorflow as tf
+import keras
 import numpy as np
 import tqdm
 
-from predicode.hierarchical.weight_init import weight_init
+from predicode.hierarchical.initializer import weight_init, init
+
+def hierarchical_config(initializer='random')
 
 class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
     """Interface to the minimal hierarchical model.
@@ -28,73 +31,73 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
         weights: An object that can be fed through
             :fun:`~predicode.weight_init`.
         use_bias: Should the model use an additional bias layer?"""
+    parameter_classes = []
+    @classmethod
+    def parameter_classes(cls, )
 
     @staticmethod
     def _state_estimator_predict(mode, flipped_graph):
-        return tf.estimator.EstimatorSpec(mode, predictions=flipped_graph)
+        return flipped_graph
 
     @staticmethod
     def _state_estimator_loss(flipped_graph, labels):
         loss = tf.losses.mean_squared_error(flipped_graph, labels)
         return loss
 
-    @classmethod
-    def _state_estimator_eval(cls, mode, flipped_graph, labels):
-        loss = cls._state_estimator_loss(flipped_graph, labels)
-        return tf.estimator.EstimatorSpec(mode, loss=loss)
-
     def _state_estimator_train(self, mode, flipped_graph, labels,
                                learning_rate=1):
         loss = self._state_estimator_loss(flipped_graph, labels)
-        optimizer = tf.train.GradientDescentOptimizer(
+        optimizer = keras.train.GradientDescentOptimizer(
             learning_rate=learning_rate
         )
         train_op = optimizer.minimize(
             loss, global_step=tf.train.get_global_step()
         )
-        return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
+        return (loss, train_op)
 
-    def _state_estimator(self, features, labels, mode, params):
-        _input = tf.feature_column.input_layer(features,
-                                               params['latent_weights'])
-        flipped_graph = tf.layers.dense(_input,
-                                        units=params['n_observations'],
-                                        use_bias=params['use_bias'])
-
-        if mode == tf.estimator.ModeKeys.PREDICT:
-            return self._state_estimator_predict(
-                mode, flipped_graph
-            )
-
-        if mode == tf.estimator.ModeKeys.EVAL:
-            return self._state_estimator_eval(
-                mode, flipped_graph, labels
-            )
-
-        assert mode == tf.estimator.ModeKeys.TRAIN
-
-        return self._state_estimator_train(
-            mode, flipped_graph, labels,
-            learning_rate=params['state_learning_rate']
+    def _estimator(self, latent_values, observed, weights):
+        _input = tf.Variable(latent_values)
+        _weights = tf.constant(weights.T)
+        _observed = tf.constant(observed)
+        prediction = tf.matmul(_input, _weights)
+        loss = tf.losses.mean_squared_error(prediction, _observed)
+        optimizer = tf.train.GradientDescentOptimizer(
+            learning_rate=learning_rate
         )
 
-    def __init__(self, input_data, weights='pca', latent_dimensions=None, #pylint:disable=too-many-arguments
-                 use_bias=False, state_learning_rate=1,
-                 **kwargs):
+    def __init__(self, input_data,
+                 weight_config=HierarchicalConfig(
+                     initializer='random',
+                     optimizer=tf.train.GradientDescentOptimizer(
+                         learning_rate=1
+                     ),
+                     epsilon=1e-3
+                 ),
+                 state_config=HierarchicalConfig(
+                     initializer='random',
+                     optimizer=tf.train.GradientDescentOptimizer(
+                         learning_rate=1
+                     ),
+                     epsilon=1e-3
+                 )):
         self.input_data = input_data
         self.input_dimensions = input_data.shape[1]
         self.n_observations = input_data.shape[0]
         self.latent_dimensions = latent_dimensions
+        self._weight_config = weight_config
+        self._state_config = state_config
+
+        self.initialize_parameters()
+        
+        
 
         self._weights = weight_init(weights,
                                     input_data=input_data,
                                     latent_dimensions=latent_dimensions,
                                     input_dimensions=self.input_dimensions)
-        self._dct_weights = {
-            "theta1_%d"%(i): self.weights[:, i] for i in range(
-                self.weights.shape[1]
-            )
-        }
+        self._latent_values = weight_init('random',
+                                          input_dimensions=self.n_observations,
+                                          latent_dimensions=latent_dimensions)
 
         assert self.input_dimensions == self._weights.shape[0]
         assert self.latent_dimensions == self._weights.shape[1]
@@ -118,6 +121,19 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
 
         self.activate('state', 'simulation')
 
+    def initialize_parameters(self, initializer=None, range='activated'):
+        """Initialize state and weight parameters.
+
+        Initialize the parameters either according to their configuration or
+        according to a specified initializer.
+        
+        Args:
+            initializer: If None (default value), use the specified initializer.
+                Otherwise, specify an initializer that can be assigned by the
+                given configuration.
+            range: If you would like to specify your own range, set this range
+                to a list of possible values. Default is the special"""
+
     @staticmethod
     def _validate_estimation(what):
         if what not in ['state', 'weight']:
@@ -139,7 +155,7 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
 
         Args:
             estimation: 'state' or 'weight'.
-            method: 'simulation' or analytical'."""
+            method: 'simulated' or analytical'."""
         if estimation:
             estimation = self._validate_estimation(estimation)
             self._estimation = estimation
@@ -149,10 +165,12 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
 
     @property
     def estimation(self):
+        """Are states or weights currently estimated?"""
         return self._estimation
 
     @property
     def method(self):
+        """Is the model computing simulated or analytical solutions?"""
         return self._method
 
     def activate_state_estimation(self):
@@ -163,9 +181,9 @@ class MinimalHierarchicalModel(): # pylint:disable=too-many-instance-attributes
         """Activate weight estimation."""
         self.activate(estimation='weight')
 
-    def activate_simulation_method(self):
-        """Activate simulation method."""
-        self.activate(method='simulation')
+    def activate_simulated_method(self):
+        """Activate simulated method."""
+        self.activate(method='simulated')
 
     def activate_analytical_method(self):
         """Activate analytical method."""
