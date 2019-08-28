@@ -21,20 +21,9 @@ class TestMinimalModelState(unittest.TestCase):
 
     def test_activate(self):
         """Tests whether activation works."""
-        self.assertEqual(self.model.estimation, 'state')
-        self.assertEqual(self.model.method, 'simulated')
+        self.assertEqual(self.model.what, 'state')
         with self.assertRaises(ValueError):
-            self.model.activate(estimation='no')
-        with self.assertRaises(ValueError):
-            self.model.activate(method='no')
-        self.model.activate_weight_estimation()
-        self.assertEqual(self.model.estimation, 'weight')
-        self.model.activate_state_estimation()
-        self.assertEqual(self.model.estimation, 'state')
-        self.model.activate_analytical_method()
-        self.assertEqual(self.model.method, 'analytical')
-        self.model.activate_simulated_method()
-        self.assertEqual(self.model.method, 'simulated')
+            self.model.activate('no')
 
     def test_eval(self):
         """Tests whether state evaluation works."""
@@ -69,7 +58,7 @@ class TestMinimalModelWeight(unittest.TestCase):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             self.model.train(steps=10)
-        self.model.activate(estimation='weight')
+        self.model.activate('weight')
 
     def test_train(self):
         """Test weight training."""
