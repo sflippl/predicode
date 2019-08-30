@@ -50,7 +50,7 @@ class TestWeightInit(unittest.TestCase):
             pc.weight_init('nomethod')
         self.assertEqual(pc.weight_init(np.array([1])), np.array([1]))
         call = lambda x: x
-        self.assertEqual(pc.weight_init(call), call)
+        self.assertEqual(pc.weight_init(call, x=1), 1)
 
     def test_random(self):
         """Tests whether random weight initialization is appropriately
@@ -69,3 +69,28 @@ class TestWeightInit(unittest.TestCase):
             input_data=np.array([[1, 0], [0, 1]])
         )
         self.assertEqual(weight.shape, (2, 1))
+
+class TestInit(unittest.TestCase):
+    """Tests init function."""
+
+    def test_init(self):
+        """Tests whether non-character arguments are appropriately handled."""
+        with self.assertRaises(NotImplementedError):
+            pc.init('nomethod')
+        self.assertEqual(pc.init(np.array([1])), np.array([1]))
+        call = lambda x: x
+        self.assertEqual(pc.init(call, x=1), 1)
+
+    def test_random(self):
+        """Tests whether random weight initialization is appropriately
+        implemented."""
+        weight = pc.init(
+            'random', rows=2, columns=1
+        )
+        self.assertEqual(weight.shape, (2, 1))
+        self.assertAlmostEqual(np.matmul(weight.T, weight)[0, 0], 1)
+        weight = pc.init(
+            'random', rows=1, columns=2
+        )
+        self.assertEqual(weight.shape, (1, 2))
+        self.assertAlmostEqual(np.matmul(weight, weight.T)[0, 0], 1)

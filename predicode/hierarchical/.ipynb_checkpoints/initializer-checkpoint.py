@@ -53,40 +53,38 @@ def init_random(method='orthogonal'):
            orthogonal: Creates a random orthogonal matrix.
 
     Returns:
-        Function that initializes weights.
+        Function that initializes a matrix.
 
         Args:
-            input_dimensions: Number of input dimensions.
-            latent_dimensions: Number of latent dimensions.
+            rows: Number of rows.
+            columns: Number of columns.
 
         Returns:
-            Two dimensional numpy array with one principal rotation per
-            column.
+            Two dimensional numpy array.
 
     Raises:
-        NotImplementedError: Method must be implemented."""
-
+        NotImplementedError: If method is not implemented."""
     if method == 'orthogonal':
-        def initialize(input_dimensions=None, latent_dimensions=None,
-                       **kwargs): # kwargs required to make arbitrary passing of one of the weight_init_* functions possible pylint:disable=unused-argument
+        def initialize(rows, columns,
+                       **kwargs): # kwargs required to make arbitrary passing of one of the init_* functions possible pylint:disable=unused-argument
             """Initialize weights according to the specified method.
 
             Args:
-                input_dimensions: Number of input dimensions.
-                latent_dimensions: Number of latent dimensions to be extracted. Must
+                rows: Number of rows.
+                columns: Number of latent dimensions to be extracted. Must
                     be less than the input dimensions.
 
             Returns:
-                Two dimensional numpy array with one rotation per row."""
-            min_dim = min(input_dimensions, latent_dimensions)
-            max_dim = max(input_dimensions, latent_dimensions)
-            transpose = input_dimensions<latent_dimensions
-            weights = stats.ortho_group.rvs(
+                Two dimensional numpy array."""
+            min_dim = min(rows, columns)
+            max_dim = max(rows, columns)
+            transpose = rows < columns
+            matrix = stats.ortho_group.rvs(
                 max_dim
             )[:, range(min_dim)]
             if transpose:
-                weights = weights.T
-            return weights
+                matrix = matrix.T
+            return matrix
 
     else:
         raise NotImplementedError('Method %s is not implemented.' % (method, ))
@@ -94,21 +92,53 @@ def init_random(method='orthogonal'):
     return initialize
 
 def weight_init_random(method='orthogonal'):
+    """Initialize weights randomly.
+
+    Args:
+        method: Which method should be used for the random initialization?
+           Default is orthogonal.
+
+           orthogonal: Creates a random orthogonal matrix.
+
+    Returns:
+        Function that initializes a random rotation.
+
+        Args:
+            input_dimensions: Dimensions of the lower tier.
+            latent_dimensions: Dimensions of the upper tier.
+
+        Returns:
+            Two dimensional numpy array.
+
+    Raises:
+        NotImplementedError: If method is not implemented."""
     _initialize = init_random(method)
     def initialize(input_dimensions=None, latent_dimensions=None,
                    **kwargs):
         latent_dimensions = _validate_latent_dimensions(latent_dimensions,
                                                         input_dimensions)
-        return _initialize(input_dimensions=input_dimensions,
-                           latent_dimensions=latent_dimensions,
+        return _initialize(rows=input_dimensions,
+                           columns=latent_dimensions,
                            **kwargs)
     return initialize
 
 def init(char, **kwargs):
-    """Initialize values according to method"""
+    """Initialize matrix according to method.
+
+    Args:
+        char: Method, function, or initialized array.
+        rows: Number of rows.
+        columns: Number of columns.
+
+    Returns:
+        A two dimensional numpy array.
+
+    Raises:
+        NotImplementedError: If the method specified by char is not implemented.
+        """
     if isinstance(char, np.ndarray):
         return char
-    if isinstance(char, collection.Callable):
+    if isinstance(char, collections.Callable):
         return char(**kwargs)
     if char == 'random':
         return init_random('orthogonal')(**kwargs)
@@ -137,10 +167,7 @@ def weight_init(char, **kwargs):
     if isinstance(char, collections.Callable):
         return char(**kwargs)
     if char == 'pca':
-        return weight_init_pca()(input_dimensions=input_dimensions,
-                                 latent_dimensions=latent_dimensions,
-                                 input_data=input_data,
-                                 **kwargs)
+        return weight_init_pca()(**kwargs)
     if char == 'random':
         return weight_init_random('orthogonal')(**kwargs)
     raise NotImplementedError('Method %s is not implemented.' % (char, ))
