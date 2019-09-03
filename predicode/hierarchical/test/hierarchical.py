@@ -5,6 +5,7 @@ import unittest
 import unittest.mock
 
 import keras
+import tensorflow as tf
 
 import predicode as pc
 
@@ -25,6 +26,15 @@ class TestTierUI(unittest.TestCase):
         """Tests if add_tier fails appropriately."""
         with self.assertRaises(ValueError):
             self.hpc.add_tier((2, ), 'tier_0')
+        with self.assertRaises(ValueError):
+            self.hpc.add_tier((2, 2, 2))
+
+    def test_correct_tiers_initialized(self):
+        """Tests if the first tier is constant and the second tier is
+        variable."""
+        self.assertTrue(isinstance(self.hpc.tier(0), tf.Tensor))
+        self.assertTrue(isinstance(self.hpc.tier(1), tf.Variable))
+        self.assertTrue(isinstance(self.hpc.tier('latent_layer'), tf.Variable))
 
     def test_choose_connection(self):
         """Tests if the appropriate connections are chosen."""

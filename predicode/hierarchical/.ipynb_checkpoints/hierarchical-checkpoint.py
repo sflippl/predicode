@@ -5,6 +5,9 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
+import tensorflow as tf
+
+from predicode.hierarchical.initializer import init
 
 class NoPredictor(): # This class is required to make the interface consistent pylint:disable=too-few-public-methods
     """Predictor class if no model has been defined so far."""
@@ -43,7 +46,7 @@ class Hierarchical():
         self._state_predictions = []
         self._current_connection = None
 
-    def add_tier(self, shape, name=None, initializer=None):
+    def add_tier(self, shape, name=None, initializer='random'):
         """Add a tier to the hierarchical model.
 
         This method adds a tier to the hierarchical model. For now, this is only
@@ -60,7 +63,7 @@ class Hierarchical():
             The updated hierarchical model to allow chained assignment.
 
         Raises:
-            ValueError: If you do not provide an appropriate shape."""
+            ValueError: If you do not provide an appropriate name or shape."""
         if not name:
             name = 'tier_%d' % (self._n_tiers, )
         if name in self._tier_names:
@@ -89,7 +92,10 @@ class Hierarchical():
         Args:
             tier: Choose a tier, either by its name or by its position.
             lower: Should the connection be below (True) or above (False) this
-                tier? Default is True."""
+                tier? Default is True.
+
+        Returns:
+            The new Hierarchical object."""
         tier = self._get_tier_from_name(tier)
         if lower and tier == 0:
             raise ValueError('There is no connection below tier 0.')
@@ -100,6 +106,23 @@ class Hierarchical():
             tier -= 1
         self._current_connection = tier
         return self
+
+    def tier(self, tier):
+        """Inspect a particular tier.
+
+        Args:
+            tier: Choose a tier, either by its name or by its position.
+
+        Returns:
+            a tensor variable or constant.
+
+        Raises:
+            ValueError: if the tier does not exist.
+            TypeError: if the tier cannot be interpreted as string or integer.
+        """
+        tier_nr = self._get_tier_from_name(tier)
+        _tier = self._tiers[tier_nr]
+        return _tier[1]
 
     def _get_tier_from_name(self, name):
         if isinstance(name, str):
@@ -128,12 +151,35 @@ class Hierarchical():
         names = [name for name, __ in self._tiers]
         return names
 
-    @classmethod
-    def _create_tier_variable(cls, shape, initializer, name):
+    def _create_tier_variable(self, shape, initializer, name, constant=None):
         """Creates the variable corresponding to a particular tier.
 
-        Currently a dummy function."""
-        return 'DUMMY'
+        Args:
+            shape: Which shape does the variable have?
+            initializer: How is the variable be initialized?
+            name: What is the name of the variable?
+            constant: Should a constant value be initialized? By default, only
+                the lowest tier consists of a constant value.
+
+        Returns:
+            A tensor variable or constant."""
+        if constant is None:
+            constant = (self._n_tiers == 0)
+        rows = shape[0]
+        if len(shape) == 1:
+            columns = 1
+        elif len(shape) == 2:
+            columns = shape[1]
+        else:
+            raise ValueError('Currently, more than two dimensions for a state '
+                             'variable are not accepted.')
+        initializer = init(initializer, rows=rows, columns=columns)
+        name = '%s_%s' % (self.name, name)
+        if constant:
+            variable = tf.constant(initializer, name=name, dtype=tf.float32)
+        else:
+            variable = tf.Variable(initializer, name=name, dtype=tf.float32)
+        return variable
 
     @property
     def predictor(self):
