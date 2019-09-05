@@ -1,9 +1,8 @@
 setuptools>=41.0.0
 pandas
 numpy
-tensorflow
+tensorflow==2.0.0-rc
 plotnine
-keras
 scipy
 sklearn
 tqdm
