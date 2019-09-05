@@ -54,6 +54,10 @@ class TestConstantRegimen(unittest.TestCase):
         """Tests that the end is always true."""
         self.assertEqual(self.regimen.end(), True)
 
+    def test_finish_batch(self):
+        """Tests finish_batch."""
+        self.assertEqual(self.regimen.finish_batch(), None)
+
     def test_restart(self):
         """Tests the restart."""
         self.assertEqual(self.regimen.restart(), None)

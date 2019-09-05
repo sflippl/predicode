@@ -246,7 +246,7 @@
 <p id="t66" class="pln"><span class="str">        NotImplementedError: If method is not implemented."""</span><span class="strut">&nbsp;</span></p>
 <p id="t67" class="stm run hide_run">    <span class="key">if</span> <span class="nam">method</span> <span class="op">==</span> <span class="str">'orthogonal'</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t68" class="stm run hide_run">        <span class="key">def</span> <span class="nam">initialize</span><span class="op">(</span><span class="nam">input_dimensions</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">latent_dimensions</span><span class="op">=</span><span class="key">None</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t69" class="pln">                       <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t69" class="pln">                       <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span> <span class="com"># kwargs required to make arbitrary passing of one of the weight_init_* functions possible pylint:disable=unused-argument</span><span class="strut">&nbsp;</span></p>
 <p id="t70" class="stm run hide_run">            <span class="nam">latent_dimensions</span> <span class="op">=</span> <span class="nam">_validate_latent_dimensions</span><span class="op">(</span><span class="nam">latent_dimensions</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t71" class="pln">                                                            <span class="nam">input_dimensions</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t72" class="stm run hide_run">            <span class="nam">matrix</span> <span class="op">=</span> <span class="nam">stats</span><span class="op">.</span><span class="nam">ortho_group</span><span class="op">.</span><span class="nam">rvs</span><span class="op">(</span><span class="strut">&nbsp;</span></p>
@@ -296,7 +296,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.5.4</a>,
-            created at 2019-09-05 19:25
+            created at 2019-09-05 19:27
         </p>
     </div>
 </div>
