@@ -16,8 +16,11 @@ predicode/datasets/test/imagedata.py
 predicode/hierarchical/__init__.py
 predicode/hierarchical/hierarchical.py
 predicode/hierarchical/initializer.py
+predicode/hierarchical/regimen.py
+predicode/hierarchical/state_prediction.py
 predicode/hierarchical/interfaces/__init__.py
 predicode/hierarchical/interfaces/test/__init__.py
 predicode/hierarchical/test/__init__.py
 predicode/hierarchical/test/hierarchical.py
 predicode/hierarchical/test/initializer.py
+predicode/hierarchical/test/state_prediction.py

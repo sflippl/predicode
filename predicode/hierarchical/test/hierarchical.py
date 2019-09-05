@@ -4,15 +4,18 @@ import io
 import unittest
 import unittest.mock
 
-import keras
 import tensorflow as tf
+import tensorflow.keras as keras
+import numpy as np
 
 import predicode as pc
 
 def _setup_hpc():
     hpc = pc.Hierarchical()
-    hpc.add_tier(shape=(10, ))
-    hpc.add_tier(shape=(4, ), name='latent_layer')
+    hpc.add_tier(shape=(2, ))
+    hpc.add_tier(shape=(1, ),
+                 name='latent_layer',
+                 initializer=tf.initializers.constant([[0.]]))
     return hpc
 
 class TestTierUI(unittest.TestCase):
@@ -26,13 +29,10 @@ class TestTierUI(unittest.TestCase):
         """Tests if add_tier fails appropriately."""
         with self.assertRaises(ValueError):
             self.hpc.add_tier((2, ), 'tier_0')
-        with self.assertRaises(ValueError):
-            self.hpc.add_tier((2, 2, 2))
 
     def test_correct_tiers_initialized(self):
         """Tests if the first tier is constant and the second tier is
         variable."""
-        self.assertTrue(isinstance(self.hpc.tier(0), tf.Tensor))
         self.assertTrue(isinstance(self.hpc.tier(1), tf.Variable))
         self.assertTrue(isinstance(self.hpc.tier('latent_layer'), tf.Variable))
 
@@ -64,7 +64,7 @@ class TestTierUI(unittest.TestCase):
         expected_string = ('# Tier 1: latent_layer\n'
                            '## Connecting Predictor\n'
                            '(No predictor defined.)\n'
-                           '## Connection State Prediction\n'
+                           '## Connecting State Prediction\n'
                            '(No state prediction defined.)\n'
                            '# Tier 0: tier_0\n')
         self.assertEqual(
@@ -80,7 +80,7 @@ class TestPredictorUI(unittest.TestCase):
         self.hpc = _setup_hpc()
         self.hpc.predictor = keras.Sequential()
         self.hpc.predictor.add(
-            keras.layers.Dense(10, input_shape=(4, ))
+            keras.layers.Dense(2, input_shape=(1, ), use_bias=False)
         )
 
     def test_assignment_fails(self):
@@ -137,3 +137,15 @@ class TestNoStatePrediction(unittest.TestCase):
         self.no_sp.summary()
         self.assertEqual(mock_stdout.getvalue(),
                          '(No state prediction defined.)\n')
+
+class TestEstimation(unittest.TestCase):
+    """Tests the estimation functionality."""
+
+    def setUp(self):
+        """Set up a linear HPC model."""
+        self.hpc = _setup_hpc()
+        self.hpc.predictor = keras.Sequential()
+        self.hpc.predictor.add(
+            keras.layers.Dense(2, input_shape=(1, ), use_bias=False)
+        )
+        self.hpc.state_prediction = pc.StatePrediction()
