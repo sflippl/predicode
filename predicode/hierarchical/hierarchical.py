@@ -248,7 +248,7 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
             for data in batches:
                 self._tiers = self._setup_tiers(data)
                 @tf.function
-                def loss_fun():
+                def loss_fun(): # pragma: no cover
                     losses = self._setup_losses(self._tiers)
                     return losses
                 regimen.training_step(loss_fun,

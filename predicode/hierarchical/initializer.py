@@ -43,54 +43,6 @@ def weight_init_pca():
 
     return initialize
 
-def _init_random(method='orthogonal'):
-    """Initialize value randomly.
-
-    Args:
-        method: Which method should be used for the random initialization?
-           Default is orthogonal.
-
-           orthogonal: Creates a random orthogonal matrix.
-
-    Returns:
-        Function that initializes a matrix.
-
-        Args:
-            rows: Number of rows.
-            columns: Number of columns.
-
-        Returns:
-            Two dimensional numpy array.
-
-    Raises:
-        NotImplementedError: If method is not implemented."""
-    if method == 'orthogonal':
-        def initialize(rows, columns,
-                       **kwargs): # kwargs required to make arbitrary passing of one of the init_* functions possible pylint:disable=unused-argument
-            """Initialize weights according to the specified method.
-
-            Args:
-                rows: Number of rows.
-                columns: Number of latent dimensions to be extracted. Must
-                    be less than the input dimensions.
-
-            Returns:
-                Two dimensional numpy array."""
-            min_dim = min(rows, columns)
-            max_dim = max(rows, columns)
-            transpose = rows < columns
-            matrix = stats.ortho_group.rvs(
-                max_dim
-            )[:, range(min_dim)]
-            if transpose:
-                matrix = matrix.T
-            return matrix
-
-    else:
-        raise NotImplementedError('Method %s is not implemented.' % (method, ))
-
-    return initialize
-
 def weight_init_random(method='orthogonal'):
     """Initialize weights randomly.
 
@@ -112,14 +64,19 @@ def weight_init_random(method='orthogonal'):
 
     Raises:
         NotImplementedError: If method is not implemented."""
-    _initialize = _init_random(method)
-    def initialize(input_dimensions=None, latent_dimensions=None,
-                   **kwargs):
-        latent_dimensions = _validate_latent_dimensions(latent_dimensions,
-                                                        input_dimensions)
-        return _initialize(rows=input_dimensions,
-                           columns=latent_dimensions,
-                           **kwargs)
+    if method == 'orthogonal':
+        def initialize(input_dimensions=None, latent_dimensions=None,
+                       **kwargs): # kwargs required to make arbitrary passing of one of the weight_init_* functions possible pylint:disable=unused-argument
+            latent_dimensions = _validate_latent_dimensions(latent_dimensions,
+                                                            input_dimensions)
+            matrix = stats.ortho_group.rvs(
+                input_dimensions
+            )[:, range(latent_dimensions)]
+            return matrix
+
+    else:
+        raise NotImplementedError('Method %s is not implemented.' % (method, ))
+
     return initialize
 
 def weight_init(char, **kwargs):

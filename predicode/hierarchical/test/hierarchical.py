@@ -191,9 +191,16 @@ class TestEstimation(unittest.TestCase):
         self.hpc.train(self.arr, self.regimen, batch_size=1)
         self.assertEqual(self.hpc.tier(1).shape, [1, 1])
 
-    def test_is_ready(self):
+    def test_is_ready_sp(self):
         """Tests if sensible error comes out of trying to train a model without
         state prediction."""
         self.hpc.delete_state_prediction()
+        with self.assertRaises(ValueError):
+            self.hpc.train(self.arr, self.regimen)
+
+    def test_is_ready_p(self):
+        """Tests if sensible error comes out of trying to train a model without
+        predictor."""
+        self.hpc.delete_predictor()
         with self.assertRaises(ValueError):
             self.hpc.train(self.arr, self.regimen)

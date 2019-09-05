@@ -53,9 +53,10 @@ class SimpleOptimizerRegimen:
                                           metrics=metrics)
 
     @tf.function
-    def _training_step(self, loss_fun, variables, _grads, eps, metrics=None):
+    def _training_step(self, loss_fun, variables, _grads, eps, metrics=None): # pragma: no cover
+        # (is only executed within Tensorflow call.)
         with tf.GradientTape() as tape:
-            losses = loss_fun() # pragma: no cover (is only executed within Tensorflow call.)
+            losses = loss_fun()
         gradients = tape.gradient(losses, variables)
         gen = []
         for grad, var in zip(gradients, variables):
@@ -67,7 +68,7 @@ class SimpleOptimizerRegimen:
                     )
                 )
         self.optimizer.apply_gradients(gen)
-        return _grads # pragma: no cover (see above.)
+        return _grads
 
     def end(self):
         """The regimen ends when the variables do not change by a significant
