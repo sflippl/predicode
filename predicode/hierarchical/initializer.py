@@ -43,7 +43,7 @@ def weight_init_pca():
 
     return initialize
 
-def init_random(method='orthogonal'):
+def _init_random(method='orthogonal'):
     """Initialize value randomly.
 
     Args:
@@ -112,7 +112,7 @@ def weight_init_random(method='orthogonal'):
 
     Raises:
         NotImplementedError: If method is not implemented."""
-    _initialize = init_random(method)
+    _initialize = _init_random(method)
     def initialize(input_dimensions=None, latent_dimensions=None,
                    **kwargs):
         latent_dimensions = _validate_latent_dimensions(latent_dimensions,
@@ -121,28 +121,6 @@ def weight_init_random(method='orthogonal'):
                            columns=latent_dimensions,
                            **kwargs)
     return initialize
-
-def init(char, **kwargs):
-    """Initialize matrix according to method.
-
-    Args:
-        char: Method, function, or initialized array.
-        rows: Number of rows.
-        columns: Number of columns.
-
-    Returns:
-        A two dimensional numpy array.
-
-    Raises:
-        NotImplementedError: If the method specified by char is not implemented.
-        """
-    if isinstance(char, np.ndarray):
-        return char
-    if isinstance(char, collections.Callable):
-        return char(**kwargs)
-    if char == 'random':
-        return init_random('orthogonal')(**kwargs)
-    raise NotImplementedError('Method %s is not implemented.' % (char, ))
 
 def weight_init(char, **kwargs):
     """Initialize weights according to method.

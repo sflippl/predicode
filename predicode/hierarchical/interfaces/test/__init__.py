@@ -1,1 +1,0 @@
-"""Tests predicode.hierarchical.interfaces."""
