@@ -9,8 +9,6 @@ import copy
 import numpy as np
 import tensorflow as tf
 
-from predicode.hierarchical.initializer import init
-
 class NoPredictor(): # This class is required to make the interface consistent pylint:disable=too-few-public-methods
     """Predictor class if no model has been defined so far."""
 
@@ -33,7 +31,7 @@ class NoStatePrediction(): # This class is required to make the interface consis
         """Summary of NoStatePrediction."""
         return print('(No state prediction defined.)')
 
-class Hierarchical():
+class Hierarchical(): #pylint:disable=too-many-instance-attributes
     """Defines a hierarchical predictive coding model."""
 
     n = 1
@@ -221,7 +219,7 @@ class Hierarchical():
             self._state_predictions[i-1].summary()
         print('# Tier 0: %s' % (self._tier_names[0], ))
 
-    def train(self, dataset, regimen, metrics=[], batch_size=10000):
+    def train(self, dataset, regimen, metrics=None, batch_size=10000):
         """Train a model on a given dataset.
 
         This model trains a hierarchical predictive coding model.
@@ -251,15 +249,13 @@ class Hierarchical():
                 self._tiers = self._setup_tiers(data)
                 @tf.function
                 def loss_fun():
-                    predictions = self._setup_predictions(self._tiers)
-                    losses = self._setup_losses(self._tiers, predictions)
+                    losses = self._setup_losses(self._tiers)
                     return losses
                 regimen.training_step(loss_fun,
                                       state_variables=self._tiers,
                                       predictor_variables=predictor_weights,
                                       metrics=metrics)
             regimen.finish_batch()
-        self.metrics = regimen.metrics
         return self
 
     def _is_ready(self):
@@ -272,16 +268,16 @@ class Hierarchical():
         for state_pred, lower_tier, upper_tier in zip(self._state_predictions,
                                                       self._tier_names[:-1],
                                                       self._tier_names[1:]):
-            if isinstance(predictor, NoStatePrediction):
+            if isinstance(state_pred, NoStatePrediction):
                 raise ValueError('You need to define the state prediction '
-                                 'between and %s.' % (lower_tier, upper_tier))
+                                 'between %s and %s.' % (lower_tier, upper_tier))
 
     def _setup_tiers(self, data):
         tiers = self._tiers
         for key, value in data.items():
             tier_nr = self._get_tier_from_name(key)
             tiers[tier_nr] = value
-        size = value.shape[0]
+        size = next(iter(data.items()))[1].shape[0]
         for i, tier in enumerate(tiers):
             if isinstance(tier, tf.Variable):
                 if tier.shape[0] is None or tier.shape[0] != size:
@@ -291,33 +287,27 @@ class Hierarchical():
                                              repeats=repeats,
                                              axis=0)[:repeats]
                     new_shape = [size] + list(tier.shape[1:])
-                    name = tier.name
-                    dtype = tier.dtype
                     tiers[i] = tf.Variable(array_length,
                                            shape=new_shape,
-                                           dtype=dtype)
-                
+                                           dtype=tier.dtype,
+                                           name=self._tier_names[i])
         return tiers
 
     @tf.function
-    def _setup_predictions(self, tiers):
+    def _setup_losses(self, tiers):
         predictions = [
             predictor(tier) for predictor, tier in zip(self._predictors,
                                                        tiers[1:])
         ]
-        return predictions
-
-    @tf.function
-    def _setup_losses(self, tiers, predictions):
         losses = [
             state_prediction.compute_loss(tier, prediction) for \
             prediction, tier, state_prediction in zip(predictions,
                                                       tiers[:-1],
                                                       self._state_predictions)
         ]
-        return losses
+        return losses # pragma: no cover (is only executed within Tensorflow call.)
 
-    def as_dataset(self, dataset, type=None):
+    def as_dataset(self, dataset):
         """Parses observations into a full dataset and validates dataset.
 
         Args:
@@ -344,7 +334,6 @@ class Hierarchical():
         if not isinstance(inspect, dict):
             raise ValueError('Dataset must be a dictionary pointing to the '
                              'different tiers of the hierarchical model.')
-
         for key, value in inspect.items():
             if key not in self._tier_names:
                 raise ValueError('%s does not refer to a tiername' % (key, ))

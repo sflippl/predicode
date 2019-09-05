@@ -111,6 +111,13 @@ class TestStatePredictionUI(unittest.TestCase):
         self.assertTrue(isinstance(self.hpc.state_prediction,
                                    pc.NoStatePrediction))
 
+    def test_is_ready(self):
+        """Tests if is_ready stops when no state prediction is specified."""
+        self.hpc.delete_state_prediction()
+        self.hpc.predictor = keras.Sequential([
+            keras.layers.Dense(2, input_shape=(1, ))
+        ])
+
 class TestNoPredictor(unittest.TestCase):
     """Test NoModel class."""
 
@@ -149,3 +156,44 @@ class TestEstimation(unittest.TestCase):
             keras.layers.Dense(2, input_shape=(1, ), use_bias=False)
         )
         self.hpc.state_prediction = pc.StatePrediction()
+        self.arr = np.array([[1., 0.], [-1., 0.]])
+        self.regimen = pc.ExpectationMaximizationRegimen(
+            state_regimen=pc.SimpleOptimizerRegimen(
+                keras.optimizers.Adam(), max_steps=2
+            ),
+            predictor_regimen=pc.SimpleOptimizerRegimen(
+                keras.optimizers.Adam(), max_steps=2
+            ),
+            max_steps=2
+        )
+
+    def test_as_dataset(self):
+        """Tests the as_dataset fails appropriately and returns a dataset."""
+        array_ds = self.hpc.as_dataset(self.arr)
+        self.assertIsInstance(array_ds, tf.data.Dataset)
+        entry = next(iter(array_ds))
+        self.assertTrue('tier_0' in entry)
+        with self.assertRaises(ValueError):
+            self.hpc.as_dataset(tf.data.Dataset.from_tensors(self.arr))
+        with self.assertRaises(ValueError):
+            self.hpc.as_dataset({'not_a_name': self.arr})
+        with self.assertRaises(ValueError):
+            self.hpc.as_dataset(np.array([[1.], [1.]]))
+
+    def test_training(self):
+        """Test if train method works appopriately and yields sensible values.
+        """
+        self.hpc.train(self.arr, self.regimen)
+        self.assertEqual(self.hpc.tier(1).shape, [2, 1])
+
+    def test_batch_training(self):
+        """Tests if we can also train in batches."""
+        self.hpc.train(self.arr, self.regimen, batch_size=1)
+        self.assertEqual(self.hpc.tier(1).shape, [1, 1])
+
+    def test_is_ready(self):
+        """Tests if sensible error comes out of trying to train a model without
+        state prediction."""
+        self.hpc.delete_state_prediction()
+        with self.assertRaises(ValueError):
+            self.hpc.train(self.arr, self.regimen)

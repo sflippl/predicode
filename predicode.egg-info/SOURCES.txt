@@ -23,4 +23,5 @@ predicode/hierarchical/interfaces/test/__init__.py
 predicode/hierarchical/test/__init__.py
 predicode/hierarchical/test/hierarchical.py
 predicode/hierarchical/test/initializer.py
+predicode/hierarchical/test/regimen.py
 predicode/hierarchical/test/state_prediction.py
