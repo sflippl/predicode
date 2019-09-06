@@ -33,9 +33,15 @@ class SimpleOptimizerRegimen:
         self._grads = True
         self.n_steps += 1
 
-    def finish_batch(self):
+    def finish_batch(self, metrics=None, it_baseline=0):
         """This function takes care of cleaning up the metrics."""
-        return
+        metrics = metrics or []
+        for metric in metrics:
+            tf.summary.scalar(
+                metric.name, metric.result(),
+                step=it_baseline + self.optimizer.iterations
+            )
+            metric.reset_states()
 
     def training_step(self, loss_fun, variables, metrics=None):
         """Take a minimizing step for a tensor or a set of tensors.
@@ -46,6 +52,7 @@ class SimpleOptimizerRegimen:
             gradients: The gradient the step should follow.
             variables: The variables that should be changed.
         """
+        metrics = metrics or []
         self._grads = self._training_step(loss_fun=loss_fun,
                                           variables=variables,
                                           _grads=self._grads,
@@ -53,12 +60,14 @@ class SimpleOptimizerRegimen:
                                           metrics=metrics)
 
     @tf.function
-    def _training_step(self, loss_fun, variables, _grads, eps, metrics=None): # pragma: no cover
+    def _training_step(self, loss_fun, variables, _grads, eps, metrics): # pragma: no cover
         # (is only executed within Tensorflow call.)
         with tf.GradientTape() as tape:
-            losses = loss_fun()
+            [losses, predictions, values] = loss_fun()
         gradients = tape.gradient(losses, variables)
         gen = []
+        for metric in metrics:
+            metric.update_state(values, predictions)
         for grad, var in zip(gradients, variables):
             if grad is not None:
                 gen.append((grad, var))
@@ -77,13 +86,14 @@ class SimpleOptimizerRegimen:
             return False
         return self._grads or (self.n_steps >= self.max_steps)
 
-    def train(self, loss_fun, variables, metrics=None):
+    def train(self, loss_fun, variables, metrics=None, it_baseline=0):
         """Trains a model until convergence or the maximum number of steps
         have been exceeded."""
+        metrics = metrics or []
         while not self.end():
             self.start_batch()
             self.training_step(loss_fun, variables, metrics=metrics)
-            self.finish_batch()
+            self.finish_batch(metrics=metrics, it_baseline=it_baseline)
 
     def steps_until_convergence(self):
         """Returns the number of steps until convergence.
@@ -101,6 +111,11 @@ class SimpleOptimizerRegimen:
         to zero."""
         self.n_steps = 0
 
+    @property
+    def iterations(self):
+        """The optimizer's iterations."""
+        return self.optimizer.iterations
+
 class ConstantRegimen(SimpleOptimizerRegimen):
     """This class defines a regimen that remains constant and does not affect
     the corresponding variables."""
@@ -112,7 +127,7 @@ class ConstantRegimen(SimpleOptimizerRegimen):
         """
         return
 
-    def finish_batch(self):
+    def finish_batch(self, metrics=None, it_baseline=0):
         """Indicates the end of a patch in the training regimen."""
         return
 
@@ -132,9 +147,14 @@ class ConstantRegimen(SimpleOptimizerRegimen):
         """Restarts the regimen."""
         return
 
-    def train(self, loss_fun, variables, metrics=None):
+    def train(self, loss_fun, variables, metrics=None, it_baseline=0):
         """A training session."""
         return
+
+    @property
+    def iterations(self):
+        """Returns constant 0, since there are not iterations."""
+        return 0
 
 class ExpectationMaximizationRegimen:
     """This regimen implements an expectation maximization algorithm.
@@ -160,6 +180,8 @@ class ExpectationMaximizationRegimen:
         self.n_steps = 0
         self.metrics = None
         self._sut = [False]
+        self._state_baseline = state_regimen.iterations
+        self._predictor_baseline = predictor_regimen.iterations
 
     def start_batch(self):
         """Starts batch by restarting the regimens and incrementing the number
@@ -177,7 +199,7 @@ class ExpectationMaximizationRegimen:
         """The regimen ends when the weight regimen had immediately converged.
 
         This means that even the very first gradient was below the threshold."""
-        if self.n_steps == 0 and self.max_steps > 0:
+        if (self.n_steps == 0) and (self.max_steps > 0):
             return False
         return all(self._sut) or (self.n_steps >= self.max_steps)
 
@@ -185,15 +207,19 @@ class ExpectationMaximizationRegimen:
                       metrics=None):
         """Takes one training steps by first learning the states and then
         learning the weights."""
-        self.state_regimen.train(loss_fun, state_variables, metrics=metrics)
+        metrics = metrics or []
+        self.state_regimen.train(loss_fun, state_variables, metrics=metrics,
+                                 it_baseline=self._predictor_baseline)
         self.predictor_regimen.train(loss_fun, predictor_variables,
-                                     metrics=metrics)
+                                     metrics=metrics,
+                                     it_baseline=self._state_baseline)
         self._sut.append(self.predictor_regimen.steps_until_convergence() == 0)
 
     def train(self, loss_fun, state_variables, predictor_variables,
               metrics=None):
         """Trains a model until convergence or the maximum number of steps
         have been exceeded."""
+        metrics = metrics or []
         while not self.end():
             self.start_batch()
             self.training_step(loss_fun, state_variables, predictor_variables,

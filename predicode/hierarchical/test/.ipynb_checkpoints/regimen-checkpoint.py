@@ -17,7 +17,9 @@ class TestSimpleOptimizerRegimen(unittest.TestCase):
             optimizer=keras.optimizers.SGD(learning_rate=0.1), max_steps=3
         )
         self.variable = [tf.Variable(np.array([1.]), dtype=tf.float32)]
-        self.fun = lambda: tf.math.pow(self.variable[0], 2)
+        self.fun = lambda: [tf.math.pow(self.variable[0], 2),
+                            self.variable[0],
+                            0]
 
     def test_start_batch(self):
         """Start batch increments the step count by one and sets _grads to be
@@ -95,7 +97,9 @@ class TestExpectationMaximizationRegimen(unittest.TestCase):
 
     def loss(self):
         """Sets up loss function."""
-        return self.state_variable[0]**2 + self.weight_variable[0]**2
+        return [self.state_variable[0]**2 + self.weight_variable[0]**2,
+                self.state_variable[0],
+                0]
 
     def test_train(self):
         """Tests whether training and restarting works appropriately."""

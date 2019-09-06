@@ -237,6 +237,7 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
             The trained Hierarchical object."""
         self._is_ready()
         predictor_weights = []
+        metrics = metrics or []
         for predictor in self._predictors:
             for pred in predictor.trainable_variables:
                 predictor_weights.append(pred)
@@ -249,8 +250,7 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
                 self._tiers = self._setup_tiers(data)
                 @tf.function
                 def loss_fun(): # pragma: no cover
-                    losses = self._setup_losses(self._tiers)
-                    return losses
+                    return self._setup_losses(self._tiers)
                 regimen.training_step(loss_fun,
                                       state_variables=self._tiers,
                                       predictor_variables=predictor_weights,
@@ -305,7 +305,7 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
                                                       tiers[:-1],
                                                       self._state_predictions)
         ]
-        return losses
+        return [losses, predictions, tiers[:-1]]
 
     def as_dataset(self, dataset):
         """Parses observations into a full dataset and validates dataset.
