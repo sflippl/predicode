@@ -30,10 +30,10 @@
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
 
         <h2 class="stats">
-            165 statements &nbsp;
-            <span class="run hide_run shortkey_r button_toggle_run">165 run</span>
+            166 statements &nbsp;
+            <span class="run hide_run shortkey_r button_toggle_run">166 run</span>
             <span class="mis shortkey_m button_toggle_mis">0 missing</span>
-            <span class="exc shortkey_x button_toggle_exc">7 excluded</span>
+            <span class="exc shortkey_x button_toggle_exc">6 excluded</span>
 
             
         </h2>
@@ -317,7 +317,7 @@
 <p id="n248" class="stm run hide_run"><a href="#n248">248</a></p>
 <p id="n249" class="stm run hide_run"><a href="#n249">249</a></p>
 <p id="n250" class="stm run hide_run"><a href="#n250">250</a></p>
-<p id="n251" class="exc"><a href="#n251">251</a></p>
+<p id="n251" class="stm run hide_run"><a href="#n251">251</a></p>
 <p id="n252" class="exc"><a href="#n252">252</a></p>
 <p id="n253" class="exc"><a href="#n253">253</a></p>
 <p id="n254" class="stm run hide_run"><a href="#n254">254</a></p>
@@ -654,20 +654,20 @@
 <p id="t237" class="pln"><span class="str">            The trained Hierarchical object."""</span><span class="strut">&nbsp;</span></p>
 <p id="t238" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">_is_ready</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t239" class="stm run hide_run">        <span class="nam">predictor_weights</span> <span class="op">=</span> <span class="op">[</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
-<p id="t240" class="stm run hide_run">        <span class="key">for</span> <span class="nam">predictor</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_predictors</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t241" class="stm run hide_run">            <span class="key">for</span> <span class="nam">pred</span> <span class="key">in</span> <span class="nam">predictor</span><span class="op">.</span><span class="nam">trainable_variables</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t242" class="stm run hide_run">                <span class="nam">predictor_weights</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="nam">pred</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t243" class="stm run hide_run">        <span class="nam">dataset</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">as_dataset</span><span class="op">(</span><span class="nam">dataset</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t244" class="stm run hide_run">        <span class="nam">batches</span> <span class="op">=</span> <span class="nam">dataset</span><span class="op">.</span><span class="nam">batch</span><span class="op">(</span><span class="nam">batch_size</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t245" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">_tiers</span> <span class="op">=</span> <span class="nam">copy</span><span class="op">.</span><span class="nam">deepcopy</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_raw_tiers</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t246" class="stm run hide_run">        <span class="key">while</span> <span class="key">not</span> <span class="nam">regimen</span><span class="op">.</span><span class="nam">end</span><span class="op">(</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t247" class="stm run hide_run">            <span class="nam">regimen</span><span class="op">.</span><span class="nam">start_batch</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t248" class="stm run hide_run">            <span class="key">for</span> <span class="nam">data</span> <span class="key">in</span> <span class="nam">batches</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t249" class="stm run hide_run">                <span class="nam">self</span><span class="op">.</span><span class="nam">_tiers</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_setup_tiers</span><span class="op">(</span><span class="nam">data</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t250" class="stm run hide_run">                <span class="op">@</span><span class="nam">tf</span><span class="op">.</span><span class="nam">function</span><span class="strut">&nbsp;</span></p>
-<p id="t251" class="exc">                <span class="key">def</span> <span class="nam">loss_fun</span><span class="op">(</span><span class="op">)</span><span class="op">:</span> <span class="com"># pragma: no cover</span><span class="strut">&nbsp;</span></p>
-<p id="t252" class="exc">                    <span class="nam">losses</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_setup_losses</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_tiers</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t253" class="exc">                    <span class="key">return</span> <span class="nam">losses</span><span class="strut">&nbsp;</span></p>
+<p id="t240" class="stm run hide_run">        <span class="nam">metrics</span> <span class="op">=</span> <span class="nam">metrics</span> <span class="key">or</span> <span class="op">[</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
+<p id="t241" class="stm run hide_run">        <span class="key">for</span> <span class="nam">predictor</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_predictors</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t242" class="stm run hide_run">            <span class="key">for</span> <span class="nam">pred</span> <span class="key">in</span> <span class="nam">predictor</span><span class="op">.</span><span class="nam">trainable_variables</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t243" class="stm run hide_run">                <span class="nam">predictor_weights</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="nam">pred</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t244" class="stm run hide_run">        <span class="nam">dataset</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">as_dataset</span><span class="op">(</span><span class="nam">dataset</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t245" class="stm run hide_run">        <span class="nam">batches</span> <span class="op">=</span> <span class="nam">dataset</span><span class="op">.</span><span class="nam">batch</span><span class="op">(</span><span class="nam">batch_size</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t246" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">_tiers</span> <span class="op">=</span> <span class="nam">copy</span><span class="op">.</span><span class="nam">deepcopy</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_raw_tiers</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t247" class="stm run hide_run">        <span class="key">while</span> <span class="key">not</span> <span class="nam">regimen</span><span class="op">.</span><span class="nam">end</span><span class="op">(</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t248" class="stm run hide_run">            <span class="nam">regimen</span><span class="op">.</span><span class="nam">start_batch</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t249" class="stm run hide_run">            <span class="key">for</span> <span class="nam">data</span> <span class="key">in</span> <span class="nam">batches</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t250" class="stm run hide_run">                <span class="nam">self</span><span class="op">.</span><span class="nam">_tiers</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_setup_tiers</span><span class="op">(</span><span class="nam">data</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t251" class="stm run hide_run">                <span class="op">@</span><span class="nam">tf</span><span class="op">.</span><span class="nam">function</span><span class="strut">&nbsp;</span></p>
+<p id="t252" class="exc">                <span class="key">def</span> <span class="nam">loss_fun</span><span class="op">(</span><span class="op">)</span><span class="op">:</span> <span class="com"># pragma: no cover</span><span class="strut">&nbsp;</span></p>
+<p id="t253" class="exc">                    <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_setup_losses</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_tiers</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t254" class="stm run hide_run">                <span class="nam">regimen</span><span class="op">.</span><span class="nam">training_step</span><span class="op">(</span><span class="nam">loss_fun</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t255" class="pln">                                      <span class="nam">state_variables</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">_tiers</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t256" class="pln">                                      <span class="nam">predictor_variables</span><span class="op">=</span><span class="nam">predictor_weights</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
@@ -711,7 +711,7 @@
 <p id="t294" class="stm run hide_run">        <span class="key">return</span> <span class="nam">tiers</span><span class="strut">&nbsp;</span></p>
 <p id="t295" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t296" class="stm run hide_run">    <span class="op">@</span><span class="nam">tf</span><span class="op">.</span><span class="nam">function</span><span class="strut">&nbsp;</span></p>
-<p id="t297" class="exc">    <span class="key">def</span> <span class="nam">_setup_losses</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">tiers</span><span class="op">)</span><span class="op">:</span> <span class="com"># pragma: no cover (is only executed within Tensorflow call.)</span><span class="strut">&nbsp;</span></p>
+<p id="t297" class="exc">    <span class="key">def</span> <span class="nam">_setup_losses</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">tiers</span><span class="op">)</span><span class="op">:</span> <span class="com"># pragma: no cover (is only executed within Tensorflow call)</span><span class="strut">&nbsp;</span></p>
 <p id="t298" class="exc">        <span class="nam">predictions</span> <span class="op">=</span> <span class="op">[</span><span class="strut">&nbsp;</span></p>
 <p id="t299" class="pln">            <span class="nam">predictor</span><span class="op">(</span><span class="nam">tier</span><span class="op">)</span> <span class="key">for</span> <span class="nam">predictor</span><span class="op">,</span> <span class="nam">tier</span> <span class="key">in</span> <span class="nam">zip</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_predictors</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t300" class="pln">                                                       <span class="nam">tiers</span><span class="op">[</span><span class="num">1</span><span class="op">:</span><span class="op">]</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
@@ -722,7 +722,7 @@
 <p id="t305" class="pln">                                                      <span class="nam">tiers</span><span class="op">[</span><span class="op">:</span><span class="op">-</span><span class="num">1</span><span class="op">]</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t306" class="pln">                                                      <span class="nam">self</span><span class="op">.</span><span class="nam">_state_predictions</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t307" class="pln">        <span class="op">]</span><span class="strut">&nbsp;</span></p>
-<p id="t308" class="exc">        <span class="key">return</span> <span class="nam">losses</span><span class="strut">&nbsp;</span></p>
+<p id="t308" class="exc">        <span class="key">return</span> <span class="op">[</span><span class="nam">losses</span><span class="op">,</span> <span class="nam">predictions</span><span class="op">,</span> <span class="nam">tiers</span><span class="op">[</span><span class="op">:</span><span class="op">-</span><span class="num">1</span><span class="op">]</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
 <p id="t309" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t310" class="stm run hide_run">    <span class="key">def</span> <span class="nam">as_dataset</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">dataset</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t311" class="pln">        <span class="str">"""Parses observations into a full dataset and validates dataset.</span><span class="strut">&nbsp;</span></p>
@@ -770,7 +770,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.5.4</a>,
-            created at 2019-09-05 20:59
+            created at 2019-09-07 01:08
         </p>
     </div>
 </div>
