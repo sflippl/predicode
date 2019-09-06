@@ -294,7 +294,7 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
         return tiers
 
     @tf.function
-    def _setup_losses(self, tiers):
+    def _setup_losses(self, tiers): # pragma: no cover (is only executed within Tensorflow call.)
         predictions = [
             predictor(tier) for predictor, tier in zip(self._predictors,
                                                        tiers[1:])
@@ -305,7 +305,7 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
                                                       tiers[:-1],
                                                       self._state_predictions)
         ]
-        return losses # pragma: no cover (is only executed within Tensorflow call.)
+        return losses
 
     def as_dataset(self, dataset):
         """Parses observations into a full dataset and validates dataset.
