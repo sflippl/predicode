@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-predicode: Simulations and analytical solutions of predictive coding algorithms.
+predicode: Hierarchical predictive coding in Python.
 """
 
 from predicode.hierarchical import *

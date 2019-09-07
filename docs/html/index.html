@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>predicode: Simulations and analytical solutions of predictive coding algorithms &#8212; predicode 0.0.0.9000 documentation</title>
+    <title>Predicode: Hierarchical Predictive Coding in Python &#8212; predicode 0.0.0.9000 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -33,16 +33,95 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="predicode-simulations-and-analytical-solutions-of-predictive-coding-algorithms">
-<h1>predicode: Simulations and analytical solutions of predictive coding algorithms<a class="headerlink" href="#predicode-simulations-and-analytical-solutions-of-predictive-coding-algorithms" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="predicode-hierarchical-predictive-coding-in-python">
+<h1>Predicode: Hierarchical Predictive Coding in Python<a class="headerlink" href="#predicode-hierarchical-predictive-coding-in-python" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="https://travis-ci.org/sflippl/predicode"><img alt="https://travis-ci.org/sflippl/predicode.svg?branch=master" src="https://travis-ci.org/sflippl/predicode.svg?branch=master" /></a>
 <a class="reference external image-reference" href="https://coveralls.io/github/sflippl/predicode?branch=master"><img alt="https://coveralls.io/repos/github/sflippl/predicode/badge.svg?branch=master" src="https://coveralls.io/repos/github/sflippl/predicode/badge.svg?branch=master" /></a>
-<img alt="https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7%20%7C%203.7--dev-blue" src="https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7%20%7C%203.7--dev-blue" />
-<p>The package ‘predicode’ intends to provide a consistent Tensorflow interface to fitting hierarchical predictive coding models, syntactically guided by keras models.</p>
-<p>Get started by 60 second introductions to predicode’s base functionality!</p>
+<img alt="https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.7--dev-blue" src="https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.7--dev-blue" />
+<p>Predicode is a high-level API for predictive coding algorithms in Python, written on top of <a class="reference external" href="https://www.tensorflow.org/beta/">Tensorflow 2.0</a>. It was written with the guiding principles of <a class="reference external" href="https://keras.io">Keras</a> in mind. In particular, it allows for the integration of arbitrary Keras models in the predictive coding hierarchy. You can declare your models completely in Python and easily extend the functionality.</p>
+<div class="section" id="what-is-hierarchical-predictive-coding">
+<h2>What is hierarchical predictive coding?<a class="headerlink" href="#what-is-hierarchical-predictive-coding" title="Permalink to this headline">¶</a></h2>
+<p>A hierarchical predictive coding model consists of layers of latent variables (<em>tiers</em>). Each tier attempts to predict the adjacent lower tier, resulting in a predicted state and a prediction error. By minimizing the prediction error, both the latent variables and the predictors of these variables are estimated.</p>
+<p>This principle is often complemented by more general variations that will be supported in future versions of the package.</p>
+</div>
+<div class="section" id="a-predictive-coding-model-in-60-seconds">
+<h2>A predictive coding model in 60 seconds<a class="headerlink" href="#a-predictive-coding-model-in-60-seconds" title="Permalink to this headline">¶</a></h2>
+<p>You can create a new predictive coding model using the class <code class="xref py py-class docutils literal notranslate"><span class="pre">pc.Hierarchical</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hpc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">Hierarchical</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>As a next step, you can add tiers increasing in the hierarchy.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># This represents a ten-dimensional input layer.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hpc</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># This represents a four-dimensional latent layer.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hpc</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Active connection: tier_1 -&gt; tier_0</span>
+</pre></div>
+</div>
+<p>You then need to specify how the tiers are connected. In this case, we specify that the higher tier (tier 1) should predict the lower tier (tier 0), the prediction error being the difference between the prediction and the observed value and the loss function driving the estimation being the mean squared error.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">pc.connections.TopDownSequential</span></code> allows you to configure a sequential model predicting tier 0 from tier 1.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hpc</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">TopDownSequential</span><span class="p">([</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Modifying the connection works in the same way as in Keras:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hpc</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hpc</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Once your model looks good, you can configure the learning process:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hpc</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regimen</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean_squared_error&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>If you need to, you can further configure the optimization regimen, for instance by specifying different optimizers for state and predictor estimation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hpc</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regimen</span><span class="o">=</span><span class="n">pc</span><span class="o">.</span><span class="n">EMRegimen</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">state_regimen</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">predictor_regimen</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Finally, you can train the model on your dataset.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># dataset is some ten-dimensional dataset.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hpc</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Evaluate your performance (or inspect the inferred tiers, predictions, or prediction errors) in one line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">metrics</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The inferred values of the latent tier_1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tier_1</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">tier</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The prediction error in the observed tier_0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prediction_error</span> <span class="o">=</span> <span class="n">hpc</span><span class="o">.</span><span class="n">prediction_error</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this way, you can create arbitarily complex predictive coding models with several tiers, complex predictors, and elaborate optimization mechanisms, utilizing the close integration of Keras and Tensorflow.</p>
+</div>
+<div class="section" id="learning-more">
+<h2>Learning more<a class="headerlink" href="#learning-more" title="Permalink to this headline">¶</a></h2>
+<p>The following chapters contain a more in-depth introduction to predicode starting with simple examples before explaining how to tweak your optimization regimen and how to take advantage of Tensorboard. Each of the chapters can be downloaded as a Jupyter notebook or – even simpler – be opened online in Google Colab, where you change lines of code in an interactive session without any preparation.</p>
+<p>The <a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a> provides with more detailed documentation of the software itself.</p>
+<p>Finally, I would recommend the <a class="reference external" href="https://keras.io">Keras documentation</a> for more resources on how to define predictors.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Get predicode 0.1.0-beta on PyPi now:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pip</span> <span class="n">install</span> <span class="n">predicode</span>
+</pre></div>
+</div>
+<p>Alternatively, you can download the latest development version from Github:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">sflippl</span><span class="o">/</span><span class="n">predicode</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="support-and-future-development">
+<h2>Support and future development<a class="headerlink" href="#support-and-future-development" title="Permalink to this headline">¶</a></h2>
+<p>Predicode 0.2.0 is currently under <a class="reference external" href="https://github.com/sflippl/predicode/milestone/2">active development</a>. Stay tuned for autopredictive coding tiers, metrics that are more customized to predictive coding, and state and predictor traces!</p>
+<p>If you would like to file a bug, submit a feature request, or contribute to the development, please file an issue on <a class="reference external" href="https://github.com/sflippl/predicode/issues">Github</a>.</p>
 <div class="toctree-wrapper compound">
 </div>
-<p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p>
+</div>
 </div>
 
 
