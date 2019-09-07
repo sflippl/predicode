@@ -204,3 +204,9 @@ class TestEstimation(unittest.TestCase):
         self.hpc.delete_predictor()
         with self.assertRaises(ValueError):
             self.hpc.train(self.arr, self.regimen)
+
+    def test_metric(self):
+        """Tests if the metric yields results."""
+        metric = keras.metrics.MeanSquaredError()
+        self.hpc.train(self.arr, self.regimen, metrics = [metric])
+        self.assertGreaterEqual(metric.result(), 0)
