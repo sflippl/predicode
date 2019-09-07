@@ -1,6 +1,6 @@
 setuptools>=41.0.0
 pandas
-numpy
+numpy>=1.16.0
 tensorflow==2.0.0-rc
 plotnine
 scipy
