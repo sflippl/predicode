@@ -8,7 +8,7 @@ class TierConnection(abc.ABC):
     """
 
     def __init__(self):
-        super().__init__()
+        pass
 
     @abc.abstractmethod
     def predict(self, upper_tier, lower_tier):
@@ -20,7 +20,6 @@ class TierConnection(abc.ABC):
             lower_tier: The tensor variable or constant corresponding to the
                 states of the lower tier.
         """
-        pass
 
     @abc.abstractmethod
     def prediction_error(self, upper_tier, lower_tier, predictions):
@@ -33,7 +32,6 @@ class TierConnection(abc.ABC):
                 states of the lower tier.
             predictions: The predictions compute by the connection.
         """
-        pass
 
     @abc.abstractmethod
     def compute_loss(self, upper_tier, lower_tier, predictions):
@@ -42,13 +40,11 @@ class TierConnection(abc.ABC):
         Args:
             prediction_error: The prediction error computed by the connection.
         """
-        pass
 
     @abc.abstractmethod
     def summary(self):
         """Provides a summary of the tier connection.
         """
-        pass
 
     @property
     def predictor_variables(self):
@@ -60,8 +56,8 @@ class NoTierConnection(TierConnection): # This class is required to make the int
     """Undefined tier connection.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self): # pylint:disable=super-init-not-called
+        pass
 
     def predict(self, upper_tier, lower_tier):
         raise ValueError('NoTierConnection is only a placeholder. Define a '

@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.keras as keras
 
-class SimpleOptimizerRegimen:
+class OptimizerRegimen:
     """This class defines a simple regimen using one optimizer and one set of
     values.
 
@@ -74,10 +74,9 @@ class SimpleOptimizerRegimen:
         for grad, var in zip(gradients, variables):
             if grad is not None:
                 gen.append((grad, var))
-                flat_grad = tf.reshape(grad, [-1])
                 _grads = _grads and (
                     tf.math.reduce_all(
-                        tf.pow(flat_grad, 2) < eps
+                        tf.pow(tf.reshape(grad, [-1]), 2) < eps
                     )
                 )
         self.optimizer.apply_gradients(gen)
@@ -123,7 +122,7 @@ class SimpleOptimizerRegimen:
         """The optimizer's iterations."""
         return self.optimizer.iterations
 
-class ConstantRegimen(SimpleOptimizerRegimen):
+class ConstantRegimen(OptimizerRegimen):
     """This class defines a regimen that remains constant and does not affect
     the corresponding variables."""
     def __init__(self):
@@ -132,15 +131,12 @@ class ConstantRegimen(SimpleOptimizerRegimen):
     def start_batch(self):
         """Indicates the start of a batch in the training regimen.
         """
-        return
 
     def finish_batch(self, metrics=None, it_baseline=0):
         """Indicates the end of a patch in the training regimen."""
-        return
 
     def training_step(self, loss_fun, variables, metrics=None):
         """A single training step."""
-        return
 
     def end(self):
         """Always indicates that the regimen has ended."""
@@ -152,11 +148,9 @@ class ConstantRegimen(SimpleOptimizerRegimen):
 
     def restart(self):
         """Restarts the regimen."""
-        return
 
     def train(self, loss_fun, variables, metrics=None, it_baseline=0):
         """A training session."""
-        return
 
     @property
     def iterations(self):
@@ -172,19 +166,17 @@ class EMRegimen:
     consists of a state regimen and a predictor regimen.
 
     Since the states are lost if there are several batches that are being
-    iterated over, predictor convergence is used as the general convergence 
+    iterated over, predictor convergence is used as the general convergence
     criterion (with state convergence being the logical implication).
 
     Args:
         state_regimen: The regimen used for the state estimation.
         predictor_regimen: The regimen used for the predictor estimation.
-        max_steps: The upper bound on the number of EM steps.
     """
 
-    def __init__(self, state_regimen, predictor_regimen, max_steps=1000):
+    def __init__(self, state_regimen, predictor_regimen):
         self.state_regimen = state_regimen
         self.predictor_regimen = predictor_regimen
-        self.max_steps = max_steps
         self.n_steps = 0
         self.metrics = None
         self._sut = [False]
@@ -193,24 +185,25 @@ class EMRegimen:
 
     def start_batch(self):
         """Starts batch by restarting the regimens and incrementing the number
-        of steps."""
+        of steps.
+        """
         self.state_regimen.restart()
         self.predictor_regimen.restart()
         self.n_steps += 1
         self._sut = []
 
     def finish_batch(self):
-        """Finishes batch."""
-        return
+        """Finishes batch.
+        """
 
-    def end(self):
+    def end(self, epochs):
         """The regimen ends when the weight regimen had immediately converged.
 
         This means that even the very first gradient was below the threshold.
         """
-        if (self.n_steps == 0) and (self.max_steps > 0):
+        if (self.n_steps == 0) and (epochs > 0):
             return False
-        return all(self._sut) or (self.n_steps >= self.max_steps)
+        return all(self._sut) or (self.n_steps >= epochs)
 
     def training_step(self, loss_fun, state_variables, predictor_variables,
                       metrics=None):
@@ -230,13 +223,13 @@ class EMRegimen:
         )
         self._sut.append(self.predictor_regimen.steps_until_convergence() == 0)
 
-    def train(self, loss_fun, state_variables, predictor_variables,
-              metrics=None):
+    def train(self, loss_fun, state_variables, predictor_variables, # (mostly internal method) pylint:disable=too-many-arguments
+              metrics=None, epochs=1):
         """Trains a model until convergence or the maximum number of steps
         have been exceeded.
         """
         metrics = metrics or []
-        while not self.end():
+        while not self.end(epochs):
             self.start_batch()
             self.training_step(loss_fun, state_variables, predictor_variables,
                                metrics=metrics)
@@ -249,13 +242,13 @@ class EMRegimen:
         self._sut = [False]
 
 def _get_sor(identifier):
-    if isinstance(identifier, SimpleOptimizerRegimen):
+    if isinstance(identifier, OptimizerRegimen):
         return copy.deepcopy(identifier)
     try:
         identifier = keras.optimizers.get(identifier)
     except ValueError as e:
         raise ValueError('Could not interpret regimen identifier.') from e
-    return SimpleOptimizerRegimen(optimizer=identifier)
+    return OptimizerRegimen(optimizer=copy.deepcopy(identifier))
 
 def get(identifier):
     """Retrieves a EMRegimen instance.
@@ -277,7 +270,7 @@ def get(identifier):
     Raises:
         ValueError: if 'identifier' cannot be interpreted.
     """
-    if isinstance(identifier, SimpleOptimizerRegimen):
+    if isinstance(identifier, OptimizerRegimen):
         return EMRegimen(
             state_regimen=copy.deepcopy(identifier),
             predictor_regimen=copy.deepcopy(identifier)
@@ -292,8 +285,8 @@ def get(identifier):
             if key not in identifier:
                 identifier[key] = ConstantRegimen()
         return EMRegimen(
-            state_regimen=_get_sor(key['states']),
-            predictor_regimen=_get_sor(key['predictors'])
+            state_regimen=_get_sor(identifier['states']),
+            predictor_regimen=_get_sor(identifier['predictors'])
         )
     return EMRegimen(
         state_regimen=_get_sor(identifier),

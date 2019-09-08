@@ -13,17 +13,17 @@ class TestHex2(unittest.TestCase):
     """Tests the hex_2 function."""
     def test_base(self):
         """Tests base functionality."""
-        self.assertEqual(pc.hex_2(2), '02')
-        self.assertEqual(pc.hex_2(30), '1e')
-        self.assertEqual(pc.hex_2(0), '00')
+        self.assertEqual(pc.datasets.hex_2(2), '02')
+        self.assertEqual(pc.datasets.hex_2(30), '1e')
+        self.assertEqual(pc.datasets.hex_2(0), '00')
         with self.assertRaises(ValueError):
-            pc.hex_2(16**3)
+            pc.datasets.hex_2(16**3)
         with self.assertRaises(ValueError):
-            pc.hex_2(-1)
+            pc.datasets.hex_2(-1)
         with self.assertRaises(TypeError):
-            pc.hex_2('01')
+            pc.datasets.hex_2('01')
         with self.assertRaises(TypeError):
-            pc.hex_2(1.5)
+            pc.datasets.hex_2(1.5)
 
 class TestImageData(unittest.TestCase):
     """Tests the Imagedata class."""
@@ -55,19 +55,19 @@ class TestImageData(unittest.TestCase):
                [139, 146, 149],
                [115, 115, 112]]]],
             dtype=np.uint8)
-        self.labelled_data = pc.ImageData(array, labels=['a', 'b'])
-        self.unlabelled_data = pc.ImageData(array)
+        self.labelled_data = pc.datasets.ImageData(array, labels=['a', 'b'])
+        self.unlabelled_data = pc.datasets.ImageData(array)
         self.dataframe = self.labelled_data.dataframe()
         self.rgb_dataframe = self.labelled_data.rgb_dataframe()
 
     def test_init(self):
         """Tests appropriate handling of faulty handling."""
         with self.assertRaises(ValueError):
-            pc.ImageData(np.array([], ndmin=5))
+            pc.datasets.ImageData(np.array([], ndmin=5))
         with self.assertRaises(ValueError):
-            pc.ImageData(np.array([[[[1]]]]))
+            pc.datasets.ImageData(np.array([[[[1]]]]))
         with self.assertRaises(AttributeError):
-            pc.ImageData('a')
+            pc.datasets.ImageData('a')
 
     def test_dataframe(self):
         """Tests dataframe method."""

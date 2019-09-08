@@ -13,7 +13,7 @@ import tensorflow.keras as keras
 import predicode.regimens as regimens
 import predicode.connections as connections
 
-class Hierarchical(): #pylint:disable=too-many-instance-attributes
+class Hierarchical: #pylint:disable=too-many-instance-attributes
     """Defines a hierarchical predictive coding model.
 
     Args:
@@ -22,7 +22,8 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
     """
 
     n = 1
-    def __init__(self, tiers = [], name=None):
+    def __init__(self, tiers=None, name=None):
+        tiers = tiers or []
         if not name:
             name = 'hierarchical_%d' % (Hierarchical.n, )
             Hierarchical.n += 1
@@ -36,6 +37,10 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
         self._connections = []
         self._current_connection = None
         self._regimen = None
+        self._optimizer = None
+        self._metrics = None
+        self._is_compiled = False
+
         for tier in tiers:
             self.add_tier(tier)
 
@@ -220,7 +225,7 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
                             % (self._current_connection+1, ))
         self._connections[self._current_connection] = value
 
-    def delete_connections(self):
+    def delete_connection(self):
         """Deletes the activated tier connection."""
         self._connections[self._current_connection] =\
             connections.NoTierConnection()
@@ -236,7 +241,7 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
             print()
         print('# Tier 0: %s' % (self._tier_names[0], ))
 
-    def compile(self, optimizer, metrics=[]):
+    def compile(self, optimizer, metrics=None):
         """Configures the model for training.
 
         Args:
@@ -254,13 +259,14 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
         self._metrics = metrics
         self._is_compiled = True
 
-    def train(self, dataset, batch_size=10000, logdir=None):
+    def train(self, dataset, epochs=1, batch_size=10000, logdir=None):
         """Train a model on a given dataset.
 
         This model trains a hierarchical predictive coding model.
 
         Args:
             data: A numpy array or a Tensorflow Dataset.
+            epochs: How many epochs should be estimated?
             batch_size: In which batch sizes should training occur? Default is
                 10000, as this creates a manageable size, but also means that
                 small datasets are estimated together.
@@ -275,12 +281,10 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
         dataset = self.as_dataset(dataset)
         batches = dataset.batch(batch_size)
         self._tiers = copy.deepcopy(self._raw_tiers)
-        self._predictions = copy.deepcopy(self._raw_tiers[:-1])
-        self._prediction_errors = copy.deepcopy(self._raw_tiers[:-1])
         optimizer = copy.deepcopy(self._optimizer)
         if logdir:
             summary_writer = tf.summary.create_file_writer(logdir).as_default()
-        while not optimizer.end():
+        while not optimizer.end(epochs):
             optimizer.start_batch()
             for data in batches:
                 self._tiers = self._setup_tiers(data)
@@ -355,7 +359,8 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
             Value Error: if dataset is neither numpy array nor dictionary
                 nor tensorflow datset; if an entry is provided that is not
                 a tier of the model or if the shape of a provided tier
-                does not conform to the shape of the tier in the model."""
+                does not conform to the shape of the tier in the model.
+        """
         if isinstance(dataset, np.ndarray):
             dataset = {self._tier_names[0]: dataset}
         if isinstance(dataset, dict):

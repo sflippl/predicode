@@ -141,7 +141,7 @@
 <p id="t33" class="stm run hide_run">    <span class="nam">rand_ortho</span> <span class="op">=</span> <span class="nam">stats</span><span class="op">.</span><span class="nam">ortho_group</span><span class="op">.</span><span class="nam">rvs</span><span class="op">(</span><span class="nam">dimensions</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t34" class="stm run hide_run">    <span class="nam">rand_normal</span> <span class="op">=</span> <span class="nam">np</span><span class="op">.</span><span class="nam">random</span><span class="op">.</span><span class="nam">normal</span><span class="op">(</span><span class="nam">scale</span><span class="op">=</span><span class="nam">pc_variance</span><span class="op">,</span> <span class="nam">size</span><span class="op">=</span><span class="op">(</span><span class="nam">size</span><span class="op">,</span> <span class="nam">dimensions</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t35" class="stm run hide_run">    <span class="nam">rand_input</span> <span class="op">=</span> <span class="nam">np</span><span class="op">.</span><span class="nam">matmul</span><span class="op">(</span><span class="nam">rand_normal</span><span class="op">,</span> <span class="nam">rand_ortho</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t36" class="stm run hide_run">    <span class="key">return</span> <span class="nam">rand_input</span><span class="strut">&nbsp;</span></p>
+<p id="t36" class="stm run hide_run">    <span class="key">return</span> <span class="nam">rand_input</span><span class="op">.</span><span class="nam">astype</span><span class="op">(</span><span class="str">'float32'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 
             </td>
         </tr>
@@ -152,7 +152,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.5.4</a>,
-            created at 2019-08-25 22:09
+            created at 2019-09-08 17:54
         </p>
     </div>
 </div>

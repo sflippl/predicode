@@ -13,10 +13,10 @@ class TestCifar10(unittest.TestCase):
 
     def setUp(self):
         """Import CIFAR-10."""
-        self.cifar10 = pc.Cifar10()
+        self.cifar10 = pc.datasets.Cifar10()
 
     def test_labels(self):
         """Test that labels are correct."""
         self.assertTrue(
-            self.cifar10.labels['label_text'][0] in pc.Cifar10.labels
+            self.cifar10.labels['label_text'][0] in pc.datasets.Cifar10.labels
         )

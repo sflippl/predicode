@@ -11,10 +11,10 @@ class TestDecayingMultiNormal(unittest.TestCase):
     """Tests decaying_multi_normal function."""
     def setUp(self):
         """Sets up an example dataset."""
-        self.art = pc.decaying_multi_normal(2, 1)
+        self.art = pc.datasets.decaying_multi_normal(2, 1)
 
     def test_init(self):
         """Tests that initialization of decaying_multi_normal function works."""
         with self.assertRaises(ValueError):
-            pc.decaying_multi_normal(2, 2, -1)
+            pc.datasets.decaying_multi_normal(2, 2, -1)
         self.assertEqual(self.art.shape, (1, 2))

@@ -5,7 +5,7 @@ import collections
 import tensorflow as tf
 
 @tf.function
-def difference(states, predictions):
+def difference(states, predictions): # pragma: no cover
     """Computes the prediction error as difference between state and prediction.
 
     Args:

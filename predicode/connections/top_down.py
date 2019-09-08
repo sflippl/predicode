@@ -37,20 +37,20 @@ class TopDownPrediction(TierConnection):
         self.loss = keras.losses.get(loss)
 
     @tf.function
-    def predict(self, upper_tier, lower_tier=None):
+    def predict(self, upper_tier, lower_tier=None): # pragma: no cover
         """Uses the model to predict the lower tier.
         """
         return self.model(upper_tier)
 
     @tf.function
-    def prediction_error(self, upper_tier, lower_tier, predictions):
+    def prediction_error(self, upper_tier, lower_tier, predictions): # pragma: no cover
         """Computes the prediction error between the lower tier and its
         prediction specified in the initialization.
         """
         return self._prediction_error(lower_tier, predictions)
 
     @tf.function
-    def compute_loss(self, upper_tier, lower_tier, predictions):
+    def compute_loss(self, upper_tier, lower_tier, predictions): # pragma: no cover
         """Computes the loss specified in the initialization.
         """
         return self.loss(lower_tier, predictions)
@@ -85,4 +85,6 @@ class TopDownSequential(TopDownPrediction):
         )
 
     def add(self, layer):
+        """Add a layer to the sequential model.
+        """
         self.model.add(layer)

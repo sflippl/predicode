@@ -1,8 +1,6 @@
 README.md
 setup.py
 predicode/__init__.py
-predicode/prediction_errors.py
-predicode/regimens.py
 predicode.egg-info/PKG-INFO
 predicode.egg-info/SOURCES.txt
 predicode.egg-info/dependency_links.txt
@@ -10,6 +8,9 @@ predicode.egg-info/top_level.txt
 predicode/connections/__init__.py
 predicode/connections/connections.py
 predicode/connections/top_down.py
+predicode/connections/test/__init__.py
+predicode/connections/test/connections.py
+predicode/connections/test/top_down.py
 predicode/datasets/__init__.py
 predicode/datasets/artificial_data.py
 predicode/datasets/cifar10.py
@@ -21,9 +22,12 @@ predicode/datasets/test/imagedata.py
 predicode/hierarchical/__init__.py
 predicode/hierarchical/hierarchical.py
 predicode/hierarchical/initializer.py
-predicode/hierarchical/state_prediction.py
 predicode/hierarchical/test/__init__.py
 predicode/hierarchical/test/hierarchical.py
 predicode/hierarchical/test/initializer.py
-predicode/hierarchical/test/regimen.py
-predicode/hierarchical/test/state_prediction.py
+predicode/prediction_errors/__init__.py
+predicode/prediction_errors/prediction_errors.py
+predicode/prediction_errors/test.py
+predicode/regimens/__init__.py
+predicode/regimens/regimens.py
+predicode/regimens/test.py
