@@ -110,6 +110,4 @@ If you would like to file a bug, submit a feature request, or contribute to the 
    :hidden:
    
    usage/get_started
-   usage/installation
    usage/datasets
-   usage/minimal_model

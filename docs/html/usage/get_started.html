@@ -16,8 +16,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Installation" href="installation.html" />
-    <link rel="prev" title="predicode: Simulations and analytical solutions of predictive coding algorithms" href="../index.html" />
+    <link rel="next" title="Datasets" href="datasets.html" />
+    <link rel="prev" title="Predicode: Hierarchical Predictive Coding in Python" href="../index.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -242,11 +242,14 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">try</span><span class="p">:</span>
+<span></span><span class="c1"># For installation of the necessary packages in Google Colab</span>
+<span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
 <span class="k">except</span><span class="p">:</span>
     <span class="o">!</span>pip install git+https://github.com/sflippl/predicode
     <span class="kn">import</span> <span class="nn">predicode</span> <span class="k">as</span> <span class="nn">pc</span>
+<span class="c1"># lazytools just contains a few convenience functions, specifically matrix heatmaps,</span>
+<span class="c1"># but is otherwise not necessary.</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">lazytools_sflippl</span> <span class="k">as</span> <span class="nn">lazytools</span>
 <span class="k">except</span><span class="p">:</span>
@@ -255,17 +258,25 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="A-minimal-model-in-60-seconds">
-<h2>A minimal model in 60 seconds<a class="headerlink" href="#A-minimal-model-in-60-seconds" title="Permalink to this headline">¶</a></h2>
-<p>A minimal hierarchical predictive coding model consists of a single, densely and linearly connected hidden layer. In itself, it amounts to a simple PCA, but already has interesting consequences, both in its outcome, which is able to explain neural effects such as endstopping, and in its learning trajectory.</p>
-<p>To get some data that can well be approximated by a PCA, call pc.DecayingMultiNormal:</p>
-<div class="nbinput docutils container">
+<p>In this tutorial, you will get to know the basic functionality of predicode, starting with a minimal linear predictive coding model before discussing multiple tiers, customized optimization regimens, training in batches, and the tensorboard functionality.</p>
+<p>Throughout the tutorial, we will be concerned with a small artificial dataset that is normally distributed, with its principal components having exponentially decreasing variance.</p>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">art</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">decaying_multi_normal</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">art</span><span class="p">,</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">decaying_multi_normal</span><span class="p">(</span>
+    <span class="n">dimensions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -277,129 +288,25 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (8760784900369)&gt;
-</pre></div>
-</div>
-</div>
-<p>To fit a minimal model to this data, call pc.MinimalHierarchicalModel:</p>
-<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">hpc</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">MinimalHierarchicalModel</span><span class="p">(</span><span class="n">art</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">latent_dimensions</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8748327106389)&gt;
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-WARNING: Logging before flag parsing goes to stderr.
-W0826 13:23:25.600336 140173786113856 estimator.py:1811] Using temporary folder as model directory: /tmp/tmpf6ungpzq
-</pre></div></div>
-</div>
+<div class="section" id="The-minimal-model">
+<h2>The minimal model<a class="headerlink" href="#The-minimal-model" title="Permalink to this headline">¶</a></h2>
+<p>As a first step, we add tiers of specified shape, in this case a ten-dimensional input layer and a four-dimensional latent layer.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-W0826 13:23:39.305405 140173786113856 estimator.py:1811] Using temporary folder as model directory: /tmp/tmpeo15sm9j
-W0826 13:23:39.341255 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/training_util.py:236: Variable.initialized_value (from tensorflow.python.ops.variables) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use Variable.read_value. Variables in 2.X are initialized automatically both in eager and graph (inside tf.defun) contexts.
-W0826 13:23:39.364500 140173786113856 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:59: The name tf.feature_column.input_layer is deprecated. Please use tf.compat.v1.feature_column.input_layer instead.
-
-W0826 13:23:39.366652 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:205: NumericColumn._get_dense_tensor (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
-Instructions for updating:
-The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
-W0826 13:23:39.368350 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:2115: NumericColumn._transform_feature (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
-Instructions for updating:
-The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
-W0826 13:23:39.380359 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/feature_column/feature_column.py:206: NumericColumn._variable_shape (from tensorflow.python.feature_column.feature_column_v2) is deprecated and will be removed in a future version.
-Instructions for updating:
-The old _FeatureColumn APIs are being deprecated. Please use the new FeatureColumn APIs instead.
-W0826 13:23:39.450145 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:63: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use keras.layers.dense instead.
-W0826 13:23:39.457595 140173786113856 deprecation.py:506] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/init_ops.py:1251: calling VarianceScaling.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
-Instructions for updating:
-Call initializer instance with the dtype argument instead of passing it to the constructor
-W0826 13:23:39.740041 140173786113856 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:35: The name tf.losses.mean_squared_error is deprecated. Please use tf.compat.v1.losses.mean_squared_error instead.
-
-W0826 13:23:39.762232 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/ops/losses/losses_impl.py:121: add_dispatch_support.&lt;locals&gt;.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use tf.where in 2.0, which has the same broadcast rule as np.where
-W0826 13:23:39.789297 140173786113856 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:49: The name tf.train.GradientDescentOptimizer is deprecated. Please use tf.compat.v1.train.GradientDescentOptimizer instead.
-
-W0826 13:23:39.790798 140173786113856 deprecation_wrapper.py:119] From /home/sflippl/.local/lib/python3.7/site-packages/predicode/hierarchical/interfaces/minimal_model.py:53: The name tf.train.get_global_step is deprecated. Please use tf.compat.v1.train.get_global_step instead.
-
-W0826 13:23:40.310899 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 104 vs previous value: 104. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-W0826 13:23:40.375190 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 201 vs previous value: 201. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-W0826 13:23:40.425785 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 301 vs previous value: 301. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-W0826 13:23:40.477852 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 401 vs previous value: 401. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-W0826 13:23:40.614050 140173786113856 basic_session_run_hooks.py:724] It seems that global step (tf.train.get_global_step) has not been increased. Current value (could be stable): 646 vs previous value: 646. You could increase the global step by passing tf.train.get_global_step() to Optimizer.apply_gradients or Optimizer.minimize.
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;tensorflow_estimator.python.estimator.estimator.Estimator at 0x7f7c700d2910&gt;
-</pre></div>
-</div>
-</div>
-<div class="section" id="Outcome">
-<h3>Outcome<a class="headerlink" href="#Outcome" title="Permalink to this headline">¶</a></h3>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">hpc</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-W0826 13:23:46.181127 140173786113856 deprecation.py:323] From /home/sflippl/.local/lib/python3.7/site-packages/tensorflow/python/training/saver.py:1276: checkpoint_exists (from tensorflow.python.training.checkpoint_management) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use standard file APIs to check for files with this prefix.
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>{&#39;loss&#39;: 2.7815644e-05, &#39;global_step&#39;: 10000}
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">latent_values</span><span class="p">,</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">hpc_minimal</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">Hierarchical</span><span class="p">()</span>
+<span class="n">hpc_minimal</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="p">))</span>
+<span class="n">hpc_minimal</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -407,53 +314,706 @@ Use standard file APIs to check for files with this prefix.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/usage_get_started_12_0.png" src="../_images/usage_get_started_12_0.png" />
-</div>
+<div class="highlight"><pre>
+Active connection: tier_1 -&gt; tier_0
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (8760775465813)&gt;
+<span></span>&lt;predicode.hierarchical.hierarchical.Hierarchical at 0x7f4e05728410&gt;
 </pre></div>
 </div>
 </div>
+<p>We can inspect the current result using the summary:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+# Tier 1: tier_1
+
+# Connection: tier_1 -&gt; tier_0
+(No tier connection defined.)
+
+# Tier 0: tier_0
+</pre></div></div>
+</div>
+<p>The ‘connection’ property refers to the currently activated connection, in this case the connection between tier 1 and tier 0.</p>
+<p>This connection specifies how tier 1 is inferred from tier 0 with the observed data. The class <code class="docutils literal notranslate"><span class="pre">pc.TopDownPrediction()</span></code> provides a classical hierarchical predictive connection where tier 1 is used to predict tier 0 and the values of tier 1 are inferred to optimize this prediction. The provided model must be a Keras model that specifies how tier 0 is predicted from tier 1. Specifically, <code class="docutils literal notranslate"><span class="pre">pc.TopDownSequential</span></code> instantiates a
+<a class="reference external" href="https://keras.io/getting-started/sequential-model-guide/">Sequential</a> model.</p>
+<p>For example, a simple linear connection is given by a sequential model consisting of single dense linear connection.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
+<span class="n">hpc_minimal</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">TopDownSequential</span><span class="p">()</span>
+<span class="n">hpc_minimal</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The model is now ready to be compiled:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc</span><span class="o">.</span><span class="n">predict</span><span class="p">(),</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
+<div class="output_area docutils container">
 <div class="highlight"><pre>
-W0826 13:23:53.079085 140173786113856 estimator.py:1000] Input graph does not use tf.data.Dataset or contain a QueueRunner. That means predict yields forever. This is probably a mistake.
+# Tier 1: tier_1
+
+# Connection: tier_1 -&gt; tier_0
+Top-down prediction.
+## Predictive model
+Model: &#34;sequential&#34;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+dense (Dense)                (None, 10)                50
+=================================================================
+Total params: 50
+Trainable params: 50
+Non-trainable params: 0
+_________________________________________________________________
+## Prediction error
+&lt;tensorflow.python.eager.def_function.Function object at 0x7f4e143c86d0&gt;
+## Loss function
+&lt;function mean_squared_error at 0x7f4e1de4d560&gt;
+
+# Tier 0: tier_0
 </pre></div></div>
+</div>
+<p>By default, the prediction error is given by the difference between the prediction from tier 1 and the true values of tier 0, and the loss function is given by the mean squared error between the two. By compiling the model, we now specify how the states and the predictor weights are estimated.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We can now use <code class="docutils literal notranslate"><span class="pre">dataset</span></code> to train the model:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;predicode.hierarchical.hierarchical.Hierarchical at 0x7f4e05728410&gt;
+</pre></div>
+</div>
+</div>
+<p>We can now inspect the estimated tiers, predictions, and prediction errors:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">tier</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                         <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/usage_get_started_13_1.png" src="../_images/usage_get_started_13_1.png" />
+<img alt="../_images/usage_get_started_23_0.png" src="../_images/usage_get_started_23_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;ggplot: (8760775572757)&gt;
+<span></span>&lt;ggplot: (8748307531765)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">prediction</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                         <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_get_started_24_0.png" src="../_images/usage_get_started_24_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8748307336885)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">prediction_error</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                         <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_get_started_25_0.png" src="../_images/usage_get_started_25_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8748317225069)&gt;
+</pre></div>
+</div>
+</div>
+<p>We can also inspect the estimated weights:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[array([[ 0.4781576 ,  0.688794  ,  0.12980229,  0.5537218 ,  0.38032824,
+         -0.11391962, -0.02828846,  1.0756079 ,  0.5172539 , -0.5371767 ],
+        [ 1.2092746 , -0.1235444 ,  0.53653646,  0.9537554 ,  0.83324504,
+         -0.46419057,  0.01348522, -1.3601234 ,  0.66269   ,  0.17493841],
+        [-0.95141053,  0.06300981, -0.27511808,  0.1718974 ,  0.5279959 ,
+          1.1658176 , -0.29007822, -0.20417835, -1.0425217 , -0.7889378 ],
+        [ 0.7737668 ,  0.54437613, -1.2937229 ,  0.65247506,  0.03088524,
+         -1.3553474 ,  0.4264841 , -1.7554736 ,  0.6602506 ,  0.57957274]],
+       dtype=float32),
+ array([-0.00057098, -0.00237244,  0.0034195 , -0.00104265,  0.00052802,
+         0.00262731, -0.00226873, -0.00321213,  0.00054307,  0.00072796],
+       dtype=float32)]
 </pre></div>
 </div>
 </div>
 </div>
+<div class="section" id="Optimization-regimens">
+<h2>Optimization regimens<a class="headerlink" href="#Optimization-regimens" title="Permalink to this headline">¶</a></h2>
+<p>Hierarchical predictive coding must infer the latent variables and the predictor’s weights. When both are taken together, the system is oversaturated. These variables must therefore be estimated in separate stages. Usually, this is solved by the Expectation-Maximization-Algorithm, iteratively estimating states and predictor variables until convergence. This means that the usual routine of simply specifying epochs is not sufficient. Instead, convergence criteria must be specified when estimation
+mode should be switched.</p>
+<p>This specification works with <code class="docutils literal notranslate"><span class="pre">OptimizationRegimens</span></code>. The parameter <code class="docutils literal notranslate"><span class="pre">eps</span></code> specifies the change at which the algorithm is assumed to have converged, and the parameter <code class="docutils literal notranslate"><span class="pre">max_steps</span></code> specifies and upper bound on the number of iterations.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
 </div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">state_regimen</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">regimens</span><span class="o">.</span><span class="n">OptimizerRegimen</span><span class="p">(</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
+    <span class="n">eps</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span>
+    <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">predictor_regimen</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">regimens</span><span class="o">.</span><span class="n">OptimizerRegimen</span><span class="p">(</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">),</span>
+    <span class="n">eps</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Finally, you can combine the state and predictor regimen using the class <code class="docutils literal notranslate"><span class="pre">EMRegimen</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">em_regimen</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">regimens</span><span class="o">.</span><span class="n">EMRegimen</span><span class="p">(</span>
+    <span class="n">state_regimen</span><span class="o">=</span><span class="n">state_regimen</span><span class="p">,</span>
+    <span class="n">predictor_regimen</span><span class="o">=</span><span class="n">predictor_regimen</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>As a shortcut, you can use identifiers for compilation (see <code class="docutils literal notranslate"><span class="pre">help(pc.regimens.get)</span></code>).</p>
+</div>
+<div class="section" id="Multiple-tiers">
+<h2>Multiple tiers<a class="headerlink" href="#Multiple-tiers" title="Permalink to this headline">¶</a></h2>
+<p>Specifying multiple tiers works in exactly the same way:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_three</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">Hierarchical</span><span class="p">()</span>
+<span class="n">hpc_three</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="p">))</span>
+<span class="n">hpc_three</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">))</span>
+<span class="n">hpc_three</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Active connection: tier_1 -&gt; tier_0
+Active connection: tier_2 -&gt; tier_1
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;predicode.hierarchical.hierarchical.Hierarchical at 0x7f4dfc3892d0&gt;
+</pre></div>
+</div>
+</div>
+<p>At the moment the active connection is given by the one between tier_2 and tier_1. We specify a sequential model with an intermediate nonlinearity.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
+<span class="n">hpc_three</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">TopDownSequential</span><span class="p">(</span>
+    <span class="n">layers</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">)),</span>
+        <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">),</span>
+        <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We now activate the connection between tier_1 and tier_0 to specify a linear model there.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_three</span><span class="o">.</span><span class="n">activate_connection</span><span class="p">(</span><span class="s1">&#39;tier_1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Active connection: tier_1 -&gt; tier_0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;predicode.hierarchical.hierarchical.Hierarchical at 0x7f4dfc3892d0&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_three</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">TopDownSequential</span><span class="p">(</span>
+    <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">),</span>
+                               <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_three</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+# Tier 2: tier_2
+
+# Connection: tier_2 -&gt; tier_1
+Top-down prediction.
+## Predictive model
+Model: &#34;sequential_1&#34;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+dense_1 (Dense)              (None, 8)                 24
+_________________________________________________________________
+activation (Activation)      (None, 8)                 0
+_________________________________________________________________
+dense_2 (Dense)              (None, 4)                 36
+=================================================================
+Total params: 60
+Trainable params: 60
+Non-trainable params: 0
+_________________________________________________________________
+## Prediction error
+&lt;tensorflow.python.eager.def_function.Function object at 0x7f4e143c86d0&gt;
+## Loss function
+&lt;function mean_squared_error at 0x7f4e1de4d560&gt;
+
+# Tier 1: tier_1
+
+# Connection: tier_1 -&gt; tier_0
+Top-down prediction.
+## Predictive model
+Model: &#34;sequential_2&#34;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+dense_3 (Dense)              (None, 10)                40
+=================================================================
+Total params: 40
+Trainable params: 40
+Non-trainable params: 0
+_________________________________________________________________
+## Prediction error
+&lt;tensorflow.python.eager.def_function.Function object at 0x7f4e143c86d0&gt;
+## Loss function
+&lt;function mean_squared_error at 0x7f4e1de4d560&gt;
+
+# Tier 0: tier_0
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_three</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">em_regimen</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_three</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;predicode.hierarchical.hierarchical.Hierarchical at 0x7f4dfc3892d0&gt;
+</pre></div>
+</div>
+</div>
+<p>We can now again examine this model:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc_three</span><span class="o">.</span><span class="n">tier</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_get_started_48_0.png" src="../_images/usage_get_started_48_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8748299009465)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc_three</span><span class="o">.</span><span class="n">prediction</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_get_started_49_0.png" src="../_images/usage_get_started_49_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8748286785853)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc_three</span><span class="o">.</span><span class="n">prediction_error</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                         <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_get_started_50_0.png" src="../_images/usage_get_started_50_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8748286364185)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc_three</span><span class="o">.</span><span class="n">tier</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_get_started_51_0.png" src="../_images/usage_get_started_51_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8748200262345)&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Batch-training">
+<h2>Batch training<a class="headerlink" href="#Batch-training" title="Permalink to this headline">¶</a></h2>
+<p>For big datasets, you can also train in batches. This means, however that you will not have retained all tiers, but only the last batch that was used.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">big_dataset</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">decaying_multi_normal</span><span class="p">(</span>
+    <span class="n">dimensions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">50000</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>As an example we just estimate the states for the given weights. This can be specified by only specifying a state estimator in the provided dictionary.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">compile</span><span class="p">({</span><span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="s1">&#39;adam&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">big_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;predicode.hierarchical.hierarchical.Hierarchical at 0x7f4e05728410&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lazytools</span><span class="o">.</span><span class="n">matrix_heatmap</span><span class="p">(</span><span class="n">hpc_minimal</span><span class="o">.</span><span class="n">prediction</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">pole</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/usage_get_started_58_0.png" src="../_images/usage_get_started_58_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>&lt;ggplot: (8748299408945)&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Metrics-and-Tensorboard">
+<h2>Metrics and Tensorboard<a class="headerlink" href="#Metrics-and-Tensorboard" title="Permalink to this headline">¶</a></h2>
+<p>During compilation, we can also specify metrics to keep track of:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">new_dataset</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">decaying_multi_normal</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hpc_metrics</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">Hierarchical</span><span class="p">(</span>
+    <span class="n">tiers</span><span class="o">=</span><span class="p">[(</span><span class="mi">10</span><span class="p">,</span> <span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">hpc_metrics</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">TopDownSequential</span><span class="p">([</span>
+    <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">)),</span>
+    <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">),</span>
+    <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="n">hpc_metrics</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="n">pc</span><span class="o">.</span><span class="n">regimens</span><span class="o">.</span><span class="n">OptimizerRegimen</span><span class="p">(</span>
+        <span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(),</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span>
+    <span class="p">),</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">MeanSquaredError</span><span class="p">(),</span>
+             <span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">MeanAbsoluteError</span><span class="p">()]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Active connection: tier_1 -&gt; tier_0
+</pre></div></div>
+</div>
+<p>If you specify a log directory during training we can use <a class="reference external" href="https://www.tensorflow.org/guide/summaries_and_tensorboard">Tensorboard</a> using the summary file writer.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="n">logdir</span> <span class="o">=</span> <span class="s1">&#39;log/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="n">summary_writer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">create_file_writer</span><span class="p">(</span><span class="n">logdir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">with</span> <span class="n">summary_writer</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+    <span class="n">hpc_metrics</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">new_dataset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We can now use the magic method tensorboard to inspect the progress during estimation.</p>
+%load_ext tensorboard%tensorboard --logdir log</div>
 </div>
 
 
@@ -476,20 +1036,22 @@ W0826 13:23:53.079085 140173786113856 estimator.py:1000] Input graph does not us
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Get Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#A-minimal-model-in-60-seconds">A minimal model in 60 seconds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#The-minimal-model">The minimal model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Optimization-regimens">Optimization regimens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Multiple-tiers">Multiple tiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Batch-training">Batch training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Metrics-and-Tensorboard">Metrics and Tensorboard</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="minimal_model.html">Minimal Model</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../index.html" title="previous chapter">predicode: Simulations and analytical solutions of predictive coding algorithms</a></li>
-      <li>Next: <a href="installation.html" title="next chapter">Installation</a></li>
+      <li>Previous: <a href="../index.html" title="previous chapter">Predicode: Hierarchical Predictive Coding in Python</a></li>
+      <li>Next: <a href="datasets.html" title="next chapter">Datasets</a></li>
   </ul></li>
 </ul>
 </div>

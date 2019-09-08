@@ -5,6 +5,8 @@ from __future__ import division
 from __future__ import print_function
 
 import copy
+import tempfile
+import datetime
 
 import numpy as np
 import tensorflow as tf
@@ -259,7 +261,7 @@ class Hierarchical: #pylint:disable=too-many-instance-attributes
         self._metrics = metrics
         self._is_compiled = True
 
-    def train(self, dataset, epochs=1, batch_size=10000, logdir=None):
+    def train(self, dataset, epochs=1, batch_size=10000):
         """Train a model on a given dataset.
 
         This model trains a hierarchical predictive coding model.
@@ -282,8 +284,6 @@ class Hierarchical: #pylint:disable=too-many-instance-attributes
         batches = dataset.batch(batch_size)
         self._tiers = copy.deepcopy(self._raw_tiers)
         optimizer = copy.deepcopy(self._optimizer)
-        if logdir:
-            summary_writer = tf.summary.create_file_writer(logdir).as_default()
         while not optimizer.end(epochs):
             optimizer.start_batch()
             for data in batches:
@@ -296,8 +296,6 @@ class Hierarchical: #pylint:disable=too-many-instance-attributes
                                         predictor_variables=predictor_weights,
                                         metrics=self._metrics)
             optimizer.finish_batch()
-        if logdir:
-            del summary_writer
         return self
 
     def _is_ready(self):
