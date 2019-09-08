@@ -33,4 +33,4 @@ def decaying_multi_normal(dimensions, size, alpha=1):
     rand_ortho = stats.ortho_group.rvs(dimensions)
     rand_normal = np.random.normal(scale=pc_variance, size=(size, dimensions))
     rand_input = np.matmul(rand_normal, rand_ortho)
-    return rand_input
+    return rand_input.astype('float32')

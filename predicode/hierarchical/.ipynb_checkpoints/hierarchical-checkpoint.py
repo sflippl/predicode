@@ -10,25 +10,16 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.keras as keras
 
-import predicode.optimizers as optimizers
-
-class NoTierConnection(): # This class is required to make the interface consistent pylint:disable=too-few-public-methods
-    """Undefined tier connection."""
-
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def summary():
-        """Summary of NoTierConnection."""
-        return print('(No tier connection defined.)')
+import predicode.regimens as regimens
+import predicode.connections as connections
 
 class Hierarchical(): #pylint:disable=too-many-instance-attributes
     """Defines a hierarchical predictive coding model.
 
     Args:
         tiers: List of tier shapes, bottom-up.
-        name: Name of the hierarchical model."""
+        name: Name of the hierarchical model.
+    """
 
     n = 1
     def __init__(self, tiers = [], name=None):
@@ -38,6 +29,8 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
         self.name = name
         self._n_tiers = 0
         self._tiers = []
+        self._predictors = []
+        self._prediction_errors = []
         self._raw_tiers = []
         self._tier_names = []
         self._connections = []
@@ -62,7 +55,8 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
             The updated hierarchical model to allow chained assignment.
 
         Raises:
-            ValueError: If you do not provide an appropriate name or shape."""
+            ValueError: If shape or name are not appropriate.
+        """
         if not name:
             name = 'tier_%d' % (self._n_tiers, )
         if name in self._tier_names:
@@ -73,9 +67,11 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
                                                    name=name)
         self._tiers.append(tier_variable)
         self._raw_tiers.append(tier_variable)
+        self._predictors.append(tier_variable)
+        self._prediction_errors.append(tier_variable)
         self._tier_names.append(name)
         if self._n_tiers > 0:
-            self._connections.append(NoTierConnection())
+            self._connections.append(connections.NoTierConnection())
         self._n_tiers += 1
         # We want an automatic connection to be chosen -- as long as there is
         # already a possible connection.
@@ -99,7 +95,8 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
             The new Hierarchical object.
 
         Raises:
-            ValueError: if the activated connection does not exist."""
+            ValueError: if the activated connection does not exist.
+        """
         tier = self._get_tier_from_name(tier)
         if lower and tier == 0:
             raise ValueError('There is no connection below tier 0.')
@@ -109,8 +106,8 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
         if lower:
             tier -= 1
         self._current_connection = tier
-        print('Active connection: %s -> %s' % (self._tier_names[i],
-                                               self._tier_names[i+1]))
+        print('Active connection: %s -> %s' % (self._tier_names[tier+1],
+                                               self._tier_names[tier]))
         return self
 
     def tier(self, tier):
@@ -124,11 +121,49 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
 
         Raises:
             ValueError: if the tier does not exist.
-            TypeError: if the tier cannot be interpreted as string or integer.
+            TypeError: if the tier cannot be interpreted as a string or integer.
         """
         tier_nr = self._get_tier_from_name(tier)
         _tier = self._tiers[tier_nr]
         return _tier
+
+    def prediction(self, tier):
+        """Inspect the prediction for a tier.
+
+        Args:
+            tier: Choose a tier, either by its name or by its position.
+
+        Returns:
+            A Tensor variable or constant.
+
+        Raises:
+            Value Error: if the tier does not exist.
+            TypeError: if the tier cannot be interpreted as a string or integer.
+        """
+        tier_nr = self._get_tier_from_name(tier)
+        _prediction = self._connections[tier_nr].predict(
+            self._tiers[tier_nr+1], self._tiers[tier_nr]
+        )
+        return _prediction
+
+    def prediction_error(self, tier):
+        """Inspect the prediction error of a tier.
+
+        Args:
+            tier: Choose a tier, either by its name or by its position.
+
+        Returns:
+            A Tensor variable or constant.
+
+        Raises:
+            Value Error: if the tier does not exist.
+            TypeError: if the tier cannot be interpreted as a string or integer.
+        """
+        tier_nr = self._get_tier_from_name(tier)
+        _prediction_error = self._connections[tier_nr].prediction_error(
+            self._tiers[tier_nr+1], self._tiers[tier_nr], self.prediction(tier)
+        )
+        return _prediction_error
 
     def _get_tier_from_name(self, name):
         if isinstance(name, str):
@@ -160,7 +195,8 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
             name: What is the name of the variable?
 
         Returns:
-            A tensor variable or constant."""
+            A tensor variable or constant.
+        """
         name = '%s_%s' % (self.name, name)
         new_shape = [None] + list(shape)
         initial_value = initializer(shape=[1] + list(shape))
@@ -176,7 +212,7 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
     @connection.setter
     def connection(self, value):
         if not isinstance(self._connections[self._current_connection],
-                          NoTierConnection):
+                          connections.NoTierConnection):
             raise TypeError('Predictor below tier %d has already been assigned.'
                             ' If you truly want to create a new predictor, '
                             'first delete the old model using the method '
@@ -186,16 +222,18 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
 
     def delete_connections(self):
         """Deletes the activated tier connection."""
-        self._connections[self._current_connection] = NoTierConnection()
+        self._connections[self._current_connection] =\
+            connections.NoTierConnection()
 
     def summary(self):
-        """Provides a summary of the model architecture."""
+        """Provides a summary of the model architecture.
+        """
         for i in range(self._n_tiers-1, 0, -1):
             print('# Tier %d: %s\n' % (i, self._tier_names[i]))
             print('# Connection: %s -> %s' % (self._tier_names[i],
                                               self._tier_names[i-1]))
-            print()
             self._connections[i-1].summary()
+            print()
         print('# Tier 0: %s' % (self._tier_names[0], ))
 
     def compile(self, optimizer, metrics=[]):
@@ -208,37 +246,41 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
                 training.
 
         Returns:
-            Compiled model."""
-        self._optimizer = optimizers.get(optimizer)
-        self._metrics = metrics or []
+            Compiled model.
+        """
+        self._optimizer = regimens.get(optimizer)
+        metrics = metrics or []
+        metrics = [keras.metrics.get(metric) for metric in metrics]
+        self._metrics = metrics
         self._is_compiled = True
 
-    def train(self, dataset, batch_size=10000):
+    def train(self, dataset, batch_size=10000, logdir=None):
         """Train a model on a given dataset.
 
         This model trains a hierarchical predictive coding model.
 
         Args:
-            data: A State or an object that is interpretable as a state, e. g.
-                a numpy array or a Dataset.
-            regimen: A training regimen.
-            metrics: A list of metrics.
+            data: A numpy array or a Tensorflow Dataset.
             batch_size: In which batch sizes should training occur? Default is
                 10000, as this creates a manageable size, but also means that
                 small datasets are estimated together.
 
         Returns:
-            The trained Hierarchical object."""
+            The trained Hierarchical object.
+        """
         self._is_ready()
         predictor_weights = []
         for connection in self._connections:
-            for pred in connection.trainable_variables:
-                predictor_weights.append(pred)
+            predictor_weights += connection.predictor_variables
         dataset = self.as_dataset(dataset)
         batches = dataset.batch(batch_size)
         self._tiers = copy.deepcopy(self._raw_tiers)
+        self._predictions = copy.deepcopy(self._raw_tiers[:-1])
+        self._prediction_errors = copy.deepcopy(self._raw_tiers[:-1])
         optimizer = copy.deepcopy(self._optimizer)
-        while not regimen.end():
+        if logdir:
+            summary_writer = tf.summary.create_file_writer(logdir).as_default()
+        while not optimizer.end():
             optimizer.start_batch()
             for data in batches:
                 self._tiers = self._setup_tiers(data)
@@ -250,13 +292,15 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
                                         predictor_variables=predictor_weights,
                                         metrics=self._metrics)
             optimizer.finish_batch()
+        if logdir:
+            del summary_writer
         return self
 
     def _is_ready(self):
         for connection, lower_tier, upper_tier in zip(self._connections,
                                                       self._tier_names[:-1],
                                                       self._tier_names[1:]):
-            if isinstance(connection, NoTierConnection):
+            if isinstance(connection, connections.NoTierConnection):
                 raise ValueError('You need to define the tier connection '
                                  'between %s and %s.'\
                                  % (upper_tier, lower_tier))
@@ -287,16 +331,14 @@ class Hierarchical(): #pylint:disable=too-many-instance-attributes
 
     @tf.function
     def _setup_losses(self, tiers): # pragma: no cover (is only executed within Tensorflow call)
-        predictions = [
-            connection.predict(tier) for predictor, tier in\
-            zip(self._connections, tiers[1:])
-        ]
-        losses = [
-            state_prediction.compute_loss(tier, prediction) for \
-            prediction, tier, state_prediction in zip(predictions,
-                                                      tiers[:-1],
-                                                      self._state_predictions)
-        ]
+        predictions = []
+        for i, connection in enumerate(self._connections):
+            predictions.append(connection.predict(tiers[i+1], tiers[i]))
+        losses = []
+        for i, connection in enumerate(self._connections):
+            losses.append(connection.compute_loss(tiers[i+1],
+                                                  tiers[i],
+                                                  predictions[i]))
         return [losses, predictions, tiers[:-1]]
 
     def as_dataset(self, dataset):

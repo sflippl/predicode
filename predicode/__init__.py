@@ -4,5 +4,8 @@
 predicode: Hierarchical predictive coding in Python.
 """
 
+import predicode.regimens
+import predicode.prediction_errors
+import predicode.connections
 from predicode.hierarchical import *
-from predicode.datasets import *
+import predicode.datasets

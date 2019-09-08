@@ -1,7 +1,10 @@
-"""Defines possible training regimens."""
+"""Defines training regimens."""
+
+import copy
 
 import numpy as np
 import tensorflow as tf
+import tensorflow.keras as keras
 
 class SimpleOptimizerRegimen:
     """This class defines a simple regimen using one optimizer and one set of
@@ -14,7 +17,7 @@ class SimpleOptimizerRegimen:
     Args:
         optimizer: Any object that can handle a tensor with its 'minimize'
             method.
-        eps: If the mean squared difference between the last two estimates
+        eps: If the maximal difference between the last two estimates
             is below this value, the regimen stops.
         max_steps: If this number of steps has been exceeded, the regimen stops.
     """
@@ -71,9 +74,10 @@ class SimpleOptimizerRegimen:
         for grad, var in zip(gradients, variables):
             if grad is not None:
                 gen.append((grad, var))
+                flat_grad = tf.reshape(grad, [-1])
                 _grads = _grads and (
                     tf.math.reduce_all(
-                        tf.pow(tf.reshape(grad, [-1]), 2) < eps
+                        tf.pow(flat_grad, 2) < eps
                     )
                 )
         self.optimizer.apply_gradients(gen)
@@ -81,14 +85,16 @@ class SimpleOptimizerRegimen:
 
     def end(self):
         """The regimen ends when the variables do not change by a significant
-        amount anymore or the number of steps have been exceeded."""
+        amount anymore or the number of steps have been exceeded.
+        """
         if self.n_steps == 0 and self.max_steps > 0:
             return False
         return self._grads or (self.n_steps >= self.max_steps)
 
     def train(self, loss_fun, variables, metrics=None, it_baseline=0):
         """Trains a model until convergence or the maximum number of steps
-        have been exceeded."""
+        have been exceeded.
+        """
         metrics = metrics or []
         while not self.end():
             self.start_batch()
@@ -99,7 +105,8 @@ class SimpleOptimizerRegimen:
         """Returns the number of steps until convergence.
 
         If the regimen has converged, returns the step after which the gradient
-        was below the threshold. If it hasn't returns NA."""
+        was below the threshold. If not, it returns numpy.nan.
+        """
         if self._grads:
             return self.n_steps-1
         return np.nan
@@ -156,22 +163,23 @@ class ConstantRegimen(SimpleOptimizerRegimen):
         """Returns constant 0, since there are not iterations."""
         return 0
 
-class ExpectationMaximizationRegimen:
+class EMRegimen:
     """This regimen implements an expectation maximization algorithm.
 
     The expectation maximization algorithm can be used to infer latent states
     and estimate the weights connecting these latent states with observations
     at the same time (see Dempster et al., 1987). This regimen accordingly
-    consists of a state regimen and a weight regimen.
+    consists of a state regimen and a predictor regimen.
 
     Since the states are lost if there are several batches that are being
-    iterated over, as a general convergence criterion, weight convergence is
-    being used, with state convergence being the logical implication.
+    iterated over, predictor convergence is used as the general convergence 
+    criterion (with state convergence being the logical implication).
 
     Args:
-        state_regimen: Which regimen should be used for the state?
-        predictor_regimen: Which regimen should be used for the predictors?
-        max_steps: How many EM-steps should at most be taken?"""
+        state_regimen: The regimen used for the state estimation.
+        predictor_regimen: The regimen used for the predictor estimation.
+        max_steps: The upper bound on the number of EM steps.
+    """
 
     def __init__(self, state_regimen, predictor_regimen, max_steps=1000):
         self.state_regimen = state_regimen
@@ -198,7 +206,8 @@ class ExpectationMaximizationRegimen:
     def end(self):
         """The regimen ends when the weight regimen had immediately converged.
 
-        This means that even the very first gradient was below the threshold."""
+        This means that even the very first gradient was below the threshold.
+        """
         if (self.n_steps == 0) and (self.max_steps > 0):
             return False
         return all(self._sut) or (self.n_steps >= self.max_steps)
@@ -206,19 +215,26 @@ class ExpectationMaximizationRegimen:
     def training_step(self, loss_fun, state_variables, predictor_variables,
                       metrics=None):
         """Takes one training steps by first learning the states and then
-        learning the weights."""
+        learning the weights.
+        """
         metrics = metrics or []
-        self.state_regimen.train(loss_fun, state_variables, metrics=metrics,
-                                 it_baseline=self._predictor_baseline)
-        self.predictor_regimen.train(loss_fun, predictor_variables,
-                                     metrics=metrics,
-                                     it_baseline=self._state_baseline)
+        self.state_regimen.train(
+            loss_fun, variables=state_variables,
+            metrics=metrics,
+            it_baseline=self._predictor_baseline
+        )
+        self.predictor_regimen.train(
+            loss_fun, variables=predictor_variables,
+            metrics=metrics,
+            it_baseline=self._state_baseline
+        )
         self._sut.append(self.predictor_regimen.steps_until_convergence() == 0)
 
     def train(self, loss_fun, state_variables, predictor_variables,
               metrics=None):
         """Trains a model until convergence or the maximum number of steps
-        have been exceeded."""
+        have been exceeded.
+        """
         metrics = metrics or []
         while not self.end():
             self.start_batch()
@@ -227,6 +243,59 @@ class ExpectationMaximizationRegimen:
             self.finish_batch()
 
     def restart(self):
-        """Restarts a regimen."""
+        """Restarts a regimen.
+        """
         self.n_steps = 0
         self._sut = [False]
+
+def _get_sor(identifier):
+    if isinstance(identifier, SimpleOptimizerRegimen):
+        return copy.deepcopy(identifier)
+    try:
+        identifier = keras.optimizers.get(identifier)
+    except ValueError as e:
+        raise ValueError('Could not interpret regimen identifier.') from e
+    return SimpleOptimizerRegimen(optimizer=identifier)
+
+def get(identifier):
+    """Retrieves a EMRegimen instance.
+
+    Args:
+        identifier: Regimen identifier, one of:
+            - String: Name of a keras optimizer
+            - Dictionary: Regimen specified independently for states and
+                predictors
+            - EMRegimen: Returned unchanged
+            - Keras optimizer instance: The optimizer used for state and
+                predictor optimization
+            - Regimen instance: The regimen used for state and predictor
+                optimization
+
+    Returns:
+        An EMRegimen instance.
+
+    Raises:
+        ValueError: if 'identifier' cannot be interpreted.
+    """
+    if isinstance(identifier, SimpleOptimizerRegimen):
+        return EMRegimen(
+            state_regimen=copy.deepcopy(identifier),
+            predictor_regimen=copy.deepcopy(identifier)
+        )
+    if isinstance(identifier, EMRegimen):
+        return identifier
+    if isinstance(identifier, dict):
+        if not set(identifier.keys()).issubset({'states', 'predictors'}):
+            raise ValueError('You can only specify "states" and "predictors" '
+                             'in a dictionary.')
+        for key in ['states', 'predictors']:
+            if key not in identifier:
+                identifier[key] = ConstantRegimen()
+        return EMRegimen(
+            state_regimen=_get_sor(key['states']),
+            predictor_regimen=_get_sor(key['predictors'])
+        )
+    return EMRegimen(
+        state_regimen=_get_sor(identifier),
+        predictor_regimen=_get_sor(identifier)
+    )
