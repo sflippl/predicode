@@ -4,3 +4,5 @@ good-names=
     i,
 ignored-modules=
     tensorflow.keras,
+[DESIGN]
+max-parents=15

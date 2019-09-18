@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: predicode
-Version: 0.0.0.9000
+Version: 0.2.0a0
 Summary: Simulations and interface to analytical solutions of predictive coding
 Home-page: https://github.com/sflippl/predicode
 Author: Samuel Lippl

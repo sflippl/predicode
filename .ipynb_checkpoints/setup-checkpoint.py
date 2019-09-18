@@ -13,7 +13,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="predicode",
-    version="0.0.0.9000",
+    version="0.2.0a",
     author="Samuel Lippl",
     author_email="sfc.lippl@gmail.com",
     description="Simulations and interface to analytical solutions of predictive coding",
