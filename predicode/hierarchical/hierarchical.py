@@ -311,7 +311,6 @@ class Hierarchical: #pylint:disable=too-many-instance-attributes
             raise ValueError('You need to compile the model using the '
                              '"compile()" method before training.')
 
-    @tf.function
     def _setup_tiers(self, data):
         tiers = self._tiers
         for key, value in data.items():
