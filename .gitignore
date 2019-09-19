@@ -4,3 +4,4 @@ dist
 _build
 *.ipynb-checkpoints*
 *.spyproject*
+*__pycache__*
