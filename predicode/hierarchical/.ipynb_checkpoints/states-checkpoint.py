@@ -57,11 +57,14 @@ class States(dict):
         Raises:
             ValueError: If new value is not a tier.
         """
+        self._validate_setitem(value)
+        index = self._get_tier_name(index)
+        super().__setitem__(index, value)
+
+    def _validate_setitem(self, value):
         if not isinstance(value, con.Tier):
             raise ValueError('New value must be a tier, but is a {}.'.\
                              format(type(value)))
-        index = self._get_tier_name(index)
-        super().__setitem__(index, value)
 
     def _get_tier_name(self, tier):
         """Get the name of a tier.
@@ -73,9 +76,9 @@ class States(dict):
         Returns:
             A string that corresponds to a tier name.
         """
-        if isinstance(tier, (str, bytes)):
+        if isinstance(tier, (str, )):
             return tier
-        return self.attrs['order'][tier]
+        return self.attrs['order'].astype(str)[tier]
 
     def add_tier(self, shape, tier_name=None):
         """Adds an empty tier.
@@ -85,7 +88,7 @@ class States(dict):
             tier_name: Specify the tier name. By default, tier names are given
                 as tier_0, tier_1, and so on."""
         tier_name = tier_name or 'tier_%d' % (self.n_tiers, )
-        if tier_name in self.order:
+        if tier_name in self.order.astype(str):
             raise ValueError('Tier name %s is already taken.' % (tier_name, ))
         self.attrs['order'] = np.append(self.attrs['order'], [tier_name])\
                                 .astype(bytes)
@@ -129,6 +132,7 @@ class HDF5States(h5py.File, States):
         return super().__getitem__(index)
 
     def __setitem__(self, index, value):
+        self._validate_setitem(value)
         index = super()._get_tier_name(index)
         value.to_hdf5(self[index])
 
@@ -136,3 +140,7 @@ class HDF5States(h5py.File, States):
         tier_name = tier_name or 'tier_%d' % (self.n_tiers, )
         self.create_group(tier_name)
         super().add_tier(shape, tier_name)
+
+    def to_hdf5(self, name, **kwds):
+        raise NotImplementedError('Attempt to save hdf5 object as another '
+                                  'hdf5 file. Use h5py functionality directly.')

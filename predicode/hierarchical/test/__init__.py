@@ -1,5 +1,5 @@
 """Tests predicode.hierarchical."""
 
-from predicode.hierarchical.test.test_initializer import *
-from predicode.hierarchical.test.test_hierarchical import *
-from predicode.hierarchical.test.test_states import *
+from predicode.hierarchical.test.initializer import *
+from predicode.hierarchical.test.hierarchical import *
+from predicode.hierarchical.test.states import *
