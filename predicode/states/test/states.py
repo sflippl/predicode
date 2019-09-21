@@ -1,4 +1,4 @@
-"""Tests predicode.hierarchical.states.
+"""Tests predicode.states.states.
 """
 
 import unittest
@@ -42,7 +42,7 @@ class TestStates(unittest.TestCase):
         """Makes sure tiers must have distinct names.
         """
         with self.assertRaises(ValueError):
-            self.states.add_tier((1, ), tier_name='latent_layer')
+            self.states.add_tier((1, ), name='latent_layer')
 
     def test_n_tiers(self):
         """Tests n_tiers.

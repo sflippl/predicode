@@ -14,6 +14,7 @@ import tensorflow.keras as keras
 
 import predicode.regimens as regimens
 import predicode.connections as connections
+import predicode.states as states
 
 class Hierarchical: #pylint:disable=too-many-instance-attributes
     """Defines a hierarchical predictive coding model.
@@ -30,6 +31,7 @@ class Hierarchical: #pylint:disable=too-many-instance-attributes
             name = 'hierarchical_%d' % (Hierarchical.n, )
             Hierarchical.n += 1
         self.name = name
+        self.states = states.HierarchicalStates()
         self._n_tiers = 0
         self._tiers = []
         self._predictors = []
@@ -64,6 +66,7 @@ class Hierarchical: #pylint:disable=too-many-instance-attributes
         Raises:
             ValueError: If shape or name are not appropriate.
         """
+        self.states.add_tier(shape, name, attrs={'initializer': initializer})
         if not name:
             name = 'tier_%d' % (self._n_tiers, )
         if name in self._tier_names:
