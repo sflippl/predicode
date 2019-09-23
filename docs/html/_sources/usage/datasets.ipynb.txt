@@ -28,6 +28,8 @@
     "try:\n",
     "    import predicode as pc\n",
     "except:\n",
+    "    # Tensorflow 2.0 must be installed manually in Google Colab\n",
+    "    !pip install tensorflow==2.0.0rc\n",
     "    !pip install git+https://github.com/sflippl/predicode\n",
     "    import predicode as pc\n",
     "# lazytools just contains a few convenience functions, specifically matrix heatmaps,\n",
