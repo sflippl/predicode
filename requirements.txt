@@ -2,7 +2,7 @@ setuptools>=41.0.0
 pandas
 numpy>=1.16.0
 h5py
-tensorflow==2.0.0-rc
+tensorflow==2.7.2
 plotnine
 scipy
 sklearn
